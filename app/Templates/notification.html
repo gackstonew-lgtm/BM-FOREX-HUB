@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{subject}</title>
+<style>
+  body { margin: 0; padding: 0; background-color: #0A0E14; color: #E8E6DE; font-family: 'Inter', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  table { border-collapse: collapse; }
+  .wrapper { width: 100%; table-layout: fixed; background-color: #0A0E14; padding: 40px 0; }
+  .main-card { background-color: #10161F; border: 1px solid #232B38; border-radius: 12px; max-width: 600px; margin: 0 auto; overflow: hidden; }
+  .header { padding: 32px; text-align: center; border-bottom: 1px solid #232B38; background: linear-gradient(180deg, #161D29 0%, #10161F 100%); }
+  .logo { width: 64px; height: 64px; border-radius: 50%; display: block; margin: 0 auto 12px; }
+  .brand-title { font-family: 'Space Grotesk', Helvetica, Arial, sans-serif; font-size: 20px; font-weight: 700; color: #E8E6DE; margin: 0; text-transform: uppercase; letter-spacing: 0.05em; }
+  .brand-subtitle { font-family: monospace; font-size: 11px; color: #D4A24C; text-transform: uppercase; letter-spacing: 0.15em; margin-top: 4px; display: block; }
+  .content { padding: 36px 32px; font-size: 15px; line-height: 1.6; color: #E8E6DE; }
+  .content h1, .content h2, .content h3 { font-family: 'Space Grotesk', sans-serif; color: #D4A24C; margin-top: 0; }
+  .content a { color: #D4A24C; text-decoration: underline; }
+  .footer { padding: 24px 32px; border-top: 1px solid #232B38; text-align: center; font-size: 12px; color: #8B93A3; background-color: #0A0E14; }
+  .footer a { color: #8B93A3; text-decoration: underline; }
+  .unsubscribe { margin-top: 12px; font-size: 11px; color: #5B6472; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <div class="main-card">
+          <div class="header">
+            <img src="{app_logo}" alt="BM Forex Hub" class="logo">
+            <h1 class="brand-title">BM Forex Hub</h1>
+            <span class="brand-subtitle">Official Communication</span>
+          </div>
+          <div class="content">
+            {body_content}
+          </div>
+          <div class="footer">
+            <p style="margin: 0 0 8px 0;">&copy; {year} BM Forex Hub. All rights reserved.</p>
+            <p style="margin: 0 0 8px 0;">
+              <a href="{app_url}">{app_url}</a> | Support: <a href="mailto:{support_email}">{support_email}</a>
+            </p>
+            <div class="unsubscribe">
+              You are receiving this email because you registered on BM Forex Hub.<br>
+              <a href="{unsubscribe_link}" style="color:#D4A24C;">Unsubscribe from bulk communications</a>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

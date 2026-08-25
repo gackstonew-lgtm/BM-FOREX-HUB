@@ -1,0 +1,405 @@
+/* ==========================================================================
+   BM Forex Hub — auth.css
+   Login / register page styling, matching the dark + gold theme in
+   basics.css. Loaded only on login.php and register.php.
+   ========================================================================== */
+@import url("css/motion.css");
+
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(22,119,255,0.14), transparent 55%),
+    var(--void);
+}
+
+.auth-card {
+  width: min(420px, 100%);
+  background: rgba(16, 23, 34, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(22,119,255,0.1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.auth-card:hover {
+  box-shadow: 0 28px 90px rgba(0,0,0,.6), 0 0 24px rgba(22,119,255,0.15);
+}
+
+.auth-brand {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+
+.auth-card h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.auth-sub {
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  margin-bottom: 24px;
+}
+
+.auth-alert {
+  background: rgba(246,70,93,0.1);
+  border: 1px solid rgba(246,70,93,0.35);
+  color: var(--coral);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  margin-bottom: 16px;
+}
+
+.auth-alert.auth-success {
+  background: rgba(22,199,132,0.1);
+  border-color: rgba(22,199,132,0.35);
+  color: var(--teal);
+}
+
+.auth-field {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.auth-field span {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 6px;
+}
+
+.auth-field input {
+  width: 100%;
+  background: #202B3A;
+  border: 1px solid #283548;
+  border-radius: 6px;
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  padding: 11px 12px;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.auth-field input:focus {
+  outline: none;
+  border-color: #1677FF;
+  box-shadow: 0 0 0 3px rgba(22,119,255,0.2);
+}
+
+.auth-field--password .auth-pw-wrap {
+  position: relative;
+}
+
+.auth-field--password input {
+  padding-right: 42px;
+}
+
+.auth-toggle-pw {
+  position: absolute;
+  right: 4px;
+  top: 0;
+  bottom: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 6px;
+  color: var(--ink-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color .15s;
+}
+
+.auth-toggle-pw:hover {
+  color: var(--gold);
+}
+
+.auth-toggle-pw svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.auth-submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.auth-footnote {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+
+.auth-footnote a {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
+/* ==================================================
+   Google OAuth & Authentication Action Elements
+   ================================================== */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 0;
+  color: var(--ink-dim, #7F8B99);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--hairline, #283548);
+}
+
+.auth-google-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--hairline, #283548);
+  border-radius: 8px;
+  color: var(--ink, #ffffff);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 11px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.auth-google-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--gold, #1677FF);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(22, 119, 255, 0.15);
+}
+.auth-google-btn:focus-visible {
+  outline: 2px solid var(--gold, #1677FF);
+  outline-offset: 2px;
+}
+.auth-google-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ==================================================
+   Phone row — country dropdown + phone input
+   ================================================== */
+.auth-phone-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.auth-phone-row .auth-field {
+  margin-bottom: 0;
+}
+
+.auth-phone-row .auth-field:first-child {
+  flex: 0 0 130px;
+}
+
+.auth-phone-row .auth-field:last-child {
+  flex: 1;
+}
+
+.auth-phone-row select {
+  width: 100%;
+  background: var(--panel-raised);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  padding: 11px 12px;
+  transition: border-color .15s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238B93A3' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+  cursor: pointer;
+}
+
+.auth-phone-row select:focus {
+  outline: none;
+  border-color: var(--gold-dim);
+}
+
+.auth-phone-row select option {
+  background: var(--panel-raised);
+  color: var(--ink);
+}
+
+/* ==================================================
+   OTP verification step
+   ================================================== */
+.auth-otp-wrap {
+  display: none;
+}
+
+.auth-otp-wrap.active {
+  display: block;
+}
+
+.auth-form-wrap.hidden {
+  display: none;
+}
+
+.auth-otp-info {
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.auth-otp-info strong {
+  color: var(--gold);
+}
+
+.auth-otp-inputs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.auth-otp-inputs input {
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  background: var(--panel-raised);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  color: var(--ink);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  caret-color: var(--gold);
+  transition: border-color .15s;
+}
+
+.auth-otp-inputs input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.auth-otp-inputs input.filled {
+  border-color: var(--gold-dim);
+}
+
+.auth-otp-resend {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+}
+
+.auth-otp-resend button {
+  background: none;
+  border: none;
+  color: var(--gold);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-family: 'Inter', sans-serif;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.auth-otp-resend button:hover {
+  color: var(--gold-dim);
+}
+
+.auth-otp-resend button:disabled {
+  color: var(--ink-dim);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* ==================================================
+   New password step (for password reset)
+   ================================================== */
+.auth-new-pw-wrap {
+  display: none;
+}
+
+.auth-new-pw-wrap.active {
+  display: block;
+}
+
+/* ==================================================
+   Back link
+   ================================================== */
+.auth-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+  margin-bottom: 18px;
+  transition: color .15s;
+}
+
+.auth-back:hover {
+  color: var(--gold);
+}
+
+.auth-back svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 480px) {
+  .auth-phone-row {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .auth-phone-row .auth-field:first-child {
+    flex: none;
+  }
+  .auth-otp-inputs input {
+    width: 42px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}

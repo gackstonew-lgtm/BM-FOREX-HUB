@@ -1,0 +1,600 @@
+/* ==========================================================================
+   BM Forex Hub — Light Theme (css/theme-light.css)
+   Applied when <html data-theme="light"> is present (set by js/theme.js).
+   Dark remains the default theme. This file only ever ADDS overrides for
+   the light theme; it never changes the dark look.
+   ========================================================================== */
+
+/* ---------- Theme toggle button (works in both themes) ---------- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--hairline, var(--line, #283548));
+  color: var(--ink-muted, var(--muted, #B8C3D1));
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.theme-toggle:hover {
+  border-color: var(--gold, #1677FF);
+  color: var(--gold, #1677FF);
+}
+.theme-toggle svg { display: block; }
+.theme-toggle__moon { display: none; }
+:root[data-theme="light"] .theme-toggle__sun { display: none; }
+:root[data-theme="light"] .theme-toggle__moon { display: block; }
+.theme-toggle--corner {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9000;
+}
+.auth-card__tools {
+  display: flex;
+  justify-content: flex-end;
+  margin: -8px -8px 14px 0;
+}
+
+/* ---------- Design tokens : system A (basics.css / admin.css) ---------- */
+:root[data-theme="light"] {
+  --void:          #F6F8FB;
+  --panel:         #FFFFFF;
+  --panel-raised:  #FFFFFF;
+  --hairline:      #E2E8F0;
+  --ink:           #0F172A;
+  --muted:         #64748B;
+  --ink-muted:     #64748B;
+  --ink-dim:       #94A3B8;
+  --input-bg:      #FFFFFF;
+  --card-elevated: #FFFFFF;
+  --gold-dim:      #0D47A1;
+  --glass-bg:            rgba(255, 255, 255, 0.78);
+  --glass-bg-hover:      rgba(22, 119, 255, 0.08);
+  --glass-border:        rgba(226, 232, 240, 0.8);
+  --glass-border-light:  rgba(203, 213, 225, 0.9);
+  --glass-blur:          blur(16px) saturate(180%);
+  --glass-shadow:        0 8px 30px 0 rgba(15, 23, 42, 0.06);
+}
+
+/* ---------- Design tokens : system B (landing / legal / auth) ---------- */
+:root[data-theme="light"] {
+  --void:   #F6F8FB;
+  --panel:  #FFFFFF;
+  --panel2: #FFFFFF;
+  --line:   #E2E8F0;
+  --ink:    #0F172A;
+  --muted:  #64748B;
+  --dim:    #94A3B8;
+}
+
+/* ---------- Design tokens : AI assistant ---------- */
+:root[data-theme="light"] {
+  --ai-bg-dark:     #F6F8FB;
+  --ai-panel-bg:    #FFFFFF;
+  --ai-panel-raised:#FFFFFF;
+  --ai-text-main:   #0F172A;
+  --ai-text-muted:  #64748B;
+  --ai-border:      rgba(22, 119, 255, 0.25);
+}
+
+/* ---------- Selection & body ---------- */
+:root[data-theme="light"] ::selection { color: #FFFFFF; }
+:root[data-theme="light"] body { transition: background-color .25s ease, color .25s ease; }
+
+/* ---------- Scrollbars (motion.css uses hardcoded colors) ---------- */
+:root[data-theme="light"] html { scrollbar-color: #CBD5E1 #F1F5F9; }
+:root[data-theme="light"] ::-webkit-scrollbar-track { background: #F1F5F9; }
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #CBD5E1 0%, #A8B7C9 100%);
+  border: 1px solid rgba(22, 119, 255, 0.15);
+}
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #1677FF 0%, #0D47A1 100%);
+  box-shadow: 0 0 10px rgba(22, 119, 255, 0.4);
+}
+
+/* ==========================================================================
+   Shared surface overrides (topbars, sidebars, glass, tables)
+   ========================================================================== */
+
+/* Sticky topbars (basics.css + index.php inline override) */
+:root[data-theme="light"] .topbar {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid #E2E8F0;
+}
+:root[data-theme="light"] .topbar__user-row { border-top: 1px solid #E2E8F0; }
+
+/* Dashboard sidebar + dashboard text surfaces (index.php inline styles) */
+:root[data-theme="light"] .dash-sidebar {
+  background: #FFFFFF;
+  border-right: 1px solid #E2E8F0;
+}
+:root[data-theme="light"] .dash-sidebar__brand { border-bottom: 1px solid #E2E8F0; }
+:root[data-theme="light"] .dash-sidebar__bottom { border-top: 1px solid #E2E8F0; }
+:root[data-theme="light"] .dash-sidebar__item:hover { color: #0F172A; }
+
+:root[data-theme="light"] .topbar .logo--text span { color: #0F172A; }
+:root[data-theme="light"] .topbar__user-row { color: #0F172A; }
+:root[data-theme="light"] .topbar__user-avatar { background: #EEF2F7; color: #64748B; }
+:root[data-theme="light"] .topbar__user-greeting small { color: #64748B; }
+
+:root[data-theme="light"] .dash-overview__title { color: #0F172A; }
+:root[data-theme="light"] .dash-overview__subtitle { color: #64748B; }
+
+/* Dashboard card surfaces */
+:root[data-theme="light"] .dash-qa-card,
+:root[data-theme="light"] .dash-contact-card,
+:root[data-theme="light"] .dash-classes-section,
+:root[data-theme="light"] .dash-str-card,
+:root[data-theme="light"] .dash-news-card {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+}
+:root[data-theme="light"] .dash-section-header h2,
+:root[data-theme="light"] .dash-class-title,
+:root[data-theme="light"] .dash-upcoming-item strong,
+:root[data-theme="light"] .dash-contact-card__text strong,
+:root[data-theme="light"] .dash-premium-center__main h2 { color: #0F172A; }
+
+:root[data-theme="light"] .dash-qa-card { color: #0F172A; }
+:root[data-theme="light"] .dash-qa-card:hover { background: #F1F5F9; color: #0F172A; }
+
+:root[data-theme="light"] .dash-classes-upcoming {
+  background: rgba(15, 23, 42, 0.02);
+  border-color: #E2E8F0;
+}
+:root[data-theme="light"] .dash-classes-upcoming h4 { color: #64748B; }
+:root[data-theme="light"] .dash-upcoming-item { color: #0F172A; }
+:root[data-theme="light"] .dash-upcoming-item small { color: #64748B; }
+
+:root[data-theme="light"] .dash-premium-center {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F6F8FB 100%);
+  border-color: #E2E8F0;
+}
+:root[data-theme="light"] .dash-premium-center__main p { color: #64748B; }
+:root[data-theme="light"] .dash-premium-action {
+  background: rgba(15, 23, 42, 0.03);
+  border-color: #E2E8F0;
+  color: #0F172A;
+}
+:root[data-theme="light"] .dash-premium-action:hover { color: #0F172A; }
+
+:root[data-theme="light"] .dash-contact-card:hover { background: #F1F5F9; }
+:root[data-theme="light"] .dash-contact-card__text span { color: #64748B; }
+:root[data-theme="light"] .dash-contact-card__arrow { color: #94A3B8; }
+
+:root[data-theme="light"] .dash-class-meta-item { color: #64748B; }
+
+/* Welcome meta chips (translucent white on dark -> light chips) */
+:root[data-theme="light"] .dash-welcome__meta-item {
+  background: #F1F5F9;
+  border-color: #E2E8F0;
+  color: #64748B;
+}
+:root[data-theme="light"] .dash-welcome__meta-item svg { color: #94A3B8; }
+:root[data-theme="light"] .dash-welcome__badge { color: #1677FF; }
+:root[data-theme="light"] .dash-welcome__quick-summary { color: #64748B; }
+
+/* Header search (index.php) */
+:root[data-theme="light"] .topbar__search {
+  background: #F1F5F9;
+  border-color: #E2E8F0;
+  color: #94A3B8;
+}
+:root[data-theme="light"] .topbar__search input { color: #0F172A; }
+:root[data-theme="light"] .topbar__search input::placeholder { color: #94A3B8; }
+
+/* Mobile nav overlay + glass + ladder tip + whatsapp tooltip (basics.css) */
+:root[data-theme="light"] .mobile-nav { background: rgba(255, 255, 255, 0.97); }
+:root[data-theme="light"] .ladder-tip { background: rgba(255, 255, 255, 0.95); }
+:root[data-theme="light"] .sm-glass-panel,
+:root[data-theme="light"] .sm-glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="light"] .whatsapp-float-tooltip { background: rgba(255, 255, 255, 0.95); }
+
+/* motion.css glass + scroll-to-top + sticky table heads + skeleton */
+:root[data-theme="light"] .bm-glass {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(226, 232, 240, 0.7) !important;
+}
+:root[data-theme="light"] .bm-scroll-top-btn {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15);
+}
+:root[data-theme="light"] .bm-scroll-top-btn:hover {
+  background: #1677FF;
+  color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(22, 119, 255, 0.35);
+}
+:root[data-theme="light"] .bm-table-sticky thead th,
+:root[data-theme="light"] .user-table thead th {
+  background: #F8FAFC;
+  box-shadow: 0 1px 0 #E2E8F0;
+}
+:root[data-theme="light"] .bm-skeleton {
+  background: linear-gradient(90deg, #E8EEF6 25%, #F4F7FB 50%, #E8EEF6 75%);
+}
+:root[data-theme="light"] .bm-table-container::-webkit-scrollbar-track,
+:root[data-theme="light"] .table-wrap::-webkit-scrollbar-track { background: #F1F5F9; }
+:root[data-theme="light"] .bm-table-container::-webkit-scrollbar-thumb,
+:root[data-theme="light"] .table-wrap::-webkit-scrollbar-thumb { background: #CBD5E1; }
+:root[data-theme="light"] .bm-table-container::-webkit-scrollbar-thumb:hover,
+:root[data-theme="light"] .table-wrap::-webkit-scrollbar-thumb:hover { background: #1677FF; }
+
+/* Ripple on light backgrounds */
+:root[data-theme="light"] .bm-ripple { background: rgba(15, 23, 42, 0.18); }
+
+/* ---------- Admin (admin.css) ---------- */
+:root[data-theme="light"] .sidebar-link:hover { background: rgba(15, 23, 42, 0.05); }
+:root[data-theme="light"] .topbar-admin { background: rgba(255, 255, 255, 0.9); }
+:root[data-theme="light"] .user-table tbody tr:hover { background: rgba(15, 23, 42, 0.04) !important; }
+:root[data-theme="light"] .role-badge--user { color: #64748B; }
+
+/* admin-email.css translucent-white hover surfaces */
+:root[data-theme="light"] .sidebar-link:hover,
+:root[data-theme="light"] .email-row:hover,
+:root[data-theme="light"] .recipient-row:hover { background: rgba(15, 23, 42, 0.04); }
+
+/* ==========================================================================
+   Auth pages (auth.css + unsubscribe.php)
+   ========================================================================== */
+:root[data-theme="light"] .auth-shell {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(22, 119, 255, 0.10), transparent 55%),
+    #F6F8FB;
+}
+:root[data-theme="light"] .auth-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #E2E8F0;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(22, 119, 255, 0.08);
+}
+:root[data-theme="light"] .auth-card:hover {
+  box-shadow: 0 28px 90px rgba(15, 23, 42, 0.16), 0 0 24px rgba(22, 119, 255, 0.10);
+}
+:root[data-theme="light"] .auth-field input {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+  color: #0F172A;
+}
+:root[data-theme="light"] .auth-field input::placeholder { color: #94A3B8; }
+:root[data-theme="light"] .auth-phone-row select {
+  background-color: #FFFFFF;
+  border-color: #E2E8F0;
+  color: #0F172A;
+}
+:root[data-theme="light"] .auth-phone-row select option,
+:root[data-theme="light"] .auth-otp-inputs input { background: #FFFFFF; }
+:root[data-theme="light"] .auth-otp-inputs input { border-color: #E2E8F0; color: #0F172A; }
+
+/* unsubscribe.php (own inline styles) */
+:root[data-theme="light"] body { background: #F6F8FB; color: #0F172A; }
+:root[data-theme="light"] .unsub-card { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .unsub-card p { color: #64748B; }
+
+/* ==========================================================================
+   Landing / legal pages (landing.php, contact.php, about.php, legal pages)
+   ========================================================================== */
+
+/* Hero stays a dark band in light mode for readability (video background) */
+:root[data-theme="light"] .hero { background: #0B0F14; }
+:root[data-theme="light"] .hero-overlay {
+  background: linear-gradient(180deg, rgba(11, 15, 20, 0.7) 0%, rgba(11, 15, 20, 0.85) 60%, #0B0F14 100%);
+}
+:root[data-theme="light"] .hero { color: #FFFFFF; }
+:root[data-theme="light"] .hero .lead,
+:root[data-theme="light"] .hero p,
+:root[data-theme="light"] .hero .proof { color: #B8C3D1; }
+
+/* Navigation bars (rgba(11,15,20,.94) / rgba(10,14,20,.94)) */
+:root[data-theme="light"] .nav,
+:root[data-theme="light"] .topnav,
+:root[data-theme="light"] .premium-header {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom-color: #E2E8F0;
+}
+:root[data-theme="light"] .premium-header { background: #FFFFFF; color: #0F172A; }
+:root[data-theme="light"] .premium-header .logo { color: #0F172A; }
+:root[data-theme="light"] .premium-header .search { background: #F1F5F9; border-color: #E2E8F0; color: #94A3B8; }
+
+/* Landing footer band */
+:root[data-theme="light"] footer { background: #FFFFFF; }
+
+/* ==========================================================================
+   Classes / Elites pages (classes.css, elite.css, bm_elites.php)
+   ========================================================================== */
+:root[data-theme="light"] .shell.classes-page,
+:root[data-theme="light"] .classes-details { background: #FFFFFF; }
+:root[data-theme="light"] .classes-intro,
+:root[data-theme="light"] #classTitle { color: #0F172A; }
+:root[data-theme="light"] .classes-intro p,
+:root[data-theme="light"] #classDescription { color: #64748B; }
+:root[data-theme="light"] .btn-ghost { color: #0F172A; }
+
+/* ==========================================================================
+   Crypto widget (crypto-widget.css)
+   ========================================================================== */
+:root[data-theme="light"] .crypto-card,
+:root[data-theme="light"] .crypto-nav-card { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .crypto-card__title,
+:root[data-theme="light"] .crypto-nav-card__title { color: #0F172A; }
+:root[data-theme="light"] .crypto-card__subtitle,
+:root[data-theme="light"] .crypto-nav-card__subtitle { color: #64748B; }
+
+:root[data-theme="light"] .crypto-tabs { background: #EEF2F7; border-color: #E2E8F0; }
+:root[data-theme="light"] .crypto-tab { color: #64748B; }
+:root[data-theme="light"] .crypto-tab:not(.active):hover { color: #0F172A; }
+
+:root[data-theme="light"] .crypto-side,
+:root[data-theme="light"] .crypto-select,
+:root[data-theme="light"] .crypto-swap-icon,
+:root[data-theme="light"] .crypto-quote-details,
+:root[data-theme="light"] .crypto-payment-method select,
+:root[data-theme="light"] .crypto-payment-method input,
+:root[data-theme="light"] .crypto-wallet-address input,
+:root[data-theme="light"] .crypto-ticker-item {
+  background: #F6F8FB;
+  border-color: #E2E8F0;
+  color: #0F172A;
+}
+:root[data-theme="light"] .crypto-side__row input[type="number"] { color: #0F172A; }
+:root[data-theme="light"] .crypto-side__row input[readonly] { color: #64748B; }
+:root[data-theme="light"] .crypto-side__label,
+:root[data-theme="light"] .crypto-payment-method label,
+:root[data-theme="light"] .crypto-wallet-address label,
+:root[data-theme="light"] .crypto-quote-timer,
+:root[data-theme="light"] .crypto-risk-note { color: #64748B; }
+:root[data-theme="light"] .crypto-quote-details .val { color: #0F172A; }
+:root[data-theme="light"] .crypto-deposit-address code { background: #F6F8FB; border-color: #E2E8F0; }
+
+:root[data-theme="light"] .crypto-ticker-item__sym,
+:root[data-theme="light"] .crypto-ticker-item__price { color: #0F172A; }
+:root[data-theme="light"] .crypto-history th,
+:root[data-theme="light"] .crypto-history td { border-bottom-color: #E2E8F0; color: #64748B; }
+:root[data-theme="light"] .crypto-history th { color: #94A3B8; }
+:root[data-theme="light"] .crypto-submit-btn:disabled { background: #E2E8F0; color: #94A3B8; }
+
+/* ==========================================================================
+   Market Overview (overview.css + post.php)
+   ========================================================================== */
+:root[data-theme="light"] .overview-page-title { color: #0F172A; }
+:root[data-theme="light"] .market-category {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+}
+:root[data-theme="light"] .market-category:hover { box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08); }
+:root[data-theme="light"] .post-card {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+}
+:root[data-theme="light"] .post-thumbnail { border-bottom-color: #E2E8F0; }
+:root[data-theme="light"] .post-title a { color: #0F172A; }
+:root[data-theme="light"] .post-summary,
+:root[data-theme="light"] .alert-item,
+:root[data-theme="light"] .documents-list li,
+:root[data-theme="light"] .links-list li { color: #64748B; }
+:root[data-theme="light"] .empty-overview h2 { color: #64748B; }
+
+/* ==========================================================================
+   AI assistant (ai-assistant.css) — tokens handle surfaces; hardcoded bits:
+   ========================================================================== */
+:root[data-theme="light"] .bm-ai-float {
+  background: linear-gradient(135deg, #FFFFFF 0%, #EEF2F7 100%);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.18), 0 0 15px var(--ai-gold-glow);
+}
+:root[data-theme="light"] .bm-ai-badge { border-color: #FFFFFF; }
+:root[data-theme="light"] .bm-ai-window {
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.25), 0 0 30px rgba(22, 119, 255, 0.12);
+}
+:root[data-theme="light"] .bm-ai-header {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F6F8FB 100%);
+}
+:root[data-theme="light"] .bm-ai-title { color: #0F172A; }
+:root[data-theme="light"] .bm-ai-btn-ctrl:hover { background: rgba(15, 23, 42, 0.08); color: #0F172A; }
+:root[data-theme="light"] .bm-ai-messages { background: #F6F8FB; }
+:root[data-theme="light"] .bm-ai-msg.bot .bm-ai-bubble {
+  border-color: rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="light"] .bm-ai-input { background: #FFFFFF; color: #0F172A; }
+:root[data-theme="light"] .bm-ai-input::placeholder { color: #94A3B8; }
+
+/* ==========================================================================
+   Admin sub-pages (videos.php / promotions.php / articles.php inline styles)
+   ========================================================================== */
+:root[data-theme="light"] h1 { color: #0F172A; }
+:root[data-theme="light"] input,
+:root[data-theme="light"] select,
+:root[data-theme="light"] textarea {
+  background-color: #FFFFFF;
+  border-color: #E2E8F0;
+  color: #0F172A;
+}
+:root[data-theme="light"] label { color: #64748B; }
+:root[data-theme="light"] th { color: #64748B; border-bottom-color: #E2E8F0; }
+:root[data-theme="light"] td { color: #0F172A; border-bottom-color: #E2E8F0; }
+:root[data-theme="light"] .action-btn {
+  border-color: #E2E8F0;
+  color: #64748B;
+}
+:root[data-theme="light"] .action-btn:hover { color: #0F172A; border-color: #1677FF; }
+:root[data-theme="light"] .modal { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .modal-header h2 { color: #0F172A; }
+:root[data-theme="light"] .table-empty { color: #94A3B8; }
+
+/* ==========================================================================
+   Admin Market Overview (market_overview.css) — tokens + hardcoded bits
+   ========================================================================== */
+:root[data-theme="light"] {
+  --mo-bg-dark:       #F6F8FB;
+  --mo-card-bg:       #FFFFFF;
+  --mo-input-bg:      #FFFFFF;
+  --mo-text-primary:  #0F172A;
+  --mo-text-secondary:#64748B;
+  --mo-border:        #E2E8F0;
+}
+:root[data-theme="light"] .mo-admin-header {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F6F8FB 100%);
+  border-bottom-color: #E2E8F0;
+}
+:root[data-theme="light"] .mo-page-title { color: #0F172A; }
+:root[data-theme="light"] .mo-header h2,
+:root[data-theme="light"] .mo-modal-header h3 { color: #0F172A; }
+:root[data-theme="light"] .mo-tab:hover { background-color: rgba(15, 23, 42, 0.05); }
+:root[data-theme="light"] .mo-table th { background-color: #F1F5F9; }
+:root[data-theme="light"] .mo-table tr:hover { background-color: rgba(15, 23, 42, 0.03); }
+:root[data-theme="light"] .mo-modal { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .mo-toast { background-color: #FFFFFF; color: #0F172A; box-shadow: 0 5px 15px rgba(15, 23, 42, 0.12); }
+
+/* ==========================================================================
+   Classes page (classes.php — inline style block, hardcoded colors)
+   ========================================================================== */
+:root[data-theme="light"] .topbar { background: rgba(255, 255, 255, 0.92); border-bottom-color: #E2E8F0; }
+:root[data-theme="light"] .topbar .logo--text span,
+:root[data-theme="light"] .topbar__user-info { color: #0F172A; }
+:root[data-theme="light"] .topbar__user-greeting small { color: #64748B; }
+:root[data-theme="light"] .topbar__nav-link { color: #64748B; }
+:root[data-theme="light"] .topbar__nav-link:hover,
+:root[data-theme="light"] .topbar__nav-link.active { color: #0F172A; }
+:root[data-theme="light"] .card-section-title,
+:root[data-theme="light"] .class-title,
+:root[data-theme="light"] .class-detail-value,
+:root[data-theme="light"] .bottom-card-content h4 { color: #0F172A; }
+:root[data-theme="light"] .card-inner-box,
+:root[data-theme="light"] .meet-session-box,
+:root[data-theme="light"] .bottom-card { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .class-detail-item { border-bottom-color: #EEF2F7; }
+:root[data-theme="light"] .class-detail-label,
+:root[data-theme="light"] .bottom-card-content p { color: #64748B; }
+:root[data-theme="light"] .join-class-btn.disabled { background: #E2E8F0; color: #94A3B8; }
+:root[data-theme="light"] .open-meet-btn { color: #0F172A; border-color: #E2E8F0; }
+:root[data-theme="light"] .open-meet-btn:hover { background: rgba(15, 23, 42, 0.04); border-color: #94A3B8; }
+:root[data-theme="light"] .open-meet-btn.disabled { color: #94A3B8; }
+:root[data-theme="light"] [style*="background:#101722"] { background-color: #EEF2F7 !important; }
+:root[data-theme="light"] #cdDays,
+:root[data-theme="light"] #cdHours,
+:root[data-theme="light"] #cdMins,
+:root[data-theme="light"] #cdSecs { color: #0F172A; }
+
+/* ==========================================================================
+   BM Elites (bm_elites.php — inline style block, hardcoded colors)
+   ========================================================================== */
+:root[data-theme="light"] .topbar { background: rgba(255, 255, 255, 0.92); border-bottom-color: #E2E8F0; }
+:root[data-theme="light"] .topbar .logo--text span,
+:root[data-theme="light"] .topbar__user-info { color: #0F172A; }
+:root[data-theme="light"] .topbar__user-greeting small { color: #64748B; }
+:root[data-theme="light"] .topbar__nav-link { color: #64748B; }
+:root[data-theme="light"] .topbar__nav-link:hover,
+:root[data-theme="light"] .topbar__nav-link.active { color: #0F172A; }
+:root[data-theme="light"] .sp-card { background: linear-gradient(180deg, #FFFFFF 0%, #F6F8FB 100%); border-color: #E2E8F0; }
+:root[data-theme="light"] .sp-card h3,
+:root[data-theme="light"] .sp-elite-tier__amount { color: #0F172A; }
+:root[data-theme="light"] .sp-elite-tier { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .sp-elite-tier:hover { background: rgba(22, 119, 255, 0.06); }
+
+/* ==========================================================================
+   Copy Trading (copy_trading.php — inline style block, hardcoded colors)
+   ========================================================================== */
+:root[data-theme="light"] .topbar__title { color: #0F172A; }
+:root[data-theme="light"] .topbar__user { color: #64748B; }
+:root[data-theme="light"] .ct-banner { background: linear-gradient(135deg, rgba(22, 119, 255, 0.10) 0%, rgba(13, 71, 161, 0.05) 100%); }
+:root[data-theme="light"] .ct-banner__title { color: #0F172A; }
+:root[data-theme="light"] .ct-banner__desc,
+:root[data-theme="light"] .ct-form-group label,
+:root[data-theme="light"] .ct-checkbox-wrap label { color: #64748B; }
+:root[data-theme="light"] .ct-status-card,
+:root[data-theme="light"] .ct-card { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .ct-status-card h3 { color: #0F172A; }
+:root[data-theme="light"] .ct-info-group { background: #F6F8FB; border-color: #E2E8F0; }
+:root[data-theme="light"] .ct-info-val { color: #0F172A; }
+:root[data-theme="light"] .ct-input-wrap input,
+:root[data-theme="light"] .ct-form-group textarea { background: #FFFFFF; border-color: #E2E8F0; color: #0F172A; }
+:root[data-theme="light"] .ct-status-badge.Closed { background: rgba(15, 23, 42, 0.06); color: #64748B; border-color: rgba(15, 23, 42, 0.15); }
+:root[data-theme="light"] .mobile-nav-toggle { color: #0F172A; }
+
+/* ==========================================================================
+   Quick Tools (quick_tools.php — inline style block, hardcoded colors)
+   ========================================================================== */
+:root[data-theme="light"] .mo-top { background: rgba(255, 255, 255, 0.92); border-bottom-color: #E2E8F0; }
+:root[data-theme="light"] .mo-top__brand { color: #0F172A; }
+:root[data-theme="light"] .mo-top__nav a { color: #64748B; }
+:root[data-theme="light"] .mo-top__nav a:hover,
+:root[data-theme="light"] .mo-top__nav a.active { color: #0F172A; background: rgba(22, 119, 255, 0.12); }
+:root[data-theme="light"] .mo-top__back { color: #64748B; }
+:root[data-theme="light"] .qt-title { color: #0F172A; }
+:root[data-theme="light"] .qt-desc { color: #64748B; }
+:root[data-theme="light"] .qt-card { background: #FFFFFF; border-color: #E2E8F0; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06); }
+:root[data-theme="light"] .qt-card__title { color: #0F172A; }
+:root[data-theme="light"] .qt-card__desc { color: #64748B; }
+:root[data-theme="light"] .mo-modal { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .mo-modal__header { border-bottom-color: #E2E8F0; }
+:root[data-theme="light"] .mo-modal__title { color: #0F172A; }
+:root[data-theme="light"] .mo-modal__close { color: #94A3B8; }
+:root[data-theme="light"] .mo-modal__close:hover { color: #0F172A; }
+:root[data-theme="light"] .mo-calc-field label { color: #64748B; }
+:root[data-theme="light"] .mo-calc-field input,
+:root[data-theme="light"] .mo-calc-field select { background: #FFFFFF; border-color: #E2E8F0; color: #0F172A; }
+:root[data-theme="light"] .mo-calc-field select option { background: #FFFFFF; color: #0F172A; }
+:root[data-theme="light"] .mo-calc-result__value { color: #0F172A; }
+
+/* ==========================================================================
+   Subscribe (subscribe.php — inline style block, hardcoded colors)
+   ========================================================================== */
+:root[data-theme="light"] .sp-top { background: rgba(255, 255, 255, 0.92); border-bottom-color: #E2E8F0; }
+:root[data-theme="light"] .sp-logo { color: #0F172A; }
+:root[data-theme="light"] .sp-top-right a { color: #64748B; }
+:root[data-theme="light"] .sp-hero h1,
+:root[data-theme="light"] .sp-section__title { color: #0F172A; }
+:root[data-theme="light"] .sp-hero p,
+:root[data-theme="light"] .sp-trust span { color: #64748B; }
+:root[data-theme="light"] .sp-step { color: #64748B; }
+:root[data-theme="light"] .sp-step__line { background: #E2E8F0; }
+:root[data-theme="light"] .sp-card { background: linear-gradient(180deg, #FFFFFF 0%, #F6F8FB 100%); border-color: #E2E8F0; }
+:root[data-theme="light"] .sp-card h3,
+:root[data-theme="light"] .sp-card__price .amt { color: #0F172A; }
+:root[data-theme="light"] .sp-card__desc,
+:root[data-theme="light"] .sp-card__price .cur,
+:root[data-theme="light"] .sp-card__feat li,
+:root[data-theme="light"] .sp-toggle__btn { color: #64748B; }
+:root[data-theme="light"] .sp-elite-tier { background: #FFFFFF; border-color: #E2E8F0; color: #64748B; }
+:root[data-theme="light"] .sp-elite-tier:hover { border-color: #1677FF; }
+:root[data-theme="light"] .sp-elite-tier__amount { color: #0F172A; }
+:root[data-theme="light"] .sp-elite-tier__usd { color: #94A3B8; }
+:root[data-theme="light"] .sp-pay-card { background: linear-gradient(180deg, #FFFFFF 0%, #F6F8FB 100%); border-color: #E2E8F0; }
+:root[data-theme="light"] .sp-pay-header h3,
+:root[data-theme="light"] .sp-pay-selected__name,
+:root[data-theme="light"] .sp-method__name,
+:root[data-theme="light"] .sp-status h3 { color: #0F172A; }
+:root[data-theme="light"] .sp-pay-back { color: #64748B; }
+:root[data-theme="light"] .sp-method { border-color: #E2E8F0; }
+:root[data-theme="light"] .sp-field__row { border-color: #E2E8F0; }
+:root[data-theme="light"] .sp-field__prefix { background: #EEF2F7; border-right-color: #E2E8F0; color: #64748B; }
+:root[data-theme="light"] .sp-field input[type="tel"],
+:root[data-theme="light"] .sp-field input[type="text"],
+:root[data-theme="light"] .sp-field input[type="password"] { background: #FFFFFF; color: #0F172A; }
+:root[data-theme="light"] .sp-field input::placeholder { color: #94A3B8; }
+:root[data-theme="light"] .sp-footer { border-top-color: #E2E8F0; }
+
+/* ==========================================================================
+   Admin Copy Traders partial (admin/views/copy_traders.php — inline styles)
+   Scoped to the section + modal so other admin buttons keep their colors.
+   ========================================================================== */
+:root[data-theme="light"] #sectionCopyTraders [style*="#151d2a"],
+:root[data-theme="light"] #sectionCopyTraders [style*="#151D29"],
+:root[data-theme="light"] #sectionCopyTraders [style*="#151d29"],
+:root[data-theme="light"] #sectionCopyTraders [style*="#101722"],
+:root[data-theme="light"] #modalCopyTraderProfile [style*="#151d2a"],
+:root[data-theme="light"] #modalCopyTraderProfile [style*="#151D29"],
+:root[data-theme="light"] #modalCopyTraderProfile [style*="#151d29"],
+:root[data-theme="light"] #modalCopyTraderProfile [style*="#101722"] { background-color: #FFFFFF; }
+:root[data-theme="light"] #sectionCopyTraders [style*="#283548"],
+:root[data-theme="light"] #sectionCopyTraders [style*="#243042"],
+:root[data-theme="light"] #modalCopyTraderProfile [style*="#283548"],
+:root[data-theme="light"] #modalCopyTraderProfile [style*="#243042"] { border-color: #E2E8F0; }
+:root[data-theme="light"] #sectionCopyTraders [style*="color:#fff"],
+:root[data-theme="light"] #modalCopyTraderProfile [style*="color:#fff"] { color: #0F172A; }

@@ -1,0 +1,116 @@
+/* ============================================================
+   BM Forex Hub — Admin Contacts Directory Styles
+   ============================================================ */
+
+/* Contact row status indicators */
+.contact-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .72rem;
+  font-weight: 600;
+}
+.contact-verified--yes {
+  color: var(--teal);
+}
+.contact-verified--yes::before {
+  content: '\2713';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  background: var(--teal-dim);
+  border-radius: 50%;
+  font-size: .65rem;
+}
+.contact-verified--no {
+  color: var(--ink-dim);
+}
+.contact-verified--no::before {
+  content: '\2717';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  background: var(--bg);
+  border-radius: 50%;
+  font-size: .65rem;
+}
+
+/* Account status badges */
+.account-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.account-status--active {
+  background: var(--teal-dim);
+  color: var(--teal);
+}
+.account-status--inactive {
+  background: var(--bg);
+  color: var(--ink-dim);
+}
+.account-status--banned {
+  background: var(--coral-dim);
+  color: var(--coral);
+}
+
+/* Quick action buttons in contacts table */
+.quick-actions {
+  display: flex;
+  gap: 4px;
+}
+.quick-actions button {
+  background: none;
+  border: 1px solid var(--hairline);
+  color: var(--ink-muted);
+  width: 28px; height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .15s;
+  font-size: .75rem;
+}
+.quick-actions button:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.quick-actions button.danger:hover {
+  border-color: var(--coral);
+  color: var(--coral);
+}
+
+/* Country flag placeholder */
+.country-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .82rem;
+}
+.country-flag__code {
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  color: var(--ink-dim);
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* Contacts stats mini-cards */
+.contacts-stat-mini {
+  text-align: center;
+  padding: 12px 8px;
+}
+.contacts-stat-mini .stat-value {
+  font-size: 1.1rem;
+}
+.contacts-stat-mini .stat-label {
+  font-size: .65rem;
+}

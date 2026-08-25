@@ -1,0 +1,88 @@
+/* ============================================================
+   BM Forex Hub — Admin Email / Bulk Notifications Styles
+   ============================================================ */
+
+/* Email compose specific overrides */
+#sectionBulkNotifications .bulk-form-panel {
+  max-width: 900px;
+}
+
+#sectionBulkNotifications .form-col {
+  flex: 1;
+}
+
+/* Email preview modal */
+.email-preview-frame {
+  background: #fff;
+  border-radius: 8px;
+  padding: 32px;
+  max-width: 640px;
+  margin: 0 auto;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.email-preview-frame h1,
+.email-preview-frame h2,
+.email-preview-frame h3 {
+  color: #1a2233;
+  margin: 16px 0 8px;
+}
+.email-preview-frame a {
+  color: #1677FF;
+}
+.email-preview-frame img {
+  max-width: 100%;
+  border-radius: 6px;
+}
+
+/* History table status badges */
+.email-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.email-status--sent {
+  background: var(--teal-dim);
+  color: var(--teal);
+}
+.email-status--failed {
+  background: var(--coral-dim);
+  color: var(--coral);
+}
+.email-status--scheduled {
+  background: var(--gold-dim);
+  color: var(--gold);
+}
+.email-status--draft {
+  background: var(--bg);
+  color: var(--ink-dim);
+}
+
+/* Draft actions */
+.draft-actions {
+  display: flex;
+  gap: 6px;
+}
+.draft-actions button {
+  background: none;
+  border: 1px solid var(--hairline);
+  color: var(--ink-muted);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: .72rem;
+  cursor: pointer;
+  transition: all .15s;
+}
+.draft-actions button:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.draft-actions button.delete:hover {
+  border-color: var(--coral);
+  color: var(--coral);
+}

@@ -1,0 +1,90 @@
+[2026-07-26T21:17:05+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:17:10+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:17:42+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:17:46+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:17:50+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:17:58+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:18:27+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:19:16+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:20:24+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-07-26T21:33:00+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_copytrading_02e92a9173a9620e
+[2026-07-26T21:37:46+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_copytrading_ce9d865b945443c4
+[2026-07-26T21:54:58+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_copytrading_7f7842f2e0d77888
+[2026-07-28T17:58:23+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_b82a791514f2ce61
+[2026-07-29T11:11:54+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_27f881a5e36b748a
+[2026-07-29T12:10:28+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_6e12265d6d55d95a
+[2026-07-29T13:39:31+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_f05dd3066f5e0c88
+[2026-07-30T00:44:22+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_5f468c4c29c30a2c
+[2026-07-30T00:55:34+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_dcbf9c8f1a44c64c
+[2026-07-30T07:50:33+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_trading_9fa4eb16dbb68e38
+[2026-07-30T08:50:32+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_trading_68422608778585ed
+[2026-07-30T22:36:48+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_elite_f69d7203e23e6d1b
+[2026-08-01T22:33:58+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_copytrading_832626c47cbb47e9
+[2026-08-02T00:52:34+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_copytrading_33d615ea4e719c62
+[2026-08-02T09:57:26+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_5b2127ec07662ddc
+[2026-08-02T10:12:35+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_1df7ca63ad452eb5
+[2026-08-02T10:21:31+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_07a87080f2ca752a
+[2026-08-02T11:45:04+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_939acc9be6df5499
+[2026-08-02T11:47:32+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_16cf15a69967c3c6
+[2026-08-02T12:23:23+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_c6353439a1a7fc9d
+[2026-08-02T23:09:16+00:00] [INFO] Processing Card Payment for Ref: BMFH_grid_monthly_13442a8374b99e9c | Name: Effanga Effiom Bassey | Card ending in: 8608
+[2026-08-05T12:52:53+00:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-08-05T12:58:39+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_copytrading_7a654ce56889a010
+[2026-08-05T13:03:42+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_93ce78cc6fa4cf2a
+[2026-08-05T13:14:49+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_classes_online_d2ae75bdaf0be052
+[2026-08-06T20:41:43+02:00] [INFO] Direct STK Push call to https://api.korapay.com/merchant/api/v1/charges/mobile-money for Ref: BMFH_INDICATOR_SILVER_2FCBEC14D5D8
+[2026-08-06T20:41:44+02:00] [INFO] Direct STK Push returned HTTP 403. Initializing Kora Checkout session...
+[2026-08-06T20:41:44+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_INDICATOR_SILVER_2FCBEC14D5D8
+[2026-08-08T06:35:19+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_e8c7c7443d23da10
+[2026-08-08T06:35:30+00:00] [ERROR] Initialize error: Internal server error. It would be nice if you report this to us.
+[2026-08-08T06:35:42+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_98d88505ade94cda
+[2026-08-09T09:34:19+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_e3511e77792bb175
+[2026-08-09T09:48:51+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_4debebe2a12a61e6
+[2026-08-09T09:55:38+02:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-08-09T09:55:51+02:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-08-09T09:56:38+02:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-08-09T09:56:44+02:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-08-09T09:57:28+02:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-08-09T09:57:35+02:00] [ERROR] Payment initialization failed: KORA_SECRET_KEY missing
+[2026-08-09T09:58:24+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_229e1fe64b415bc5
+[2026-08-09T10:07:01+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_copytrading_e6f37c145584ca92
+[2026-08-09T13:42:06+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_INDICATOR_QUANTUM_EDGE_8C67FFE7AE77
+[2026-08-10T22:11:11+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_eb14816dfb45922f
+[2026-08-11T00:27:03+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_98bb3d444040d2c0
+[2026-08-11T00:31:22+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_64113e875cdf78b7
+[2026-08-11T10:14:37+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_93e71072158485f9
+[2026-08-11T11:10:42+02:00] [INFO] Initializing Kora Checkout session for Ref: testpay_1786439442
+[2026-08-11T11:10:45+02:00] [ERROR] Initialize error: The amount supplied does not meet transaction limit for any payment channel. Please check and try again | HTTP 409 | Ref: testpay_1786439442
+[2026-08-11T11:10:45+02:00] [DEBUG] Kora raw response: {"status":false,"code":"AA021","message":"The amount supplied does not meet transaction limit for any payment channel. Please check and try again","data":null}
+[2026-08-11T11:11:52+02:00] [INFO] Initializing Kora Checkout session for Ref: testpay_10_1786439512
+[2026-08-11T11:11:54+02:00] [INFO] Initializing Kora Checkout session for Ref: testpay_20_1786439514
+[2026-08-11T11:11:56+02:00] [INFO] Initializing Kora Checkout session for Ref: testpay_50_1786439516
+[2026-08-11T11:11:59+02:00] [INFO] Initializing Kora Checkout session for Ref: testpay_100_1786439519
+[2026-08-11T11:12:33+02:00] [INFO] Initializing Kora Checkout session for Ref: testpay_1786439553
+[2026-08-11T11:14:24+02:00] [INFO] Initializing Kora Checkout session for Ref: testpay_1786439664
+[2026-08-11T12:16:35+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_569cc0896b106d75
+[2026-08-11T15:39:26+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_8692da41da7fa71c
+[2026-08-12T08:23:27+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_c2e3450380851f81
+[2026-08-12T11:21:00+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_grid_monthly_f181f4915f94192d
+[2026-08-12T11:24:42+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_INDICATOR_QUANTUM_EDGE_F715B31235AF
+[2026-08-12T12:49:21+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_12f7073dcab1f5bd
+[2026-08-12T13:51:41+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_bc002b1cf481099a
+[2026-08-12T14:14:18+00:00] [INFO] Processing Card Payment for Ref: BMFH_grid_monthly_69e077eeff6d3ad7 | Name: Gheorghe A Burlacu | Card ending in: 0729
+[2026-08-12T14:14:18+00:00] [ERROR] Card charge failed: card payments is not permitted for merchant | HTTP 403 | Ref: BMFH_grid_monthly_69e077eeff6d3ad7
+[2026-08-12T14:14:18+00:00] [DEBUG] Kora card raw response: {"status":false,"message":"card payments is not permitted for merchant","data":null}
+[2026-08-12T14:16:50+00:00] [INFO] Processing Card Payment for Ref: BMFH_grid_monthly_5a8b8937b23bf24b | Name: Gheorghe A Burlacu | Card ending in: 0729
+[2026-08-12T14:16:50+00:00] [ERROR] Card charge failed: card payments is not permitted for merchant | HTTP 403 | Ref: BMFH_grid_monthly_5a8b8937b23bf24b
+[2026-08-12T14:16:50+00:00] [DEBUG] Kora card raw response: {"status":false,"message":"card payments is not permitted for merchant","data":null}
+[2026-08-12T14:16:55+00:00] [INFO] Processing Card Payment for Ref: BMFH_grid_monthly_90074993bd354f6f | Name: Gheorghe A Burlacu | Card ending in: 0729
+[2026-08-12T14:16:56+00:00] [ERROR] Card charge failed: card payments is not permitted for merchant | HTTP 403 | Ref: BMFH_grid_monthly_90074993bd354f6f
+[2026-08-12T14:16:56+00:00] [DEBUG] Kora card raw response: {"status":false,"message":"card payments is not permitted for merchant","data":null}
+[2026-08-12T14:17:10+00:00] [INFO] Processing Card Payment for Ref: BMFH_grid_monthly_7b1129a6fcddf174 | Name: Gheorghe A Burlacu | Card ending in: 0729
+[2026-08-12T14:17:10+00:00] [ERROR] Card charge failed: card payments is not permitted for merchant | HTTP 403 | Ref: BMFH_grid_monthly_7b1129a6fcddf174
+[2026-08-12T14:17:10+00:00] [DEBUG] Kora card raw response: {"status":false,"message":"card payments is not permitted for merchant","data":null}
+[2026-08-12T14:17:50+00:00] [INFO] Processing Card Payment for Ref: BMFH_grid_monthly_b73f4c68ea95fdb1 | Name: Gheorghe A Burlacu | Card ending in: 0729
+[2026-08-12T14:17:50+00:00] [ERROR] Card charge failed: card payments is not permitted for merchant | HTTP 403 | Ref: BMFH_grid_monthly_b73f4c68ea95fdb1
+[2026-08-12T14:17:50+00:00] [DEBUG] Kora card raw response: {"status":false,"message":"card payments is not permitted for merchant","data":null}
+[2026-08-12T14:19:11+00:00] [INFO] Processing Card Payment for Ref: BMFH_grid_monthly_27d24b0780b2e66a | Name: Burlacu Akos | Card ending in: 9480
+[2026-08-12T14:19:12+00:00] [ERROR] Card charge failed: card payments is not permitted for merchant | HTTP 403 | Ref: BMFH_grid_monthly_27d24b0780b2e66a
+[2026-08-12T14:19:12+00:00] [DEBUG] Kora card raw response: {"status":false,"message":"card payments is not permitted for merchant","data":null}
+[2026-08-12T15:43:40+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_bc90c6b261c492d8

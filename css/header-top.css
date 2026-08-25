@@ -1,0 +1,40 @@
+/* Premium Header Styles */
+.premium-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #101722;
+  border-bottom: 1px solid #1e2d42;
+  padding: 12px 20px;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 300;
+}
+.premium-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+}
+.premium-header .logo img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+.premium-header .search {
+  background: #151d2a;
+  border: 1px solid #1e2d42;
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #5b6475;
+  width: 200px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.premium-header .actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

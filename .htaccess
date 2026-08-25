@@ -1,0 +1,53 @@
+DirectoryIndex landing.php login.php index.html
+
+# Pass Authorization header to PHP (fix for FastCGI/Apache)
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Browser hardening headers.
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# Block access to sensitive files
+<FilesMatch "\.(sql|env)$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^(engine_config\.php|\.htaccess)$">
+    Require all denied
+</FilesMatch>
+
+# MIME type for Web App Manifest
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
+</IfModule>
+
+# Never cache HTML/PHP, Service Worker or Manifest
+<FilesMatch "\.(html|php)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+</FilesMatch>
+
+<FilesMatch "^(sw\.js|manifest\.webmanifest)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+    Header set Service-Worker-Allowed "/"
+</FilesMatch>
+
+# Cache CSS/JS/images for 1 hour, must revalidate
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+</FilesMatch>
+
+# Enable compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/manifest+json
+</IfModule>
+

@@ -1,0 +1,73 @@
+CREATE TABLE IF NOT EXISTS market_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    slug VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS market_posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    category_id INT NOT NULL,
+    author_id INT NOT NULL,
+    thumbnail_path VARCHAR(255) NULL,
+    summary TEXT NULL,
+    content LONGTEXT NOT NULL,
+    status ENUM('draft','published','archived') NOT NULL DEFAULT 'draft',
+    featured TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES market_categories(id) ON DELETE RESTRICT,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS market_alerts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    currency_pair VARCHAR(20) NOT NULL,
+    alert_time DATETIME NOT NULL,
+    description TEXT NOT NULL,
+    risk_level ENUM('Low','Medium','High') NOT NULL DEFAULT 'Low',
+    status ENUM('active','inactive','expired') NOT NULL DEFAULT 'active',
+    expires_at DATETIME NULL,
+    featured TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    author_id INT NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS market_documents (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    size BIGINT NOT NULL,
+    category_id INT NOT NULL,
+    status ENUM('active','inactive') NOT NULL DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    uploaded_by INT NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES market_categories(id) ON DELETE RESTRICT,
+    FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS market_links (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NULL,
+    url VARCHAR(500) NOT NULL,
+    button_text VARCHAR(100) NOT NULL DEFAULT 'Visit',
+    icon_class VARCHAR(100) NULL,
+    open_in_new_tab TINYINT(1) NOT NULL DEFAULT 0,
+    category_id INT NOT NULL,
+    status ENUM('active','inactive') NOT NULL DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_by INT NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES market_categories(id) ON DELETE RESTRICT,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
