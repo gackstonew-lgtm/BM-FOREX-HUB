@@ -608,6 +608,22 @@
     tbody.innerHTML = page.map(function(u){
       var lastLogin = u.last_login ? fmtDate(u.last_login) : '--';
       var country = countryName(u.country_code);
+      var statusVal = (u.status || 'active').toLowerCase();
+      var isSuspended = statusVal === 'suspended';
+      var isDeleted = statusVal === 'deleted';
+
+      var actionsHtml = '<button class="btn-primary-sm" onclick="viewUser(\''+u.id+'\')">View</button> ';
+      if (!isDeleted) {
+        if (isSuspended) {
+          actionsHtml += '<button class="btn-primary-sm" style="background:#f59e0b;border-color:#f59e0b;margin-left:2px;" onclick="reinstateUser(\''+u.id+'\')">Reinstate</button> ';
+        } else {
+          actionsHtml += '<button class="btn-primary-sm" style="background:#d97706;border-color:#d97706;margin-left:2px;" onclick="openSuspendUserModal(\''+u.id+'\')">Suspend</button> ';
+        }
+        actionsHtml += '<button class="btn-primary-sm" style="background:#ef4444;border-color:#ef4444;margin-left:2px;" onclick="openDeleteUserModal(\''+u.id+'\')">Delete</button>';
+      } else {
+        actionsHtml += '<span style="font-size:0.75rem;color:#94a3b8;font-style:italic;">Deleted</span>';
+      }
+
       return '<tr>'
         + '<td><strong>'+esc(u.username||u.first_name||'--')+'</strong></td>'
         + '<td>'+esc(u.email||'--')+'</td>'
@@ -616,8 +632,8 @@
         + '<td>'+esc(u.role||'user')+'</td>'
         + '<td>'+fmtDate(u.created_at)+'</td>'
         + '<td>'+lastLogin+'</td>'
-        + '<td><span class="account-status account-status--'+(u.status||'active')+'">'+esc(u.status||'active')+'</span></td>'
-        + '<td><button class="btn-primary-sm" onclick="viewUser(\''+u.id+'\')">View</button></td>'
+        + '<td><span class="account-status account-status--'+statusVal+'">'+esc(statusVal)+'</span></td>'
+        + '<td style="white-space:nowrap;">'+actionsHtml+'</td>'
         + '</tr>';
     }).join('');
     document.getElementById('tableCount').textContent = filtered.length + ' users';
@@ -637,11 +653,142 @@
       + '<div><strong>Role:</strong> '+esc(u.role||'user')+'</div>'
       + '<div><strong>Status:</strong> '+esc(u.status||'active')+'</div>'
       + '<div><strong>Joined:</strong> '+fmtDate(u.created_at)+'</div>'
-      + '<div><strong>Last Login:</strong> '+(u.last_login ? fmtDate(u.last_login) : '--')+'</div>'
+      + '<div><strong>Last Login:</strong> '+(u.last_sign_in_at ? fmtDate(u.last_sign_in_at) : (u.last_login ? fmtDate(u.last_login) : '--'))+'</div>'
       + '<div><strong>Country:</strong> '+countryName(u.country_code)+'</div>'
       + '</div>';
     openModal('userModal');
   };
+
+  /* ── User Suspend & Delete Actions ── */
+  window.openSuspendUserModal = function(id) {
+    var u = allUsers.find(function(x){ return x.id === id; });
+    if (!u) return;
+    document.getElementById('suspendUserId').value = u.id;
+    document.getElementById('suspendReason').value = '';
+    document.getElementById('suspendModalUserInfo').textContent = 'User: ' + (u.username || u.email || id) + ' (' + (u.email || 'No email') + ')';
+    openModal('suspendUserModal');
+  };
+
+  window.openDeleteUserModal = function(id) {
+    var u = allUsers.find(function(x){ return x.id === id; });
+    if (!u) return;
+    document.getElementById('deleteUserId').value = u.id;
+    document.getElementById('deleteTargetEmail').value = u.email || '';
+    document.getElementById('deleteConfirmationInput').value = '';
+    document.getElementById('deleteReason').value = '';
+    document.getElementById('deleteModalUserInfo').textContent = 'User: ' + (u.username || u.email || id) + ' (' + (u.email || 'No email') + ')';
+    openModal('deleteUserModal');
+  };
+
+  window.reinstateUser = function(id) {
+    var u = allUsers.find(function(x){ return x.id === id; });
+    if (!u) return;
+    if (!confirm('Are you sure you want to reinstate user "' + (u.email || u.username || id) + '"?')) return;
+
+    fetch('api/user-management.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reinstate', user_id: id })
+    }).then(function(r){ return r.json(); }).then(function(res){
+      if (res.success) {
+        alert(res.message || 'User reinstated successfully.');
+        loaded.users = false;
+        loadUsers();
+      } else {
+        alert('Error: ' + (res.error || 'Failed to reinstate user.'));
+      }
+    }).catch(function(err){
+      alert('Network error while reinstating user.');
+    });
+  };
+
+  var suspendForm = document.getElementById('suspendUserForm');
+  if (suspendForm) {
+    suspendForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var userId = document.getElementById('suspendUserId').value;
+      var reason = document.getElementById('suspendReason').value.trim();
+      var submitBtn = document.getElementById('suspendSubmitBtn');
+
+      if (reason.length < 5) {
+        alert('Please provide a suspension reason of at least 5 characters.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Suspending...';
+
+      fetch('api/user-management.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'suspend', user_id: userId, reason: reason })
+      }).then(function(r){ return r.json(); }).then(function(res){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirm Suspension';
+
+        if (res.success) {
+          closeModal('suspendUserModal');
+          alert(res.message || 'User account suspended successfully.');
+          loaded.users = false;
+          loadUsers();
+        } else {
+          alert('Error: ' + (res.error || 'Failed to suspend user account.'));
+        }
+      }).catch(function(err){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirm Suspension';
+        alert('Network error while executing suspension.');
+      });
+    });
+  }
+
+  var deleteForm = document.getElementById('deleteUserForm');
+  if (deleteForm) {
+    deleteForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var userId = document.getElementById('deleteUserId').value;
+      var targetEmail = document.getElementById('deleteTargetEmail').value;
+      var confirmation = document.getElementById('deleteConfirmationInput').value.trim();
+      var reason = document.getElementById('deleteReason').value.trim();
+      var submitBtn = document.getElementById('deleteSubmitBtn');
+
+      if (reason.length < 5) {
+        alert('Please provide a mandatory deletion reason of at least 5 characters.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Deleting...';
+
+      fetch('api/user-management.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'delete',
+          user_id: userId,
+          target_email: targetEmail,
+          confirmation: confirmation,
+          reason: reason
+        })
+      }).then(function(r){ return r.json(); }).then(function(res){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirm Soft-Delete';
+
+        if (res.success) {
+          closeModal('deleteUserModal');
+          alert(res.message || 'User account deleted and PII anonymized successfully.');
+          loaded.users = false;
+          loadUsers();
+        } else {
+          alert('Error: ' + (res.error || 'Failed to delete user account.'));
+        }
+      }).catch(function(err){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirm Soft-Delete';
+        alert('Network error while deleting user.');
+      });
+    });
+  }
 
   /* ── Payments ── */
   var allPayments = [];

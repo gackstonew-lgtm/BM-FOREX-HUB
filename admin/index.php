@@ -951,6 +951,57 @@ $adminUser = $_SESSION['admin_user'] ?? 'Admin';
     </div>
   </div>
 
+  <!-- Suspend User Modal -->
+  <div class="modal-overlay" id="suspendUserModal">
+    <div class="modal" style="max-width:480px;">
+      <button class="modal-close" id="suspendModalClose">&times;</button>
+      <h3 class="modal-title" style="color:#f59e0b;">Suspend User Account</h3>
+      <div id="suspendModalUserInfo" style="margin-bottom:12px;font-size:0.85rem;color:var(--ink-dim, #94a3b8);"></div>
+      <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:10px 12px;border-radius:6px;font-size:0.8rem;color:#f59e0b;margin-bottom:14px;">
+        <strong>Security Notice:</strong> Suspending this user will immediately ban their account in Supabase Authentication and invalidate all active user sessions.
+      </div>
+      <form id="suspendUserForm">
+        <input type="hidden" id="suspendUserId">
+        <div class="form-group">
+          <label>Mandatory Suspension Reason *</label>
+          <textarea id="suspendReason" rows="3" placeholder="Provide audit trail reason (e.g. Suspicious login activity, AML review pending...)" required style="width:100%;box-sizing:border-box;"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
+          <button type="button" class="btn-secondary-admin" onclick="closeModal('suspendUserModal')">Cancel</button>
+          <button type="submit" class="btn-primary-sm" id="suspendSubmitBtn" style="background:#f59e0b;border-color:#f59e0b;">Confirm Suspension</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete User Modal -->
+  <div class="modal-overlay" id="deleteUserModal">
+    <div class="modal" style="max-width:500px;">
+      <button class="modal-close" id="deleteModalClose">&times;</button>
+      <h3 class="modal-title" style="color:#ef4444;">Delete User Account (GDPR Soft-Delete)</h3>
+      <div id="deleteModalUserInfo" style="margin-bottom:12px;font-size:0.85rem;color:var(--ink-dim, #94a3b8);"></div>
+      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:10px 12px;border-radius:6px;font-size:0.8rem;color:#ef4444;margin-bottom:14px;">
+        <strong>Financial Compliance Notice:</strong> Deleting this user purges their profile from Supabase Authentication backend while soft-deleting and anonymizing PII in the database to preserve financial transaction ledgers.
+      </div>
+      <form id="deleteUserForm">
+        <input type="hidden" id="deleteUserId">
+        <input type="hidden" id="deleteTargetEmail">
+        <div class="form-group">
+          <label>Type target email or "<strong style="color:#ef4444;">DELETE</strong>" to confirm *</label>
+          <input type="text" id="deleteConfirmationInput" placeholder="Type email or DELETE" required style="width:100%;box-sizing:border-box;">
+        </div>
+        <div class="form-group">
+          <label>Mandatory Deletion Reason *</label>
+          <textarea id="deleteReason" rows="3" placeholder="Provide compliance audit trail reason (e.g. Account closure request, GDPR right to be forgotten...)" required style="width:100%;box-sizing:border-box;"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
+          <button type="button" class="btn-secondary-admin" onclick="closeModal('deleteUserModal')">Cancel</button>
+          <button type="submit" class="btn-primary-sm" id="deleteSubmitBtn" style="background:#ef4444;border-color:#ef4444;">Confirm Soft-Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Add Payment Modal -->
   <div class="modal-overlay" id="paymentModal">
     <div class="modal">
@@ -1299,6 +1350,7 @@ $adminUser = $_SESSION['admin_user'] ?? 'Admin';
                 <option value="elite_intermediate">BM Elites — $2,000 USD Intermediate Tier</option>
                 <option value="elite_advanced">BM Elites — $3,000 USD Advanced Tier</option>
                 <option value="elite_professional">BM Elites — $5,000 USD Professional Tier</option>
+                <option value="elite_premium">BM Elites — $6,000 USD Premium Tier</option>
                 <option value="elite_elite">BM Elites — $10,000 USD VIP Elite Tier</option>
               </optgroup>
             </select>
@@ -1373,6 +1425,7 @@ $adminUser = $_SESSION['admin_user'] ?? 'Admin';
             <option value="elite_intermediate">BM Elites — $2,000 USD</option>
             <option value="elite_advanced">BM Elites — $3,000 USD</option>
             <option value="elite_professional">BM Elites — $5,000 USD</option>
+            <option value="elite_premium">BM Elites — $6,000 USD</option>
             <option value="elite_elite" selected>BM Elites — $10,000 USD</option>
           </select>
         </div>

@@ -574,7 +574,11 @@ $elitePlans = $membership->getElitesPlans();
               <span class="sp-elite-tier__amount">$5,000</span>
               <span class="sp-elite-tier__usd">Professional Tier</span>
             </a>
-            <a href="subscribe.php?plan=elite_elite" class="sp-elite-tier sp-elite-tier--full">
+            <a href="subscribe.php?plan=elite_premium" class="sp-elite-tier">
+              <span class="sp-elite-tier__amount">$6,000</span>
+              <span class="sp-elite-tier__usd">Premium Tier</span>
+            </a>
+            <a href="subscribe.php?plan=elite_elite" class="sp-elite-tier">
               <span class="sp-elite-tier__amount">$10,000</span>
               <span class="sp-elite-tier__usd">Ultimate VIP Elite Tier</span>
             </a>
@@ -671,6 +675,7 @@ $elitePlans = $membership->getElitesPlans();
     'elite_intermediate': 'BM Elites — $2,000 USD Intermediate Tier',
     'elite_advanced': 'BM Elites — $3,000 USD Advanced Tier',
     'elite_professional': 'BM Elites — $5,000 USD Professional Tier',
+    'elite_premium': 'BM Elites — $6,000 USD Premium Tier',
     'elite_elite': 'BM Elites — $10,000 USD VIP Elite Tier',
     'all': 'BM Elites — Permanent Admin / VIP Access'
   };

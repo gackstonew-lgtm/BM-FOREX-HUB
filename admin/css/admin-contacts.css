@@ -55,9 +55,14 @@
   background: var(--bg);
   color: var(--ink-dim);
 }
-.account-status--banned {
-  background: var(--coral-dim);
-  color: var(--coral);
+.account-status--banned,
+.account-status--suspended {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+.account-status--deleted {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
 }
 
 /* Quick action buttons in contacts table */

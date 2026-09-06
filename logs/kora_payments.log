@@ -88,3 +88,7 @@
 [2026-08-12T14:19:12+00:00] [ERROR] Card charge failed: card payments is not permitted for merchant | HTTP 403 | Ref: BMFH_grid_monthly_27d24b0780b2e66a
 [2026-08-12T14:19:12+00:00] [DEBUG] Kora card raw response: {"status":false,"message":"card payments is not permitted for merchant","data":null}
 [2026-08-12T15:43:40+00:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_bc90c6b261c492d8
+[2026-09-06T08:27:37+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_premium_97fef28ae4f8697b
+[2026-09-06T08:27:39+02:00] [ERROR] Initialize error: The amount supplied does not meet transaction limit for any payment channel. Please check and try again | HTTP 409 | Ref: BMFH_elite_premium_97fef28ae4f8697b
+[2026-09-06T08:27:39+02:00] [DEBUG] Kora raw response: {"status":false,"code":"AA021","message":"The amount supplied does not meet transaction limit for any payment channel. Please check and try again","data":null}
+[2026-09-06T08:28:02+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_09038bec19f4c831

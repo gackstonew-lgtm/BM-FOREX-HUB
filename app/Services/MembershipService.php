@@ -13,6 +13,7 @@ class MembershipService {
     const PLAN_ELITE_INTERMEDIATE = 'elite_intermediate';
     const PLAN_ELITE_ADVANCED     = 'elite_advanced';
     const PLAN_ELITE_PROFESSIONAL = 'elite_professional';
+    const PLAN_ELITE_PREMIUM      = 'elite_premium';
     const PLAN_ELITE_ELITE        = 'elite_elite';
 
     // ── Indicator Platform Plans (Single $299 One-Time Payment) ──────
@@ -32,6 +33,7 @@ class MembershipService {
         self::PLAN_ELITE_INTERMEDIATE => 'BM Elites — $2,000 USD',
         self::PLAN_ELITE_ADVANCED     => 'BM Elites — $3,000 USD',
         self::PLAN_ELITE_PROFESSIONAL => 'BM Elites — $5,000 USD',
+        self::PLAN_ELITE_PREMIUM      => 'BM Elites — $6,000 USD',
         self::PLAN_ELITE_ELITE        => 'BM Elites — $10,000 USD',
 
         // Indicator Platform ($299 One-Time)
@@ -51,6 +53,7 @@ class MembershipService {
         self::PLAN_ELITE_INTERMEDIATE => 2000.00,
         self::PLAN_ELITE_ADVANCED     => 3000.00,
         self::PLAN_ELITE_PROFESSIONAL => 5000.00,
+        self::PLAN_ELITE_PREMIUM      => 6000.00,
         self::PLAN_ELITE_ELITE        => 10000.00,
 
         // Indicator Platform ($299 One-Time)
@@ -121,6 +124,7 @@ class MembershipService {
             ['plan_name' => 'Intermediate', 'plan_key' => self::PLAN_ELITE_INTERMEDIATE, 'amount_usd' => self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_INTERMEDIATE], 'amount_kes' => round(self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_INTERMEDIATE] * $rate, 2), 'description' => 'BM Elites Intermediate Investment'],
             ['plan_name' => 'Advanced', 'plan_key' => self::PLAN_ELITE_ADVANCED, 'amount_usd' => self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_ADVANCED], 'amount_kes' => round(self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_ADVANCED] * $rate, 2), 'description' => 'BM Elites Advanced Investment'],
             ['plan_name' => 'Professional', 'plan_key' => self::PLAN_ELITE_PROFESSIONAL, 'amount_usd' => self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_PROFESSIONAL], 'amount_kes' => round(self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_PROFESSIONAL] * $rate, 2), 'description' => 'BM Elites Professional Investment'],
+            ['plan_name' => 'Premium', 'plan_key' => self::PLAN_ELITE_PREMIUM, 'amount_usd' => self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_PREMIUM], 'amount_kes' => round(self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_PREMIUM] * $rate, 2), 'description' => 'BM Elites Premium Investment'],
             ['plan_name' => 'Elite', 'plan_key' => self::PLAN_ELITE_ELITE, 'amount_usd' => self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_ELITE], 'amount_kes' => round(self::PLAN_AMOUNTS_USD[self::PLAN_ELITE_ELITE] * $rate, 2), 'description' => 'BM Elites Ultimate VIP Investment'],
         ];
     }

@@ -323,7 +323,11 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
           <span class="sp-elite-tier__amount">$5,000</span>
           <span class="sp-elite-tier__usd">625,000 KES</span>
         </button>
-        <button class="sp-elite-tier sp-elite-tier--full" type="button" onclick="spSelect('elite_elite')">
+        <button class="sp-elite-tier" type="button" onclick="spSelect('elite_premium')">
+          <span class="sp-elite-tier__amount">$6,000</span>
+          <span class="sp-elite-tier__usd">750,000 KES</span>
+        </button>
+        <button class="sp-elite-tier" type="button" onclick="spSelect('elite_elite')">
           <span class="sp-elite-tier__amount">$10,000</span>
           <span class="sp-elite-tier__usd">1,250,000 KES</span>
         </button>

@@ -123,6 +123,12 @@ $KORA_PLANS_USD = [
         'duration_days' => 36500,
         'description'   => 'BM Elites Professional Investment',
     ],
+    'elite_premium' => [
+        'name'          => 'BM Elites — $6,000 USD',
+        'amount_usd'    => 6000.00,
+        'duration_days' => 36500,
+        'description'   => 'BM Elites Premium Investment',
+    ],
     'elite_elite' => [
         'name'          => 'BM Elites — $10,000 USD',
         'amount_usd'    => 10000.00,

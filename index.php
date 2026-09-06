@@ -2781,6 +2781,7 @@ function closeSubscriptionQuickModal() {
       'elite_intermediate': 'BM Elites — $2,000 USD',
       'elite_advanced': 'BM Elites — $3,000 USD',
       'elite_professional': 'BM Elites — $5,000 USD',
+      'elite_premium': 'BM Elites — $6,000 USD',
       'elite_elite': 'BM Elites — $10,000 USD',
       'all': 'BM Elites — All Access Pass'
     };
