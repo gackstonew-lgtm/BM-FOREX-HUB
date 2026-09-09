@@ -160,8 +160,23 @@ class IndicatorAccessService
             'updated_at'           => $now,
         ];
 
-        // Write to Supabase
-        $res = $this->supabasePost('indicator_subscriptions', $data);
+        // Write to Supabase subscriptions table
+        $supaSub = [
+            'id'          => $id,
+            'user_id'     => $params['user_id'] ?? null,
+            'username'    => $params['user_name'] ?? ($params['user_email'] ? explode('@', $params['user_email'])[0] : 'Subscriber'),
+            'plan'        => 'vip',
+            'plan_key'    => $params['plan_key'] ?? 'indicator_quantum_edge',
+            'plan_name'   => $params['plan_name'] ?? 'BM Quantum Edge ($299 One-Time)',
+            'amount_kes'  => (float)($params['amount_paid_kes'] ?? 0),
+            'status'      => 'active',
+            'granted_by'  => 'Payment Gateway',
+            'starts_at'   => $now,
+            'expires_at'  => $expiresAt,
+            'notes'       => 'BM Quantum Edge Indicator Access',
+            'created_at'  => $now,
+        ];
+        $this->supabasePost('subscriptions', $supaSub);
 
         // Always write to SQLite as fallback
         $this->activateSubscriptionSQLite($data);
@@ -187,7 +202,10 @@ class IndicatorAccessService
             'updated_at'        => date('c'),
         ];
 
-        $this->supabasePatch("indicator_subscriptions", "id=eq.$subscriptionId", $data);
+        $this->supabasePatch("subscriptions", "id=eq.$subscriptionId", [
+            'status' => 'cancelled',
+            'notes'  => "Revoked by admin $adminEmail on " . date('Y-m-d H:i')
+        ]);
         $this->revokeAccessSQLite($subscriptionId);
 
         $this->logAction($subscriptionId, null, null, 'access_revoked', null, ['admin' => $adminEmail]);
@@ -214,7 +232,10 @@ class IndicatorAccessService
             $data['premium_dashboard'] = ($planKey === 'indicator_vip');
         }
 
-        $this->supabasePatch("indicator_subscriptions", "id=eq.$subscriptionId", $data);
+        $this->supabasePatch("subscriptions", "id=eq.$subscriptionId", [
+            'status' => 'active',
+            'notes'  => "Access granted by admin $adminEmail on " . date('Y-m-d H:i')
+        ]);
         $this->grantAccessSQLite($subscriptionId, $data);
 
         $this->logAction($subscriptionId, null, null, 'access_granted', null, ['admin' => $adminEmail]);
@@ -243,7 +264,6 @@ class IndicatorAccessService
             'details'    => array_merge($details, $subscriptionId ? ['subscription_id' => $subscriptionId] : []),
             'created_at' => date('c'),
         ];
-        $this->supabasePost('indicator_access_log', $data);
         $this->logActionSQLite($data);
     }
 
@@ -254,15 +274,10 @@ class IndicatorAccessService
     {
         // Supabase
         $this->supabasePatch(
-            'indicator_subscriptions',
+            'subscriptions',
             'status=eq.active&expires_at=lt.' . urlencode(date('c')),
             [
-                'status'            => 'expired',
-                'indicator_access'  => false,
-                'signals_access'    => false,
-                'ai_access'         => false,
-                'premium_dashboard' => false,
-                'updated_at'        => date('c'),
+                'status' => 'expired',
             ]
         );
 
@@ -275,21 +290,54 @@ class IndicatorAccessService
     private function fetchActiveSubscription(string $userId): ?array
     {
         $now = urlencode(date('c'));
-        $url = $this->supabaseUrl . "/rest/v1/indicator_subscriptions"
+        $url = $this->supabaseUrl . "/rest/v1/subscriptions"
              . "?user_id=eq.$userId"
              . "&status=eq.active"
              . "&expires_at=gt.$now"
              . "&order=expires_at.desc&limit=1";
 
         $resp = $this->supabaseGet($url);
-        return isset($resp[0]) ? $resp[0] : null;
+        if (isset($resp[0])) {
+            $r = $resp[0];
+            $pk = $r['plan_key'] ?? $r['plan'];
+            if (strpos($pk, 'indicator_') === 0 || $r['plan'] === 'vip' || $pk === 'vip') {
+                return [
+                    'id'                   => $r['id'],
+                    'user_id'              => $r['user_id'],
+                    'user_name'            => $r['username'] ?? '',
+                    'user_email'           => '',
+                    'plan_key'             => $pk,
+                    'plan_name'            => $r['plan_name'] ?? 'BM Quantum Edge',
+                    'status'               => $r['status'] ?? 'active',
+                    'indicator_access'     => true,
+                    'signals_access'       => true,
+                    'ai_access'            => true,
+                    'premium_dashboard'    => true,
+                    'tradingview_username' => null,
+                    'expires_at'           => $r['expires_at'],
+                ];
+            }
+        }
+        return null;
     }
 
     private function fetchSubscriptionById(string $id): ?array
     {
-        $url = $this->supabaseUrl . "/rest/v1/indicator_subscriptions?id=eq.$id&limit=1";
+        $url = $this->supabaseUrl . "/rest/v1/subscriptions?id=eq.$id&limit=1";
         $resp = $this->supabaseGet($url);
-        return isset($resp[0]) ? $resp[0] : null;
+        if (isset($resp[0])) {
+            $r = $resp[0];
+            return [
+                'id'         => $r['id'],
+                'user_id'    => $r['user_id'],
+                'user_name'  => $r['username'] ?? '',
+                'plan_key'   => $r['plan_key'] ?? $r['plan'],
+                'plan_name'  => $r['plan_name'] ?? 'BM Quantum Edge',
+                'status'     => $r['status'] ?? 'active',
+                'expires_at' => $r['expires_at'],
+            ];
+        }
+        return null;
     }
 
     private function supabaseGet(string $url): ?array

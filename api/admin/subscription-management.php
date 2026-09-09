@@ -32,6 +32,14 @@ if (!class_exists('App\Services\MembershipService')) {
     }
 }
 
+if (!class_exists('App\Services\CopyTradingService')) {
+    if (file_exists(__DIR__ . '/../../app/Services/CopyTradingService.php')) {
+        require_once __DIR__ . '/../../app/Services/CopyTradingService.php';
+    } elseif (file_exists(__DIR__ . '/../app/Services/CopyTradingService.php')) {
+        require_once __DIR__ . '/../app/Services/CopyTradingService.php';
+    }
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 
@@ -121,6 +129,84 @@ try {
             }
             exit;
 
+        // ── List all Copy Traders ───────────────────────────────────
+        case 'list_copy_traders':
+            if (class_exists('App\Services\CopyTradingService')) {
+                $traders = \App\Services\CopyTradingService::getAllCopyTraders();
+                echo json_encode([
+                    'success' => true,
+                    'data'    => $traders,
+                    'total'   => count($traders)
+                ]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'CopyTradingService unavailable.']);
+            }
+            exit;
+
+        // ── Grant Copy Trading Access ────────────────────────────────
+        case 'grant_copytrading':
+            $username = trim($input['username'] ?? '');
+            $durationDays = (int)($input['duration_days'] ?? ($input['duration'] ?? 36500));
+            $notes = trim($input['notes'] ?? 'Copy Trading Integration Access');
+
+            if (empty($username)) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Target username or email is required.']);
+                exit;
+            }
+
+            $mt5Payload = null;
+            if (!empty($input['broker_name']) || !empty($input['mt5_login'])) {
+                $mt5Payload = [
+                    'broker_name'  => trim($input['broker_name'] ?? ''),
+                    'mt5_login'    => trim($input['mt5_login'] ?? ''),
+                    'mt5_password' => $input['mt5_password'] ?? '',
+                    'mt5_server'   => trim($input['mt5_server'] ?? ''),
+                    'notes'        => $notes,
+                    'status'       => trim($input['status'] ?? 'Active')
+                ];
+            }
+
+            $result = \App\Services\CopyTradingService::grantCopyTradingAccess($adminUser, $username, $durationDays, $notes, $mt5Payload);
+            if ($result['success']) {
+                echo json_encode($result);
+            } else {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => $result['message'] ?? 'Failed to grant Copy Trading.']);
+            }
+            exit;
+
+        // ── Update Copy Trader Details & Status ──────────────────────
+        case 'update_copy_trader':
+            $id = trim($input['id'] ?? '');
+            if (empty($id)) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Copy Trader ID is required.']);
+                exit;
+            }
+
+            $result = \App\Services\CopyTradingService::updateCopyTraderDetails($id, $input, $adminUser);
+            echo json_encode($result);
+            exit;
+
+        // ── Reveal Copy Trader MT5 Password for Admin ────────────────
+        case 'reveal_copy_trader_password':
+            $id = trim($input['id'] ?? '');
+            if (empty($id)) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Copy Trader ID is required.']);
+                exit;
+            }
+
+            $result = \App\Services\CopyTradingService::revealPasswordForAdmin($id, $adminUser);
+            if ($result['success']) {
+                echo json_encode($result);
+            } else {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => $result['message'] ?? 'Password not found.']);
+            }
+            exit;
+
         // ── Revoke Subscription ──────────────────────────────────────
         case 'revoke_subscription':
             $id = trim($input['id'] ?? '');
@@ -144,54 +230,13 @@ try {
                 exit;
             }
 
-            $pdo = function_exists('getMarketPDO') ? getMarketPDO() : null;
-            if (!$pdo) {
-                http_response_code(500);
-                echo json_encode(['success' => false, 'error' => 'Database connection unavailable.']);
-                exit;
+            $result = $service->extendSubscription($id, $days, $adminUser);
+            if ($result['success']) {
+                echo json_encode($result);
+            } else {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => $result['message'] ?? 'Failed to extend subscription.']);
             }
-
-            $stmt = $pdo->prepare("SELECT * FROM subscriptions WHERE id = ? LIMIT 1");
-            $stmt->execute([$id]);
-            $sub = $stmt->fetch();
-
-            if (!$sub) {
-                // Try finding in user_subscriptions
-                $stmt2 = $pdo->prepare("SELECT * FROM user_subscriptions WHERE id = ? LIMIT 1");
-                $stmt2->execute([$id]);
-                $sub = $stmt2->fetch();
-            }
-
-            if (!$sub) {
-                http_response_code(404);
-                echo json_encode(['success' => false, 'error' => 'Subscription record not found.']);
-                exit;
-            }
-
-            $curExpiresTs = strtotime($sub['expires_at'] ?? 'now');
-            $baseTs = max(time(), $curExpiresTs);
-            $newExpiresTs = strtotime("+$days days", $baseTs);
-            $newExpiresIso = date('c', $newExpiresTs);
-            $nowIso = date('c');
-
-            $upStmt = $pdo->prepare("UPDATE subscriptions SET expires_at = ?, status = 'active', updated_at = ? WHERE id = ?");
-            $upStmt->execute([$newExpiresIso, $nowIso, $id]);
-
-            $upStmt2 = $pdo->prepare("UPDATE user_subscriptions SET expires_at = ?, status = 'active', updated_at = ? WHERE id = ?");
-            $upStmt2->execute([$newExpiresIso, $nowIso, $id]);
-
-            if (function_exists('sb_admin_post')) {
-                sb_admin_post('subscriptions?id=eq.' . urlencode($id), ['expires_at' => $newExpiresIso, 'status' => 'active', 'updated_at' => $nowIso], 'PATCH');
-                sb_admin_post('user_subscriptions?id=eq.' . urlencode($id), ['expires_at' => $newExpiresIso, 'status' => 'active', 'updated_at' => $nowIso], 'PATCH');
-            }
-
-            $service->logAdminAction($adminUser, 'EXTEND_SUBSCRIPTION', $sub['user_id'] ?? $sub['username'], $sub['plan'] ?? 'Subscription', $sub['status'] ?? 'active', 'active', "Extended by $days days (new expiry: " . date('Y-m-d H:i', $newExpiresTs) . ")");
-
-            echo json_encode([
-                'success' => true,
-                'message' => "Subscription extended successfully by $days days. New expiry: " . date('Y-m-d H:i', $newExpiresTs),
-                'new_expires_at' => $newExpiresIso
-            ]);
             exit;
 
         default:

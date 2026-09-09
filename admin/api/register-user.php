@@ -47,30 +47,62 @@ if (empty($password) || strlen($password) < 8) {
 $supabase_url = SUPABASE_URL;
 $service_key  = SUPABASE_SERVICE;
 
-// Check if user already exists
-$checkCtx = stream_context_create([
-    'http' => [
-        'method' => 'GET',
-        'header' => "apikey: $service_key\r\nAuthorization: Bearer $service_key",
-        'timeout' => 10,
-        'ignore_errors' => true,
-    ],
-]);
-$checkResp = @file_get_contents("$supabase_url/auth/v1/admin/users?email=$email", false, $checkCtx);
-if ($checkResp) {
-    $checkData = json_decode($checkResp, true);
-    $existingUsers = $checkData['users'] ?? $checkData ?? [];
-    foreach ($existingUsers as $u) {
-        if (strtolower($u['email'] ?? '') === $email) {
-            $otpResult = OtpService::generateAndSend($email, 'signup');
-            send_json([
-                'success' => true,
-                'user' => ['id' => $u['id'], 'email' => $email],
-                'otp_sent' => !empty($otpResult['success']),
-                'message' => 'Account already exists. A new verification code has been sent.'
-            ]);
+// Helper function to find user
+function find_existing_user($email, $supabase_url, $service_key) {
+    $ctx = stream_context_create([
+        'http' => [
+            'method' => 'GET',
+            'header' => "apikey: $service_key\r\nAuthorization: Bearer $service_key",
+            'timeout' => 10,
+            'ignore_errors' => true,
+        ],
+    ]);
+
+    // 1. PostgREST profiles lookup
+    $resp = @file_get_contents("$supabase_url/rest/v1/profiles?email=ilike." . urlencode($email) . "&select=id,email", false, $ctx);
+    if ($resp) {
+        $profiles = json_decode($resp, true);
+        if (is_array($profiles) && !empty($profiles)) {
+            foreach ($profiles as $p) {
+                if (strtolower($p['email'] ?? '') === $email) {
+                    return $p['id'];
+                }
+            }
         }
     }
+
+    // 2. GoTrue paginated admin users lookup
+    $page = 1;
+    $perPage = 1000;
+    while (true) {
+        $usersResp = @file_get_contents("$supabase_url/auth/v1/admin/users?page=$page&per_page=$perPage", false, $ctx);
+        if (!$usersResp) break;
+        $data = json_decode($usersResp, true);
+        $users = $data['users'] ?? (is_array($data) ? $data : []);
+        if (empty($users) || !is_array($users)) break;
+
+        foreach ($users as $u) {
+            if (strtolower($u['email'] ?? '') === $email) {
+                return $u['id'];
+            }
+        }
+
+        if (count($users) < $perPage) break;
+        $page++;
+    }
+
+    return null;
+}
+
+$existingUserId = find_existing_user($email, $supabase_url, $service_key);
+if ($existingUserId) {
+    $otpResult = OtpService::generateAndSend($email, 'signup');
+    send_json([
+        'success' => true,
+        'user' => ['id' => $existingUserId, 'email' => $email],
+        'otp_sent' => !empty($otpResult['success']),
+        'message' => 'Account already exists. A new verification code has been sent.'
+    ]);
 }
 
 // Create user via Admin API
@@ -103,6 +135,18 @@ if (isset($http_response_header)) {
 }
 
 if (!$createResp || $httpCode >= 400) {
+    if ($httpCode === 422 || stripos($createResp ?: '', 'already') !== false) {
+        $existingId = find_existing_user($email, $supabase_url, $service_key);
+        if ($existingId) {
+            $otpResult = OtpService::generateAndSend($email, 'signup');
+            send_json([
+                'success' => true,
+                'user' => ['id' => $existingId, 'email' => $email],
+                'otp_sent' => !empty($otpResult['success']),
+                'message' => 'Account already exists. A new verification code has been sent.'
+            ]);
+        }
+    }
     error_log("BMFH register-user create failed: HTTP $httpCode | resp=" . substr($createResp ?: '', 0, 500));
     send_json(['error' => 'Failed to create account. Please try again.'], 500);
 }
@@ -113,6 +157,32 @@ $userId = $created['id'] ?? null;
 if (!$userId) {
     send_json(['error' => 'Account creation failed. Please try again.'], 500);
 }
+
+// Auto-insert profile record into Supabase profiles table
+$profilePayload = json_encode([
+    'id'           => $userId,
+    'username'     => $metadata['username'] ?? explode('@', $email)[0],
+    'email'        => $email,
+    'first_name'   => $metadata['first_name'] ?? '',
+    'last_name'    => $metadata['last_name'] ?? '',
+    'country_code' => $metadata['country_code'] ?? '',
+    'phone'        => $metadata['phone'] ?? ($metadata['phone_number'] ?? ''),
+    'phone_number' => $metadata['phone'] ?? ($metadata['phone_number'] ?? ''),
+    'role'         => 'user',
+    'status'       => 'active',
+    'created_at'   => date('c'),
+]);
+
+$profileCtx = stream_context_create([
+    'http' => [
+        'method' => 'POST',
+        'header' => "apikey: $service_key\r\nAuthorization: Bearer $service_key\r\nContent-Type: application/json\r\nPrefer: resolution=merge-duplicates",
+        'content' => $profilePayload,
+        'timeout' => 10,
+        'ignore_errors' => true,
+    ],
+]);
+@file_get_contents("$supabase_url/rest/v1/profiles", false, $profileCtx);
 
 // Send OTP via Resend
 $otpResult = OtpService::generateAndSend($email, 'signup');

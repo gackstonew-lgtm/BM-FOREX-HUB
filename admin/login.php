@@ -34,6 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       curl_close($ch);
       $auth = json_decode($resp, true);
 
+      $permanent_admins = ['bonfacewana3072@gmail.com', 'langatgift6@gmail.com', 'gackstoneb@gmail.com'];
+      $is_perm_admin = in_array(strtolower($email), $permanent_admins, true);
+
       if ($code === 200 && !empty($auth['access_token'])) {
         $parts = explode('.', $auth['access_token']);
         $payload = json_decode(base64_decode($parts[1]), true);
@@ -44,6 +47,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'select' => 'id,username,role',
             'id' => 'eq.' . $user_id,
           ]);
+
+          if ($is_perm_admin) {
+            $currentProfile = (!empty($email_check['data']) && is_array($email_check['data'])) ? $email_check['data'][0] : null;
+            $adminUname = $currentProfile['username'] ?? explode('@', $email)[0];
+            if (!$currentProfile) {
+              sb_admin_post('profiles', [
+                'id'         => $user_id,
+                'username'   => $adminUname,
+                'email'      => $email,
+                'role'       => 'admin',
+                'status'     => 'active',
+                'created_at' => date('c'),
+              ]);
+            } elseif (($currentProfile['role'] ?? '') !== 'admin') {
+              sb_admin_patch('profiles', ['id' => 'eq.' . $user_id], ['role' => 'admin']);
+            }
+            $email_check = ['code' => 200, 'data' => [['id' => $user_id, 'username' => $adminUname, 'role' => 'admin']]];
+          }
         } else {
           $email_check = ['code' => 404, 'data' => null];
         }

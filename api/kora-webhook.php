@@ -123,9 +123,18 @@ if ($is_successful) {
     $plan_config = $KORA_PLANS[$plan] ?? null;
     $duration    = $plan_config['duration_days'] ?? 30;
 
+    require_once __DIR__ . '/../app/Services/MembershipService.php';
+    $membershipService = new \App\Services\MembershipService();
+    $mapped = $membershipService->mapPlanForDatabase($plan);
+
     $sub_data = [
         'user_id'    => $user_id,
-        'plan'       => $plan,
+        'plan'       => $mapped['base_plan'],
+        'plan_key'   => $mapped['plan_key'],
+        'plan_name'  => $mapped['plan_name'],
+        'amount_usd' => $mapped['amount_usd'] ?: ($payment['amount_usd'] ?? 0),
+        'amount_kes' => $payment['amount'] ?? $mapped['amount_kes'],
+        'currency'   => $payment['currency'] ?? 'KES',
         'starts_at'  => date('c'),
         'expires_at' => date('c', strtotime("+{$duration} days")),
         'payment_id' => $payment['id'],

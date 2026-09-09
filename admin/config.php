@@ -41,9 +41,10 @@ function sb_admin_required() {
 }
 
 function sb_admin_headers() {
+  $serviceKey = defined('SUPABASE_SERVICE') ? SUPABASE_SERVICE : (defined('SUPABASE_SERVICE_KEY') ? SUPABASE_SERVICE_KEY : '');
   return [
-    'apikey: ' . SUPABASE_ANON,
-    'Authorization: Bearer ' . SUPABASE_SERVICE,
+    'apikey: ' . $serviceKey,
+    'Authorization: Bearer ' . $serviceKey,
     'Content-Type: application/json',
   ];
 }
@@ -64,20 +65,24 @@ function sb_admin_get($endpoint, $params = []) {
   $data = json_decode($resp, true);
   
   if ($code >= 200 && $code < 300 && is_array($data)) {
-    return ['code' => $code, 'data' => $data];
+    return ['code' => $code, 'data' => $data, 'success' => true];
   }
 
   // Fallback to local SQLite DB if Supabase REST returns non-2xx or empty
   $table = explode('?', $endpoint)[0];
   $sqliteData = sqlite_admin_get($table, $params);
-  return ['code' => 200, 'data' => $sqliteData, 'fallback' => true];
+  return ['code' => $code, 'data' => $sqliteData, 'fallback' => true, 'success' => ($code >= 200 && $code < 300)];
 }
 
-function sb_admin_post($endpoint, $body = [], $method = 'POST') {
+function sb_admin_post($endpoint, $body = [], $method = 'POST', $preferRepresentation = true) {
   $url = SUPABASE_URL . '/rest/v1/' . $endpoint;
   $ch = curl_init($url);
   $headers = sb_admin_headers();
-  if ($method === 'PATCH') $headers[] = 'Prefer: return=minimal';
+  if ($preferRepresentation) {
+    $headers[] = 'Prefer: return=representation';
+  } elseif ($method === 'PATCH') {
+    $headers[] = 'Prefer: return=minimal';
+  }
   curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_CUSTOMREQUEST  => $method,
@@ -88,6 +93,7 @@ function sb_admin_post($endpoint, $body = [], $method = 'POST') {
   ]);
   $resp = curl_exec($ch);
   $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  $curlErr = curl_error($ch);
   curl_close($ch);
   $data = json_decode($resp, true);
 
@@ -95,12 +101,30 @@ function sb_admin_post($endpoint, $body = [], $method = 'POST') {
   $table = explode('?', $endpoint)[0];
   sqlite_admin_post($table, $body, $method);
 
-  if ($code < 300) {
-    return ['code' => $code, 'data' => $data];
+  if ($code >= 200 && $code < 300) {
+    return ['code' => $code, 'data' => $data, 'success' => true];
   }
 
-  // Return success code if SQLite fallback saved the data successfully
-  return ['code' => 200, 'data' => $body, 'fallback' => true];
+  $errorMessage = 'Supabase REST error (HTTP ' . $code . ')';
+  if (!empty($data['message'])) {
+    $errorMessage = $data['message'];
+  } elseif (!empty($data['error'])) {
+    $errorMessage = $data['error'];
+  } elseif (!empty($curlErr)) {
+    $errorMessage = 'cURL error: ' . $curlErr;
+  }
+
+  return [
+    'code'    => $code ?: 500,
+    'data'    => $data,
+    'error'   => $errorMessage,
+    'success' => false,
+    'fallback'=> true
+  ];
+}
+
+function sb_admin_patch($endpoint, $body = []) {
+  return sb_admin_post($endpoint, $body, 'PATCH', true);
 }
 
 function sb_admin_delete($endpoint) {
@@ -127,7 +151,7 @@ function sb_admin_delete($endpoint) {
     sqlite_admin_delete($table, $id);
   }
   
-  return ['code' => 200, 'data' => json_decode($resp, true)];
+  return ['code' => $code, 'data' => json_decode($resp, true), 'success' => ($code >= 200 && $code < 300)];
 }
 
 // ── Market Overview & Local Fail-safe SQLite DB ─────────────────
@@ -294,7 +318,8 @@ function getMarketPDO() {
                 action TEXT,
                 ip_address TEXT,
                 details TEXT,
-                created_at TEXT
+                created_at TEXT,
+                updated_at TEXT
             );
 
             -- Indexes for high-performance querying
@@ -318,6 +343,7 @@ function getMarketPDO() {
         try { $pdo->exec("ALTER TABLE admin_audit_logs ADD COLUMN new_status TEXT"); } catch (\Throwable $e) {}
         try { $pdo->exec("ALTER TABLE admin_audit_logs ADD COLUMN result TEXT DEFAULT 'success'"); } catch (\Throwable $e) {}
         try { $pdo->exec("ALTER TABLE admin_audit_logs ADD COLUMN updated_at TEXT"); } catch (\Throwable $e) {}
+        try { $pdo->exec("ALTER TABLE copy_trader_audit_logs ADD COLUMN updated_at TEXT"); } catch (\Throwable $e) {}
     }
     return $pdo;
 }

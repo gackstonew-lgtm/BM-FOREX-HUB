@@ -117,10 +117,14 @@ $active_plans = [];
 
 if (count($activeSubs) > 0) {
     foreach ($activeSubs as $sub) {
+        if (!empty($sub['plan_key'])) {
+            $active_plans[] = $sub['plan_key'];
+        }
         if (!empty($sub['plan'])) {
             $active_plans[] = $sub['plan'];
         }
     }
+    $active_plans = array_values(array_unique(array_filter($active_plans)));
     // If premium is active, we don't start or evaluate a trial to avoid conflicting logic
     $trialStatus = [
         'trial_active'     => false,

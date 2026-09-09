@@ -72,14 +72,48 @@ function get_http_code() {
 }
 
 function find_user_by_email($email) {
-    $resp = supabase_admin_get("/auth/v1/admin/users?email=$email");
-    if (!$resp) return null;
-    $data = json_decode($resp, true);
-    $users = $data['users'] ?? $data ?? [];
-    foreach ($users as $u) {
-        if (strtolower($u['email'] ?? '') === $email) return $u['id'];
+    $email = strtolower(trim($email));
+    if (empty($email)) return null;
+
+    // 1. PostgREST profiles lookup
+    $ctx = stream_context_create(['http' => [
+        'method' => 'GET',
+        'header' => "apikey: " . SUPABASE_SERVICE . "\r\nAuthorization: Bearer " . SUPABASE_SERVICE,
+        'timeout' => 10,
+    ]]);
+    $resp = @file_get_contents(SUPABASE_URL . "/rest/v1/profiles?email=ilike." . urlencode($email) . "&select=id,email", false, $ctx);
+    if ($resp) {
+        $profiles = json_decode($resp, true);
+        if (is_array($profiles) && !empty($profiles)) {
+            foreach ($profiles as $p) {
+                if (strtolower($p['email'] ?? '') === $email) {
+                    return $p['id'];
+                }
+            }
+        }
     }
-    return $users[0]['id'] ?? null;
+
+    // 2. GoTrue paginated admin users lookup
+    $page = 1;
+    $perPage = 1000;
+    while (true) {
+        $usersResp = @file_get_contents(SUPABASE_URL . "/auth/v1/admin/users?page=$page&per_page=$perPage", false, $ctx);
+        if (!$usersResp) break;
+        $data = json_decode($usersResp, true);
+        $users = $data['users'] ?? (is_array($data) ? $data : []);
+        if (empty($users) || !is_array($users)) break;
+
+        foreach ($users as $u) {
+            if (strtolower($u['email'] ?? '') === $email) {
+                return $u['id'];
+            }
+        }
+
+        if (count($users) < $perPage) break;
+        $page++;
+    }
+
+    return null;
 }
 
 // ── VERIFY OTP ──────────────────────────────────────────────────

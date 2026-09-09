@@ -142,6 +142,7 @@
         if (name === 'users') loadUsers();
         else if (name === 'payments') loadPayments();
         else if (name === 'elite-subscriptions') loadEliteSubscriptions();
+        else if (name === 'copy-traders') loadCopyTraders();
         else if (name === 'dashboard') loadDashboard();
         else if (name === 'articles') loadArticles();
         else if (name === 'videos') loadVideos();
@@ -1116,6 +1117,24 @@
     });
   }
 
+  // Auto update amount based on elite tier selection
+  var grantElitePlanSel = document.getElementById('grantElitePlan');
+  var grantEliteAmountInput = document.getElementById('grantEliteAmount');
+  if (grantElitePlanSel && grantEliteAmountInput) {
+    var eliteTierPricing = {
+      'elite_starter': 1000,
+      'elite_intermediate': 2000,
+      'elite_advanced': 3000,
+      'elite_professional': 5000,
+      'elite_premium': 6000,
+      'elite_elite': 10000
+    };
+    grantElitePlanSel.addEventListener('change', function(){
+      var amt = eliteTierPricing[this.value] || 10000;
+      grantEliteAmountInput.value = amt;
+    });
+  }
+
   // Grant Elite Form Submit
   var grantEliteForm = document.getElementById('grantEliteForm');
   if (grantEliteForm) {
@@ -1132,7 +1151,10 @@
       }
 
       var submitBtn = document.getElementById('grantEliteSubmitBtn');
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<span class="spinner-sm"></span><span>Granting Elite...</span>'; }
+      if (submitBtn) { 
+        submitBtn.disabled = true; 
+        submitBtn.innerHTML = '<span class="spinner-sm"></span><span>Verifying & Granting in Supabase...</span>'; 
+      }
 
       safeAdminFetch({
         action: 'grant_elite',
@@ -1145,7 +1167,7 @@
       .then(function(res){
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Grant Elite Plan'; }
         if (res && res.success) {
-          alert(res.message || 'BM Elites access granted successfully!');
+          alert(res.message || 'BM Elites access granted and verified in Supabase successfully!');
           closeModal('grantEliteModal');
           grantEliteForm.reset();
           loadEliteSubscriptions();
@@ -1155,7 +1177,7 @@
       })
       .catch(function(err){
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Grant Elite Plan'; }
-        alert('Error granting Elite plan: ' + err.message);
+        alert('Error granting Elite plan: ' + (err.message || 'Connection error'));
       });
     });
   }
@@ -1166,7 +1188,7 @@
     safeAdminFetch({ action: 'revoke_subscription', id: id })
     .then(function(res){
       if (res && res.success) {
-        alert(res.message || 'Subscription revoked.');
+        alert(res.message || 'Subscription access revoked in Supabase.');
         loadEliteSubscriptions();
       } else {
         alert('Error: ' + ((res && (res.error || res.message)) || 'Failed to revoke'));
@@ -1182,13 +1204,384 @@
     safeAdminFetch({ action: 'extend_subscription', id: id, days: parseInt(days, 10) })
     .then(function(res){
       if (res && res.success) {
-        alert(res.message || 'Subscription extended.');
+        alert(res.message || 'Subscription extended and verified in Supabase.');
         loadEliteSubscriptions();
       } else {
         alert('Error: ' + ((res && (res.error || res.message)) || 'Failed to extend'));
       }
     })
     .catch(function(err){ alert('Request failed: ' + err.message); });
+  };
+
+  /* ── Copy Traders Section ── */
+  var allCopyTraders = [];
+
+  function loadCopyTraders() {
+    var tbody = document.getElementById('copyTraderTableBody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="table-empty"><span class="spinner-sm"></span> Loading Copy Traders from Supabase...</td></tr>';
+
+    safeAdminFetch({ action: 'list_copy_traders' })
+      .then(function(res){
+        allCopyTraders = (res && Array.isArray(res.data)) ? res.data : [];
+        renderCopyTraders();
+      })
+      .catch(function(err){
+        if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="table-empty" style="color:var(--red);">Error loading copy traders: ' + esc(err.message) + '</td></tr>';
+      });
+  }
+
+  function renderCopyTraders() {
+    var tbody = document.getElementById('copyTraderTableBody');
+    if (!tbody) return;
+
+    var q = (document.getElementById('copyTraderSearchInput') ? document.getElementById('copyTraderSearchInput').value : '').toLowerCase().trim();
+    var filter = document.getElementById('copyTraderFilterStatus') ? document.getElementById('copyTraderFilterStatus').value : 'all';
+
+    var filtered = allCopyTraders.filter(function(t){
+      var st = (t.mt5_status || 'Pending').toLowerCase();
+      var subSt = (t.subscription_status || 'active').toLowerCase();
+      if (filter === 'active' && st !== 'active') return false;
+      if (filter === 'pending' && st !== 'pending') return false;
+      if (filter === 'awaiting' && !st.includes('awaiting')) return false;
+      if (filter === 'cancelled' && st !== 'cancelled' && subSt !== 'cancelled') return false;
+
+      if (q) {
+        var match = (t.username || '').toLowerCase().includes(q)
+          || (t.email || '').toLowerCase().includes(q)
+          || (t.full_name || '').toLowerCase().includes(q)
+          || (t.broker_name || '').toLowerCase().includes(q)
+          || (t.mt5_login || '').toLowerCase().includes(q)
+          || (t.mt5_server || '').toLowerCase().includes(q);
+        if (!match) return false;
+      }
+      return true;
+    });
+
+    // Update Stat Cards
+    var activeCount = 0;
+    var pendingCount = 0;
+    var totalCount = allCopyTraders.length;
+
+    allCopyTraders.forEach(function(t){
+      var st = (t.mt5_status || '').toLowerCase();
+      if (st === 'active' || (t.subscription_status === 'active' && st !== 'cancelled')) activeCount++;
+      if (st === 'pending' || st.includes('awaiting')) pendingCount++;
+    });
+
+    if (document.getElementById('copyTraderStatActive')) document.getElementById('copyTraderStatActive').textContent = activeCount;
+    if (document.getElementById('copyTraderStatPending')) document.getElementById('copyTraderStatPending').textContent = pendingCount;
+    if (document.getElementById('copyTraderStatTotal')) document.getElementById('copyTraderStatTotal').textContent = totalCount;
+
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr><td colspan="9" class="table-empty">No copy trading records matching your search/filter criteria.</td></tr>';
+      if (document.getElementById('copyTraderShowingCount')) {
+        document.getElementById('copyTraderShowingCount').textContent = 'Showing 0 of ' + allCopyTraders.length + ' records';
+      }
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(function(t){
+      var mt5Status = t.mt5_status || 'Pending';
+      var statusCls = 'pending';
+      if (mt5Status.toLowerCase() === 'active') statusCls = 'active';
+      else if (mt5Status.toLowerCase() === 'cancelled') statusCls = 'inactive';
+      else if (mt5Status.toLowerCase().includes('awaiting')) statusCls = 'pending';
+      else if (mt5Status.toLowerCase() === 'disconnected') statusCls = 'inactive';
+
+      var isPermanent = t.is_permanent || (t.expires_at && t.expires_at.startsWith('2036'));
+      var isSubActive = t.subscription_status === 'active';
+
+      var actionsHtml = '';
+      if (!t.is_permanent) {
+        actionsHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;">'
+          + '<button class="action-btn" onclick="openManageCopyTrader(\''+esc(t.id)+'\')" title="Manage & View Credentials">Manage</button>'
+          + (t.subscription_id ? '<button class="action-btn" onclick="extendCopyTraderSub(\''+esc(t.subscription_id)+'\')" title="Extend Duration">Extend</button>' : '')
+          + (isSubActive ? '<button class="action-btn danger" onclick="revokeCopyTraderSub(\''+esc(t.subscription_id || t.id)+'\')" title="Revoke Access">Revoke</button>' : '')
+          + '</div>';
+      } else {
+        actionsHtml = '<span style="font-size:0.7rem;color:#F0B429;font-weight:600;">PERMANENT VIP</span>';
+      }
+
+      var passDisplay = t.mt5_password_set 
+        ? '<span style="font-family:monospace;font-size:0.8rem;color:#16C784;">•••••••• <button type="button" class="action-btn" style="padding:2px 6px;font-size:0.7rem;" onclick="revealPasswordAction(\''+esc(t.id)+'\')">👁️</button></span>'
+        : '<span style="color:#7F8B99;font-size:0.75rem;">Not set</span>';
+
+      var brokerServer = (t.broker_name && t.broker_name !== '--') 
+        ? ('<strong>'+esc(t.broker_name)+'</strong><br><small style="color:#7F8B99">'+esc(t.mt5_server)+'</small>') 
+        : '<span style="color:#7F8B99;">--</span>';
+
+      return '<tr>'
+        + '<td><strong>@'+esc(t.username||'--')+'</strong>'+(t.email ? '<br><small style="color:#7F8B99">'+esc(t.email)+'</small>' : '')+'</td>'
+        + '<td><span style="color:#fff;font-weight:600;">'+esc(t.plan_name||'Copy Trading Integration')+'</span></td>'
+        + '<td>'+brokerServer+'</td>'
+        + '<td style="font-family:monospace;font-weight:600;color:'+(t.mt5_login !== '--' ? '#1677FF' : '#7F8B99')+';">'+esc(t.mt5_login||'--')+'</td>'
+        + '<td>'+passDisplay+'</td>'
+        + '<td><span class="account-status account-status--'+statusCls+'">'+esc(mt5Status.toUpperCase())+'</span></td>'
+        + '<td style="font-weight:500;">'+(isPermanent ? 'Lifetime' : fmtDateTime(t.expires_at))+'</td>'
+        + '<td><span style="font-size:0.75rem;color:#8FA3B8;">'+esc(t.granted_by||'Admin')+'</span></td>'
+        + '<td>'+actionsHtml+'</td>'
+        + '</tr>';
+    }).join('');
+
+    if (document.getElementById('copyTraderShowingCount')) {
+      document.getElementById('copyTraderShowingCount').textContent = 'Showing ' + filtered.length + ' of ' + allCopyTraders.length + ' records';
+    }
+  }
+
+  // Copy Traders Event Bindings
+  var copyTraderSearch = document.getElementById('copyTraderSearchInput');
+  if (copyTraderSearch) copyTraderSearch.addEventListener('input', renderCopyTraders);
+  var copyTraderFilter = document.getElementById('copyTraderFilterStatus');
+  if (copyTraderFilter) copyTraderFilter.addEventListener('change', renderCopyTraders);
+  var copyTraderRefresh = document.getElementById('copyTraderRefreshBtn');
+  if (copyTraderRefresh) copyTraderRefresh.addEventListener('click', loadCopyTraders);
+
+  // Grant Copy Trader Modal trigger
+  var grantCopyTraderModalBtn = document.getElementById('grantCopyTraderModalBtn');
+  if (grantCopyTraderModalBtn) {
+    grantCopyTraderModalBtn.addEventListener('click', function(){
+      populateUserDatalists();
+      var alertEl = document.getElementById('grantCopyTraderAlert');
+      if (alertEl) { alertEl.className = 'grant-alert'; alertEl.textContent = ''; }
+      openModal('grantCopyTraderModal');
+    });
+  }
+
+  var grantCopyTraderModalClose = document.getElementById('grantCopyTraderModalClose');
+  if (grantCopyTraderModalClose) grantCopyTraderModalClose.addEventListener('click', function(){ closeModal('grantCopyTraderModal'); });
+  var grantCopyTraderCancelBtn = document.getElementById('grantCopyTraderCancelBtn');
+  if (grantCopyTraderCancelBtn) grantCopyTraderCancelBtn.addEventListener('click', function(){ closeModal('grantCopyTraderModal'); });
+
+  // Preset pills in Copy Trading Grant modal
+  document.querySelectorAll('.grant-preset-btn.ct-preset').forEach(function(pbtn){
+    pbtn.addEventListener('click', function(){
+      document.querySelectorAll('.grant-preset-btn.ct-preset').forEach(function(b){ b.classList.remove('active'); });
+      this.classList.add('active');
+      var days = this.dataset.days;
+      var durationInput = document.getElementById('grantCopyTraderDuration');
+      if (durationInput && days) durationInput.value = days;
+    });
+  });
+
+  function showGrantCtAlert(msg, type) {
+    var alertEl = document.getElementById('grantCopyTraderAlert');
+    if (!alertEl) { alert(msg); return; }
+    alertEl.textContent = msg;
+    alertEl.className = 'grant-alert show ' + (type || 'error');
+  }
+
+  // Grant Copy Trader Form Submit
+  var grantCopyTraderForm = document.getElementById('grantCopyTraderForm');
+  if (grantCopyTraderForm) {
+    grantCopyTraderForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var username = (document.getElementById('grantCopyTraderUsername').value || '').trim();
+      var duration = parseInt(document.getElementById('grantCopyTraderDuration').value, 10) || 36500;
+      var notes = (document.getElementById('grantCopyTraderNotes').value || '').trim();
+
+      var broker = (document.getElementById('grantCtBroker') ? document.getElementById('grantCtBroker').value : '').trim();
+      var server = (document.getElementById('grantCtServer') ? document.getElementById('grantCtServer').value : '').trim();
+      var login  = (document.getElementById('grantCtLogin') ? document.getElementById('grantCtLogin').value : '').trim();
+      var pass   = document.getElementById('grantCtPassword') ? document.getElementById('grantCtPassword').value : '';
+
+      if (!username) {
+        showGrantCtAlert('Please enter target username or email address.', 'error');
+        return;
+      }
+
+      var submitBtn = document.getElementById('grantCopyTraderSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-sm"></span><span>Verifying in Supabase...</span>';
+      }
+
+      safeAdminFetch({
+        action: 'grant_copytrading',
+        username: username,
+        duration_days: duration,
+        notes: notes,
+        broker_name: broker,
+        mt5_server: server,
+        mt5_login: login,
+        mt5_password: pass
+      })
+      .then(function(res){
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>Grant Copy Trading</span>';
+        }
+
+        if (res && res.success) {
+          showGrantCtAlert(res.message || 'Copy Trading granted successfully!', 'success');
+          setTimeout(function(){
+            closeModal('grantCopyTraderModal');
+            grantCopyTraderForm.reset();
+            loadCopyTraders();
+          }, 1200);
+        } else {
+          showGrantCtAlert((res && (res.error || res.message)) ? (res.error || res.message) : 'Unable to grant Copy Trading access.', 'error');
+        }
+      })
+      .catch(function(err){
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>Grant Copy Trading</span>';
+        }
+        showGrantCtAlert('Unable to grant Copy Trading: ' + (err.message || 'Connection error'), 'error');
+      });
+    });
+  }
+
+  // Manage Copy Trader Modal Handlers
+  window.openManageCopyTrader = function(id) {
+    var trader = allCopyTraders.find(function(t){ return t.id === id || t.user_id === id; });
+    if (!trader) { alert('Trader record not found.'); return; }
+
+    document.getElementById('manageCtId').value = trader.id || '';
+    document.getElementById('manageCtUserId').value = trader.user_id || '';
+    document.getElementById('manageCtTraderInfo').value = (trader.full_name || trader.username || 'Trader') + ' (@' + (trader.username||'--') + ' • ' + (trader.email||'no email') + ')';
+    document.getElementById('manageCtBroker').value = (trader.broker_name && trader.broker_name !== '--') ? trader.broker_name : '';
+    document.getElementById('manageCtServer').value = (trader.mt5_server && trader.mt5_server !== '--') ? trader.mt5_server : '';
+    document.getElementById('manageCtLogin').value = (trader.mt5_login && trader.mt5_login !== '--') ? trader.mt5_login : '';
+    document.getElementById('manageCtPassword').value = '';
+    document.getElementById('manageCtStatus').value = trader.mt5_status || 'Active';
+    document.getElementById('manageCtNotes').value = trader.notes || '';
+
+    openModal('manageCopyTraderModal');
+  };
+
+  var manageCtCloseBtn = document.getElementById('manageCtCloseBtn');
+  if (manageCtCloseBtn) manageCtCloseBtn.addEventListener('click', function(){ closeModal('manageCopyTraderModal'); });
+  var manageCtModalClose = document.getElementById('manageCopyTraderModalClose');
+  if (manageCtModalClose) manageCtModalClose.addEventListener('click', function(){ closeModal('manageCopyTraderModal'); });
+
+  var manageCtCopyLoginBtn = document.getElementById('manageCtCopyLoginBtn');
+  if (manageCtCopyLoginBtn) {
+    manageCtCopyLoginBtn.addEventListener('click', function(){
+      var loginVal = document.getElementById('manageCtLogin').value;
+      if (!loginVal) return;
+      navigator.clipboard.writeText(loginVal).then(function(){
+        manageCtCopyLoginBtn.textContent = '✓ Copied';
+        setTimeout(function(){ manageCtCopyLoginBtn.textContent = '📋'; }, 2000);
+      });
+    });
+  }
+
+  var manageCtRevealPassBtn = document.getElementById('manageCtRevealPassBtn');
+  if (manageCtRevealPassBtn) {
+    manageCtRevealPassBtn.addEventListener('click', function(){
+      var id = document.getElementById('manageCtId').value;
+      if (!id) return;
+
+      manageCtRevealPassBtn.textContent = 'Decrypting...';
+      safeAdminFetch({ action: 'reveal_copy_trader_password', id: id })
+        .then(function(res){
+          if (res && res.success && res.password) {
+            var passInput = document.getElementById('manageCtPassword');
+            passInput.type = 'text';
+            passInput.value = res.password;
+            navigator.clipboard.writeText(res.password);
+            manageCtRevealPassBtn.textContent = '✓ Copied!';
+            setTimeout(function(){ manageCtRevealPassBtn.textContent = '👁️ Reveal'; }, 3000);
+          } else {
+            alert('Password not available: ' + ((res && (res.error || res.message)) || 'No password recorded'));
+            manageCtRevealPassBtn.textContent = '👁️ Reveal';
+          }
+        })
+        .catch(function(err){
+          alert('Error decrypting password: ' + err.message);
+          manageCtRevealPassBtn.textContent = '👁️ Reveal';
+        });
+    });
+  }
+
+  window.revealPasswordAction = function(id) {
+    safeAdminFetch({ action: 'reveal_copy_trader_password', id: id })
+      .then(function(res){
+        if (res && res.success && res.password) {
+          navigator.clipboard.writeText(res.password);
+          alert('MT5 Password for Account ' + (res.mt5_login||'') + ':\n\n' + res.password + '\n\n(Password has been copied to your clipboard. Audit log recorded.)');
+        } else {
+          alert('Unable to retrieve password: ' + ((res && (res.error || res.message)) || 'No password stored'));
+        }
+      })
+      .catch(function(err){ alert('Error: ' + err.message); });
+  };
+
+  // Manage Copy Trader Form Submit
+  var manageCopyTraderForm = document.getElementById('manageCopyTraderForm');
+  if (manageCopyTraderForm) {
+    manageCopyTraderForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var id     = document.getElementById('manageCtId').value;
+      var userId = document.getElementById('manageCtUserId').value;
+      var broker = document.getElementById('manageCtBroker').value.trim();
+      var server = document.getElementById('manageCtServer').value.trim();
+      var login  = document.getElementById('manageCtLogin').value.trim();
+      var pass   = document.getElementById('manageCtPassword').value;
+      var status = document.getElementById('manageCtStatus').value;
+      var notes  = document.getElementById('manageCtNotes').value.trim();
+
+      var submitBtn = document.getElementById('manageCtSubmitBtn');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
+
+      safeAdminFetch({
+        action: 'update_copy_trader',
+        id: id,
+        user_id: userId,
+        broker_name: broker,
+        mt5_server: server,
+        mt5_login: login,
+        mt5_password: pass,
+        status: status,
+        notes: notes
+      })
+      .then(function(res){
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Save Changes'; }
+        if (res && res.success) {
+          alert('Copy Trader account details updated successfully!');
+          closeModal('manageCopyTraderModal');
+          loadCopyTraders();
+        } else {
+          alert('Error: ' + ((res && (res.error || res.message)) || 'Failed to update'));
+        }
+      })
+      .catch(function(err){
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Save Changes'; }
+        alert('Request failed: ' + err.message);
+      });
+    });
+  }
+
+  // Revoke Copy Trader Subscription
+  window.revokeCopyTraderSub = function(id) {
+    if (!confirm('Are you sure you want to revoke Copy Trading access for this user? They will immediately lose access to MT5 copy trading synchronization.')) return;
+    safeAdminFetch({ action: 'revoke_subscription', id: id })
+      .then(function(res){
+        if (res && res.success) {
+          alert(res.message || 'Copy Trading subscription revoked in Supabase.');
+          loadCopyTraders();
+        } else {
+          alert('Error: ' + ((res && (res.error || res.message)) || 'Failed to revoke'));
+        }
+      })
+      .catch(function(err){ alert('Request failed: ' + err.message); });
+  };
+
+  // Extend Copy Trader Subscription
+  window.extendCopyTraderSub = function(id) {
+    var days = prompt('Enter number of days to extend Copy Trading subscription by:', '30');
+    if (!days || isNaN(days) || parseInt(days, 10) <= 0) return;
+    safeAdminFetch({ action: 'extend_subscription', id: id, days: parseInt(days, 10) })
+      .then(function(res){
+        if (res && res.success) {
+          alert(res.message || 'Copy Trading subscription extended and verified in Supabase.');
+          loadCopyTraders();
+        } else {
+          alert('Error: ' + ((res && (res.error || res.message)) || 'Failed to extend'));
+        }
+      })
+      .catch(function(err){ alert('Request failed: ' + err.message); });
   };
 
   /* ── Articles ── */

@@ -645,7 +645,7 @@ $elitePlans = $membership->getElitesPlans();
   // Find exact active elite subscription record
   let eliteSub = null;
   if (Array.isArray(authData.subscriptions)) {
-    eliteSub = authData.subscriptions.find(s => s.plan === 'all' || (s.plan && s.plan.startsWith('elite_')));
+    eliteSub = authData.subscriptions.find(s => s.plan === 'all' || (s.plan_key && s.plan_key.startsWith('elite_')) || (s.plan && s.plan.startsWith('elite_')));
     if (!eliteSub && hasElitePlan && authData.subscriptions.length > 0) {
       eliteSub = authData.subscriptions[0];
     }
