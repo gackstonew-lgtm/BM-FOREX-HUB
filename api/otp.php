@@ -1,7 +1,8 @@
 <?php
 /**
- * /admin/api/otp.php
- * BM Forex Hub — OTP Endpoint (backward-compatible)
+ * /api/otp.php
+ * BM Forex Hub — Public OTP Endpoint
+ * Generates a new verification code, enforces rate limits, and sends OTP.
  */
 
 error_reporting(0);
@@ -55,9 +56,9 @@ if (!in_array($type, ['signup', 'recovery', 'reset'], true)) {
 }
 
 try {
-    require_once __DIR__ . '/../../app/Services/MailService.php';
-    require_once __DIR__ . '/../../app/Services/EmailTemplateService.php';
-    require_once __DIR__ . '/../../app/Services/OtpService.php';
+    require_once __DIR__ . '/../app/Services/MailService.php';
+    require_once __DIR__ . '/../app/Services/EmailTemplateService.php';
+    require_once __DIR__ . '/../app/Services/OtpService.php';
 
     $result = OtpService::generateAndSend($email, $type);
 

@@ -127,6 +127,7 @@
   var newPwBtn   = document.getElementById('newPwBtn');
 
   var _email = '';
+  var _resetToken = '';
   var _resendTimer = null;
 
   function showErr(el, msg)  { el.textContent = msg; el.hidden = false; }
@@ -191,6 +192,68 @@
     return code;
   }
 
+  async function parseResponse(resp) {
+    try {
+      return await resp.json();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function getErrorMessage(status, data, defaultMsg) {
+    if (data && (data.error || data.message)) {
+      return data.error || data.message;
+    }
+    switch (status) {
+      case 400:
+        return 'Invalid verification code.';
+      case 401:
+        return 'Your reset session has expired. Please request a new code.';
+      case 403:
+        return 'Verification request was rejected. Please request a new code and try again.';
+      case 409:
+        return 'This reset request has already been used. Please request a new code.';
+      case 429:
+        return 'Too many attempts. Please wait before trying again.';
+      case 500:
+      case 502:
+      case 503:
+        return 'Something went wrong on the server. Please try again later.';
+      default:
+        return defaultMsg || 'An error occurred. Please try again.';
+    }
+  }
+
+  async function postApi(endpoint, body) {
+    var primaryUrl = endpoint;
+    var fallbackUrl = endpoint.startsWith('api/') ? 'admin/' + endpoint : 'api/' + endpoint.replace(/^admin\/api\//, '');
+    try {
+      var resp = await fetch(primaryUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (resp.status === 404) {
+        return await fetch(fallbackUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      }
+      return resp;
+    } catch (err) {
+      try {
+        return await fetch(fallbackUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      } catch (err2) {
+        throw err;
+      }
+    }
+  }
+
   /* ---- STEP 1: Send OTP ---- */
   resetForm.addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -237,18 +300,20 @@
     verifyBtn.textContent = 'Verifying...';
 
     try {
-      var resp = await fetch('admin/api/password-reset.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify', email: _email, code: code })
-      });
-      var result = await resp.json();
+      var resp = await postApi('api/password-reset.php', { action: 'verify', email: _email, code: code, otp_type: 'recovery' });
+      var result = await parseResponse(resp);
 
-      if (!resp.ok || !result.success) {
+      if (!resp.ok || !result || !result.success) {
         verifyBtn.disabled = false;
         verifyBtn.textContent = 'Verify code';
-        showErr(otpErr, result.error || result.message || 'Invalid code. Please try again.');
+        var errMsg = getErrorMessage(resp.status, result, 'Invalid code. Please try again.');
+        showErr(otpErr, errMsg);
         return;
+      }
+
+      /* Store reset authorization token */
+      if (result.reset_token) {
+        _resetToken = result.reset_token;
       }
 
       /* verified — move to step 3 */
@@ -259,7 +324,7 @@
     } catch (err) {
       verifyBtn.disabled = false;
       verifyBtn.textContent = 'Verify code';
-      showErr(otpErr, 'Could not reach the server. Please try again.');
+      showErr(otpErr, 'Could not connect to the server. Please check your connection.');
     }
   });
 
@@ -271,14 +336,10 @@
     startResendTimer(60);
 
     try {
-      var resp = await fetch('admin/api/otp.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'resend', email: _email, type: 'recovery' })
-      });
-      var data = await resp.json();
+      var resp = await postApi('api/otp.php', { action: 'resend', email: _email, type: 'recovery' });
+      var data = await parseResponse(resp);
 
-      if (resp.ok && data.success) {
+      if (resp.ok && data && data.success) {
         otpErr.className = 'auth-alert auth-success';
         otpErr.style.cssText = 'background:rgba(79,209,197,.12);border-color:rgba(79,209,197,.3);color:var(--teal);';
         otpErr.textContent = 'A new verification code has been sent to your email.';
@@ -286,13 +347,14 @@
       } else {
         otpErr.className = 'auth-alert';
         otpErr.style.cssText = '';
-        otpErr.textContent = data.error || 'Unable to send OTP. Please try again later.';
+        var errMsg = getErrorMessage(resp.status, data, 'Unable to send OTP. Please try again later.');
+        otpErr.textContent = errMsg;
         otpErr.hidden = false;
       }
     } catch (err) {
       otpErr.className = 'auth-alert';
       otpErr.style.cssText = '';
-      otpErr.textContent = 'Unable to send OTP. Please try again later.';
+      otpErr.textContent = 'Could not connect to the server. Please check your connection.';
       otpErr.hidden = false;
     }
   });
@@ -318,18 +380,21 @@
     newPwBtn.textContent = 'Updating...';
 
     try {
-      var resp = await fetch('admin/api/password-reset.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', email: _email, code: getOtpCode(), password: pw })
+      var resp = await postApi('api/password-reset.php', {
+        action: 'update',
+        email: _email,
+        reset_token: _resetToken,
+        code: getOtpCode(),
+        password: pw
       });
-      var result = await resp.json();
+      var result = await parseResponse(resp);
 
       newPwBtn.disabled = false;
       newPwBtn.textContent = 'Update password';
 
-      if (!resp.ok || !result.success) {
-        showErr(newPwErr, result.error || 'Failed to update password. Please try again.');
+      if (!resp.ok || !result || !result.success) {
+        var errMsg = getErrorMessage(resp.status, result, 'Failed to update password. Please try again.');
+        showErr(newPwErr, errMsg);
         return;
       }
 
@@ -343,7 +408,7 @@
     } catch (err) {
       newPwBtn.disabled = false;
       newPwBtn.textContent = 'Update password';
-      showErr(newPwErr, 'Could not reach the server. Please try again.');
+      showErr(newPwErr, 'Could not connect to the server. Please check your connection.');
     }
   });
 

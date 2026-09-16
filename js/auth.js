@@ -27,6 +27,32 @@ const BMAuth = (() => {
     return path.replace(/^\/+/, '');
   }
 
+  async function postApiWithFallback(endpointName, payload) {
+    const primary = getApiEndpoint('api/' + endpointName);
+    const fallback = getApiEndpoint('admin/api/' + endpointName);
+    try {
+      let resp = await fetch(primary, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (resp.status === 404) {
+        resp = await fetch(fallback, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+      return resp;
+    } catch (e) {
+      return await fetch(fallback, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+  }
+
   /**
    * Register a new user. Creates auth account + sends OTP confirmation email.
    * Accepts first_name and last_name; auto-generates a username from them.
@@ -44,28 +70,29 @@ const BMAuth = (() => {
     const { country_code, phone, ...rest } = metadata || {};
 
     try {
-      const resp = await fetch(getApiEndpoint('admin/api/register-user.php'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          metadata: {
-            username: uniqueUsername,
-            first_name: firstName,
-            last_name: lastName,
-            country_code: country_code || '',
-            phone: phone || '',
-            phone_number: phone || '',
-            ...rest
-          }
-        })
+      const resp = await postApiWithFallback('register-user.php', {
+        email: email,
+        password: password,
+        metadata: {
+          username: uniqueUsername,
+          first_name: firstName,
+          last_name: lastName,
+          country_code: country_code || '',
+          phone: phone || '',
+          phone_number: phone || '',
+          ...rest
+        }
       });
 
-      const data = await resp.json();
+      let data = null;
+      try {
+        data = await resp.json();
+      } catch(err) {
+        data = null;
+      }
 
-      if (!resp.ok || !data.success) {
-        const errMsg = data.error || 'Registration failed. Please try again.';
+      if (!resp.ok || !data || !data.success) {
+        const errMsg = (data && data.error) || 'Registration failed. Please try again.';
         if (errMsg.toLowerCase().includes('already')) {
           return { user: null, error: 'An account with this email already exists. Please sign in instead.' };
         }
@@ -75,7 +102,7 @@ const BMAuth = (() => {
       return { user: data.user, error: null };
     } catch (e) {
       console.error('Registration request failed:', e);
-      return { user: null, error: "We couldn't connect to the server. Please check your connection and try again." };
+      return { user: null, error: "Could not connect to the server. Please check your connection." };
     }
   }
 
@@ -108,18 +135,22 @@ const BMAuth = (() => {
    */
   async function resetPasswordOtp(email) {
     try {
-      const resp = await fetch(getApiEndpoint('admin/api/otp.php'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'resend', email: email, type: 'recovery' })
-      });
-      const data = await resp.json();
-      if (resp.ok && data.success) {
+      const resp = await postApiWithFallback('otp.php', { action: 'resend', email: email, type: 'recovery' });
+      let data = null;
+      try {
+        data = await resp.json();
+      } catch(err) {
+        data = null;
+      }
+      if (resp.ok && data && data.success) {
         return { error: null };
       }
-      return { error: data.error || 'Failed to send reset code.' };
+      if (resp.status === 429) {
+        return { error: 'Too many attempts. Please wait before trying again.' };
+      }
+      return { error: (data && data.error) || 'Failed to send reset code. Please try again.' };
     } catch (e) {
-      return { error: "We couldn't connect to the server. Please check your connection and try again." };
+      return { error: "Could not connect to the server. Please check your connection." };
     }
   }
 

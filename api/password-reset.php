@@ -1,7 +1,7 @@
 <?php
 /**
- * /admin/api/password-reset.php
- * BM Forex Hub — Backward-Compatible Password Reset API
+ * /api/password-reset.php
+ * BM Forex Hub — Public Password Reset & Verification API
  */
 
 error_reporting(0);
@@ -58,7 +58,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 define('SUPABASE_URL',     'https://iwoytmcxmbhmmbrbpzvf.supabase.co');
 define('SUPABASE_SERVICE', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3b3l0bWN4bWJobW1icmJwenZmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4Mzk4MzU2MSwiZXhwIjoyMDk5NTU5NTYxfQ.1ExI-o8zwDkUIH_loQPC_ZJhJaDgrB6gSf1KgAdigCU');
 
-require_once __DIR__ . '/../../app/Services/OtpService.php';
+require_once __DIR__ . '/../app/Services/OtpService.php';
 
 // ── Helper: Supabase Admin API request ──────────────────────────
 function supabase_admin_get($endpoint) {

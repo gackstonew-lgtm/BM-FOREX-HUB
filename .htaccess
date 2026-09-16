@@ -22,6 +22,10 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
     Require all denied
 </FilesMatch>
 
+# Block direct access to storage directory (SQLite DB, OTP JSON, tokens)
+RewriteRule ^storage/ - [F,L]
+
+
 # MIME type for Web App Manifest
 <IfModule mod_mime.c>
     AddType application/manifest+json .webmanifest

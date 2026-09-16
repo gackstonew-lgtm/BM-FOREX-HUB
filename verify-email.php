@@ -155,7 +155,45 @@
     return code;
   }
 
-  /* STEP 1: Send OTP */
+  async function parseResponse(resp) {
+    try {
+      return await resp.json();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function postApi(endpoint, body) {
+    var primaryUrl = endpoint;
+    var fallbackUrl = endpoint.startsWith('api/') ? 'admin/' + endpoint : 'api/' + endpoint.replace(/^admin\/api\//, '');
+    try {
+      var resp = await fetch(primaryUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (resp.status === 404) {
+        return await fetch(fallbackUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      }
+      return resp;
+    } catch (err) {
+      try {
+        return await fetch(fallbackUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      } catch (err2) {
+        throw err;
+      }
+    }
+  }
+
+  /* STEP 1: Request OTP */
   verifyForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     hideAlerts();
@@ -170,17 +208,13 @@
     sendBtn.textContent = 'Sending code...';
 
     try {
-      var resp = await fetch('admin/api/otp.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'resend', email: _email, type: 'signup' })
-      });
-      var data = await resp.json();
+      var resp = await postApi('api/otp.php', { action: 'resend', email: _email, type: 'signup' });
+      var data = await parseResponse(resp);
 
       sendBtn.disabled = false;
       sendBtn.textContent = 'Send code';
 
-      if (resp.ok && data.success) {
+      if (resp.ok && data && data.success) {
         otpEmail.textContent = _email;
         step1.classList.add('hidden');
         step1.style.display = 'none';
@@ -188,12 +222,14 @@
         otpInputs[0].focus();
         startResendTimer(60);
       } else {
-        showErr(verifyErr, data.error || 'Unable to send verification code. Please try again.');
+        var msg = (data && (data.error || data.message)) || 'Unable to send verification code. Please try again.';
+        if (resp.status === 429) msg = 'Too many attempts. Please wait before trying again.';
+        showErr(verifyErr, msg);
       }
     } catch (err) {
       sendBtn.disabled = false;
       sendBtn.textContent = 'Send code';
-      showErr(verifyErr, "We couldn't connect to the server. Please check your connection and try again.");
+      showErr(verifyErr, "Could not connect to the server. Please check your connection.");
     }
   });
 
@@ -212,18 +248,12 @@
     var resp, result;
     try {
       /* Verify OTP */
-      resp = await fetch('admin/api/password-reset.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify', email: _email, code: code, otp_type: 'signup' })
-      });
-      result = await resp.json();
+      resp = await postApi('api/password-reset.php', { action: 'verify', email: _email, code: code, otp_type: 'signup' });
+      result = await parseResponse(resp);
     } catch (netErr) {
       verifyBtn.disabled = false;
       verifyBtn.textContent = 'Verify email';
-      step2.classList.remove('active');
-      step2.style.display = 'none';
-      step3.classList.add('active');
+      showErr(otpErr, 'Could not connect to the server. Please check your connection.');
       return;
     }
 
@@ -232,10 +262,14 @@
       verifyBtn.textContent = 'Verify email';
       var rawErr = (result && (result.error || result.message)) || '';
       var lower = rawErr.toLowerCase();
-      if (lower.includes('expired')) {
+      if (resp.status === 403) {
+        showErr(otpErr, 'Verification request was rejected. Please request a new code and try again.');
+      } else if (resp.status === 429 || lower.includes('too many')) {
+        showErr(otpErr, 'Too many attempts. Please wait before trying again.');
+      } else if (resp.status === 401 || lower.includes('expired')) {
         showErr(otpErr, 'This verification code has expired. Please request a new code.');
       } else if (lower.includes('already used') || lower.includes('used')) {
-        showErr(otpErr, 'successfully verified, sign in');
+        showErr(otpErr, 'Successfully verified, sign in');
       } else {
         showErr(otpErr, rawErr || 'Invalid verification code. Please check the code and try again.');
       }
@@ -244,12 +278,8 @@
 
     /* Primary OTP verification succeeded. Perform secondary confirm-email step safely. */
     try {
-      var confirmResp = await fetch('admin/api/password-reset.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'confirm-email', email: _email })
-      });
-      var confirmData = await confirmResp.json();
+      var confirmResp = await postApi('api/password-reset.php', { action: 'confirm-email', email: _email });
+      var confirmData = await parseResponse(confirmResp);
       if (!confirmResp.ok || !confirmData || !confirmData.success) {
         console.warn('Secondary confirm-email note:', confirmData ? confirmData.error : 'HTTP ' + confirmResp.status);
       }
@@ -272,14 +302,10 @@
     startResendTimer(60);
 
     try {
-      var resp = await fetch('admin/api/otp.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'resend', email: _email, type: 'signup' })
-      });
-      var data = await resp.json();
+      var resp = await postApi('api/otp.php', { action: 'resend', email: _email, type: 'signup' });
+      var data = await parseResponse(resp);
 
-      if (resp.ok && data.success) {
+      if (resp.ok && data && data.success) {
         otpErr.className = 'auth-alert auth-success';
         otpErr.style.cssText = 'background:rgba(79,209,197,.12);border-color:rgba(79,209,197,.3);color:var(--teal);';
         otpErr.textContent = 'A new verification code has been sent to your email.';
@@ -287,13 +313,15 @@
       } else {
         otpErr.className = 'auth-alert';
         otpErr.style.cssText = '';
-        otpErr.textContent = data.error || 'Unable to send code. Please try again.';
+        var msg = (data && (data.error || data.message)) || 'Unable to send verification code. Please try again.';
+        if (resp.status === 429) msg = 'Too many attempts. Please wait before trying again.';
+        otpErr.textContent = msg;
         otpErr.hidden = false;
       }
     } catch (err) {
       otpErr.className = 'auth-alert';
       otpErr.style.cssText = '';
-      otpErr.textContent = "We couldn't connect to the server. Please check your connection and try again.";
+      otpErr.textContent = 'Could not connect to the server. Please check your connection.';
       otpErr.hidden = false;
     }
   });
