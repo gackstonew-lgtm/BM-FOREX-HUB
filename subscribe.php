@@ -568,7 +568,7 @@ var API_BASE = typeof API_BASE !== 'undefined' ? API_BASE : '';
     }
 
     /* Deep-link: ?service=copy_trading | ?plan=copytrading | ?plan=classes */
-    var deepPlan=params.get('plan') || params.get('service');
+      var deepPlan=params.get('plan') || params.get('service');
     if(deepPlan){
       var target=null;
       if(deepPlan==='copytrading' || deepPlan==='copy_trading'){
@@ -604,8 +604,27 @@ var API_BASE = typeof API_BASE !== 'undefined' ? API_BASE : '';
   }
 
   /* Select plan */
-  window.spSelect=function(plan){
+  window.spSelect=async function(plan){
     var m=PLANS[plan];if(!m)return;
+
+    // Check mandatory Elite Circle Terms acceptance if selecting an Elite plan
+    if(plan.indexOf('elite_') === 0){
+      try {
+        var s = await BMAuth.getSession();
+        var tok = s && s.session ? s.session.access_token : '';
+        var checkResp = await fetch((typeof API_BASE !== 'undefined' ? API_BASE : '') + '/api/elite-enrollment.php?action=check', {
+          headers: { 'Authorization': 'Bearer ' + tok }
+        });
+        if(checkResp.ok){
+          var checkData = await checkResp.json();
+          if(!checkData.accepted){
+            window.location.href = 'elite_enrollment.php?plan=' + encodeURIComponent(plan);
+            return;
+          }
+        }
+      } catch(e) {}
+    }
+
     _selected=plan;
     sessionStorage.setItem('pendingPlan', plan);
     document.getElementById('spSelName').textContent=m.name;

@@ -544,7 +544,7 @@ $elitePlans = $membership->getElitesPlans();
       
       <!-- Primary CTA Banner -->
       <div style="text-align: center; margin-bottom: 40px;">
-        <a href="subscribe.php" class="btn-upgrade-elites" style="padding:16px 36px; font-size:1.05rem;">
+        <a href="elite_enrollment.php" class="btn-upgrade-elites" style="padding:16px 36px; font-size:1.05rem;">
           Upgrade to BM Elites
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
@@ -558,27 +558,27 @@ $elitePlans = $membership->getElitesPlans();
           <h3>Select Investment Tier</h3>
           <div class="sp-card__desc">Choose your capital allocation tier to join the managed circle</div>
           <div class="sp-elite-tiers">
-            <a href="subscribe.php?plan=elite_starter" class="sp-elite-tier">
+            <a href="elite_enrollment.php?plan=elite_starter" class="sp-elite-tier">
               <span class="sp-elite-tier__amount">$1,000</span>
               <span class="sp-elite-tier__usd">Starter Tier</span>
             </a>
-            <a href="subscribe.php?plan=elite_intermediate" class="sp-elite-tier">
+            <a href="elite_enrollment.php?plan=elite_intermediate" class="sp-elite-tier">
               <span class="sp-elite-tier__amount">$2,000</span>
               <span class="sp-elite-tier__usd">Intermediate Tier</span>
             </a>
-            <a href="subscribe.php?plan=elite_advanced" class="sp-elite-tier">
+            <a href="elite_enrollment.php?plan=elite_advanced" class="sp-elite-tier">
               <span class="sp-elite-tier__amount">$3,000</span>
               <span class="sp-elite-tier__usd">Advanced Tier</span>
             </a>
-            <a href="subscribe.php?plan=elite_professional" class="sp-elite-tier">
+            <a href="elite_enrollment.php?plan=elite_professional" class="sp-elite-tier">
               <span class="sp-elite-tier__amount">$5,000</span>
               <span class="sp-elite-tier__usd">Professional Tier</span>
             </a>
-            <a href="subscribe.php?plan=elite_premium" class="sp-elite-tier">
+            <a href="elite_enrollment.php?plan=elite_premium" class="sp-elite-tier">
               <span class="sp-elite-tier__amount">$6,000</span>
               <span class="sp-elite-tier__usd">Premium Tier</span>
             </a>
-            <a href="subscribe.php?plan=elite_elite" class="sp-elite-tier">
+            <a href="elite_enrollment.php?plan=elite_elite" class="sp-elite-tier">
               <span class="sp-elite-tier__amount">$10,000</span>
               <span class="sp-elite-tier__usd">Ultimate VIP Elite Tier</span>
             </a>
@@ -589,7 +589,7 @@ $elitePlans = $membership->getElitesPlans();
             <li>High-conviction institutional signals</li>
             <li>Priority consultation & senior trader access</li>
           </ul>
-          <a href="subscribe.php" class="btn-upgrade-elites" style="width:100%;">
+          <a href="elite_enrollment.php" class="btn-upgrade-elites" style="width:100%;">
             Subscribe to BM Elites
           </a>
         </div>
@@ -784,6 +784,21 @@ $elitePlans = $membership->getElitesPlans();
       badgeContainerEl.style.borderColor = 'rgba(246, 70, 93, 0.3)';
       badgeContainerEl.style.color = '#f6465d';
     }
+
+    try {
+      const checkResp = await fetch('api/elite-enrollment.php?action=check', {
+        headers: { 'Authorization': 'Bearer ' + (session ? session.access_token : '') }
+      });
+      if (checkResp.ok) {
+        const checkData = await checkResp.json();
+        if (checkData.ok && checkData.accepted) {
+          // User already completed terms enrollment — update CTA links to direct subscription
+          document.querySelectorAll('a[href^="elite_enrollment.php"]').forEach(a => {
+            a.href = a.href.replace('elite_enrollment.php', 'subscribe.php');
+          });
+        }
+      }
+    } catch(e) {}
   }
 
   // Countdown function

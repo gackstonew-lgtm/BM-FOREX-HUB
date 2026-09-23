@@ -239,6 +239,33 @@ try {
             }
             exit;
 
+        // ── List Elite Circle Electronic Enrollments ─────────────────
+        case 'list_elite_enrollments':
+            try {
+                $pdo = getMarketPDO();
+                $stmt = $pdo->query("
+                    SELECT id, user_id, member_name, id_passport_number, phone, email, country,
+                           investment_amount, currency, payment_reference, investment_start_date,
+                           expected_cycle_completion_date, terms_version, terms_effective_date,
+                           accepted, accepted_at, accepted_ip_address, email_status, created_at
+                    FROM elite_circle_enrollments
+                    ORDER BY created_at DESC
+                ");
+                $enrollments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo json_encode([
+                    'success' => true,
+                    'data'    => $enrollments,
+                    'total'   => count($enrollments)
+                ]);
+            } catch (\Throwable $e) {
+                echo json_encode([
+                    'success' => true,
+                    'data'    => [],
+                    'total'   => 0
+                ]);
+            }
+            exit;
+
         default:
             http_response_code(400);
             echo json_encode(['success' => false, 'error' => 'Unknown action: ' . htmlspecialchars($action)]);

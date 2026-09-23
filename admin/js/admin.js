@@ -352,7 +352,7 @@
         loaded[name] = true;
         if (name === 'users') loadUsers();
         else if (name === 'payments') loadPayments();
-        else if (name === 'elite-subscriptions') loadEliteSubscriptions();
+        else if (name === 'elite-subscriptions') { loadEliteSubscriptions(); loadEliteEnrollments(); }
         else if (name === 'copy-traders') loadCopyTraders();
         else if (name === 'dashboard') loadDashboard();
         else if (name === 'articles') loadArticles();
@@ -1215,7 +1215,75 @@
   var eliteFilter = document.getElementById('eliteFilterStatus');
   if (eliteFilter) eliteFilter.addEventListener('change', renderEliteSubscriptions);
   var eliteRefresh = document.getElementById('eliteRefreshBtn');
-  if (eliteRefresh) eliteRefresh.addEventListener('click', loadEliteSubscriptions);
+  if (eliteRefresh) eliteRefresh.addEventListener('click', function(){
+    loadEliteSubscriptions();
+    if (typeof loadEliteEnrollments === 'function') loadEliteEnrollments();
+  });
+
+  /* ── Elite Circle Enrollments Audit Trail ── */
+  var allEliteEnrollments = [];
+  function loadEliteEnrollments() {
+    var tbody = document.getElementById('eliteEnrollTableBody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="table-empty">Loading enrollment records...</td></tr>';
+
+    safeAdminFetch(null, { action: 'list_elite_enrollments' })
+      .then(function(res){
+        allEliteEnrollments = (res && res.data && Array.isArray(res.data)) ? res.data : [];
+        renderEliteEnrollments();
+      })
+      .catch(function(err){
+        console.error('Failed to load Elite enrollments:', err);
+        if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="table-empty" style="color:#FF6B6B">Failed to load enrollments: ' + esc(err.message) + '</td></tr>';
+      });
+  }
+
+  function renderEliteEnrollments() {
+    var search = (document.getElementById('eliteEnrollSearchInput') ? document.getElementById('eliteEnrollSearchInput').value : '').toLowerCase();
+
+    var filtered = allEliteEnrollments.filter(function(e){
+      var name = (e.member_name || '').toLowerCase();
+      var idNum = (e.id_passport_number || '').toLowerCase();
+      var email = (e.email || '').toLowerCase();
+      var phone = (e.phone || '').toLowerCase();
+      var country = (e.country || '').toLowerCase();
+      return !search || name.includes(search) || idNum.includes(search) || email.includes(search) || phone.includes(search) || country.includes(search);
+    });
+
+    var tbody = document.getElementById('eliteEnrollTableBody');
+    if (!tbody) return;
+
+    if (document.getElementById('eliteEnrollShowingCount')) {
+      document.getElementById('eliteEnrollShowingCount').textContent = 'Showing ' + filtered.length + ' of ' + allEliteEnrollments.length + ' enrollments';
+    }
+
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr><td colspan="9" class="table-empty">No Elite enrollment records found.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(function(e){
+      var amtFormatted = (e.currency || 'USD') + ' ' + Number(e.investment_amount || 0).toLocaleString();
+      var mailStatusCls = e.email_status === 'sent' ? 'active' : (e.email_status === 'failed' ? 'inactive' : 'pending');
+      var mailStatusText = e.email_status === 'sent' ? '✓ Sent' : (e.email_status || 'Pending');
+
+      return '<tr>'
+        + '<td><strong>'+esc(e.member_name||'--')+'</strong><br><small style="color:#7F8B99">User ID: '+esc((e.user_id||'').substring(0,8))+'...</small></td>'
+        + '<td><strong style="color:#F0B429;font-family:monospace;">'+esc(e.id_passport_number||'--')+'</strong></td>'
+        + '<td>'+esc(e.email||'--')+'<br><small style="color:#7F8B99">'+esc(e.phone||'--')+'</small></td>'
+        + '<td>'+esc(e.country||'--')+'</td>'
+        + '<td style="color:#16C784;font-weight:700;">'+amtFormatted+'</td>'
+        + '<td><small>Start: '+esc(e.investment_start_date||'--')+'</small><br><strong style="color:#1677FF;">End: '+esc(e.expected_cycle_completion_date||'--')+'</strong></td>'
+        + '<td><span style="font-family:monospace;font-size:0.75rem;background:rgba(22,119,255,0.12);color:#1677FF;padding:2px 6px;border-radius:4px;">v'+esc(e.terms_version||'1.0')+' ('+esc(e.terms_effective_date||'2026-01-05')+')</span></td>'
+        + '<td>'+fmtDate(e.accepted_at || e.created_at)+'<br><small style="color:#7F8B99;font-family:monospace;">IP: '+esc(e.accepted_ip_address||'--')+'</small></td>'
+        + '<td><span class="status-badge status-badge--'+mailStatusCls+'">'+mailStatusText+'</span></td>'
+        + '</tr>';
+    }).join('');
+  }
+
+  var eliteEnrollSearch = document.getElementById('eliteEnrollSearchInput');
+  if (eliteEnrollSearch) eliteEnrollSearch.addEventListener('input', renderEliteEnrollments);
+  var eliteEnrollRefresh = document.getElementById('eliteEnrollRefreshBtn');
+  if (eliteEnrollRefresh) eliteEnrollRefresh.addEventListener('click', loadEliteEnrollments);
 
   // Modal Triggers
   var grantSubBtn = document.getElementById('grantSubBtn');

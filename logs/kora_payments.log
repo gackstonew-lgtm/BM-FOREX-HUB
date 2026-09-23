@@ -92,3 +92,7 @@
 [2026-09-06T08:27:39+02:00] [ERROR] Initialize error: The amount supplied does not meet transaction limit for any payment channel. Please check and try again | HTTP 409 | Ref: BMFH_elite_premium_97fef28ae4f8697b
 [2026-09-06T08:27:39+02:00] [DEBUG] Kora raw response: {"status":false,"code":"AA021","message":"The amount supplied does not meet transaction limit for any payment channel. Please check and try again","data":null}
 [2026-09-06T08:28:02+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_09038bec19f4c831
+[2026-09-23T19:29:52+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_71e7870b05e5fc66
+[2026-09-23T19:33:42+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_de269f9508f711dc
+[2026-09-23T19:40:40+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_4717179f687e3b3a
+[2026-09-23T20:00:43+02:00] [INFO] Initializing Kora Checkout session for Ref: BMFH_elite_starter_f6aadadb4da26328

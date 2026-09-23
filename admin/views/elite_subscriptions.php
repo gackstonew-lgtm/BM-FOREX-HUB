@@ -80,4 +80,46 @@
         <span class="table-count" id="eliteShowingCount">0 members</span>
       </div>
     </div>
+
+    <!-- Elite Circle Electronic Enrollments & Terms Acceptance Audit Trail -->
+    <div class="users-panel" style="margin-top:24px;">
+      <div class="panel-header">
+        <div>
+          <h3 class="panel-title">BM Elites — Electronic Enrollment &amp; Terms Acceptance Audit Trail</h3>
+          <p style="font-size:0.78rem; color:#7f8b99; margin:4px 0 0;">Mandatory legal records, ID verification, authoritative server timestamps, and 4-month cycle records.</p>
+        </div>
+        <div class="panel-tools">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="eliteEnrollSearchInput" placeholder="Search name, ID, email, country..." autocomplete="off">
+          </div>
+          <button class="btn-secondary-admin" id="eliteEnrollRefreshBtn" style="padding:6px 12px;font-size:0.78rem;" title="Refresh list">
+            &#x21bb; Refresh
+          </button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Member Name</th>
+              <th>ID / Passport No.</th>
+              <th>Email &amp; Phone</th>
+              <th>Country</th>
+              <th>Intended Capital</th>
+              <th>Cycle (Start &rarr; End)</th>
+              <th>Terms Version</th>
+              <th>Accepted Timestamp</th>
+              <th>Notification</th>
+            </tr>
+          </thead>
+          <tbody id="eliteEnrollTableBody">
+            <tr><td colspan="9" class="table-empty">Loading enrollment records...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-footer">
+        <span class="table-count" id="eliteEnrollShowingCount">0 enrollments</span>
+      </div>
+    </div>
   </section>

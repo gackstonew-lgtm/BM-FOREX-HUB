@@ -83,6 +83,31 @@ if (!$user) {
 $user_id    = $user['id'];
 $user_email = $user['email'] ?? 'trader@bmforexhub.exchange';
 
+// ── Server-Side Gate: Elite Circle Terms & Electronic Enrollment ───
+if (strpos($plan, 'elite_') === 0) {
+    $hasAcceptedTerms = false;
+    try {
+        $pdo = getMarketPDO();
+        $stmt = $pdo->prepare("
+            SELECT id FROM elite_circle_enrollments 
+            WHERE user_id = ? AND terms_version = '1.0' AND accepted = 1 
+            LIMIT 1
+        ");
+        $stmt->execute([$user_id]);
+        if ($stmt->fetch()) {
+            $hasAcceptedTerms = true;
+        }
+    } catch (\Throwable $e) {}
+
+    if (!$hasAcceptedTerms) {
+        send_json([
+            'error'          => 'Mandatory Elite Circle Electronic Enrollment and Terms Acceptance required before proceeding to payment.',
+            'redirect'       => 'elite_enrollment.php?plan=' . urlencode($plan),
+            'requires_terms' => true
+        ], 403);
+    }
+}
+
 // ── Check for pending/duplicate payment ────────────────────────────
 $supabase_url = SUPABASE_URL;
 $service_key  = SUPABASE_SERVICE_KEY;
