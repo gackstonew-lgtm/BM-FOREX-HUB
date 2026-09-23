@@ -392,8 +392,19 @@ $elitePlans = $membership->getElitesPlans();
           </a>
         </div>
       </div>
-    <?php else: ?>
-    
+    <?php if (isset($_GET['compliance_success']) && $_GET['compliance_success'] == 1): ?>
+      <div style="background: rgba(22, 199, 132, 0.12); border: 1px solid rgba(22, 199, 132, 0.35); border-radius: 12px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(22, 199, 132, 0.2); color: #16C784; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">&check;</div>
+          <div>
+            <strong style="color: #16C784; font-size: 0.95rem; display: block;">Compliance Verified — Terms &amp; Conditions (v1.0) Accepted</strong>
+            <span style="color: #8fa3b8; font-size: 0.82rem;">Thank you for accepting the BM FOREX HUB Elite Circle Terms &amp; Conditions. Your VIP countdown and WhatsApp mentorship access are active.</span>
+          </div>
+        </div>
+        <a href="bm_elites.php" style="color: #8fa3b8; font-size: 0.78rem; text-decoration: none; padding: 4px 10px; border-radius: 6px; border: 1px solid #283548;">Dismiss</a>
+      </div>
+    <?php endif; ?>
+
     <!-- Title block -->
     <div class="dash-overview__header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom: 24px;">
       <div>
@@ -410,6 +421,20 @@ $elitePlans = $membership->getElitesPlans();
     <!-- ======================================================== -->
     <div id="eliteActiveSubscriberHero" style="display:none;">
       
+      <!-- Compliance Gate Notice for existing active members who haven't accepted Terms v1.0 -->
+      <div id="eliteComplianceNoticeBox" style="display:none; background: linear-gradient(135deg, rgba(240, 180, 41, 0.12) 0%, rgba(22, 119, 255, 0.12) 100%); border: 1px solid rgba(240, 180, 41, 0.4); border-radius: 14px; padding: 22px 24px; margin-bottom: 24px; text-align: left;">
+        <div style="display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;">
+          <div style="width: 42px; height: 42px; border-radius: 10px; background: rgba(240, 180, 41, 0.2); color: #F0B429; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">&#9888;</div>
+          <div style="flex:1; min-width:260px;">
+            <h3 style="color:#F0B429; font-size:1.05rem; margin:0 0 6px; font-family:'Space Grotesk',sans-serif;">Compliance Action Required: Elite Circle Terms Acceptance (v1.0)</h3>
+            <p style="color:#B8C3D1; font-size:0.86rem; line-height:1.5; margin:0 0 14px;">As an active BM Elite member, reviewing and accepting the updated 39-section Terms &amp; Conditions (Effective 05 January 2026) is required to maintain your active VIP access and unlock the official WhatsApp Mentorship Group.</p>
+            <a href="elite_enrollment.php?mode=compliance" class="btn-upgrade-elites" style="background:#F0B429; color:#0B0F14; font-weight:700; display:inline-flex; padding:10px 22px; font-size:0.88rem;">
+              Review &amp; Accept Terms (v1.0) &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+
       <!-- Primary Live Countdown Card (Inspired by reference aesthetic) -->
       <div class="elite-hero-card">
         <div class="elite-badge-pill" id="eliteHeroBadge">
@@ -472,7 +497,7 @@ $elitePlans = $membership->getElitesPlans();
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
             <span id="eliteUpgradeBtnText">Upgrade Elites</span>
           </a>
-          <a href="https://wa.me/254700000000?text=Hi%20BM%20Forex%20Hub,%20I%20am%20an%20active%20BM%20Elites%20member." target="_blank" rel="noopener noreferrer" class="btn-vip-whatsapp">
+          <a href="https://wa.me/254700000000?text=Hi%20BM%20Forex%20Hub,%20I%20am%20an%20active%20BM%20Elites%20member." target="_blank" rel="noopener noreferrer" class="btn-vip-whatsapp" id="eliteVipWaBtn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             Join VIP WhatsApp Group
           </a>
@@ -611,8 +636,10 @@ $elitePlans = $membership->getElitesPlans();
   <!-- Footer -->
   <footer style="margin-top: 40px; padding: 20px 24px; border-top: 1px solid #1e2d42; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.77rem; color: #5b6475;">
     <div>&copy; <?= date('Y') ?> BM Forex Hub. All Rights Reserved.</div>
-    <div style="display: flex; gap: 16px;">
+    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
       <a href="terms.php" style="color:#5b6475; text-decoration:none;">Terms of Use</a>
+      <span style="color:#1e2d42;">|</span>
+      <a href="terms-elite.php" style="color:#F0B429; text-decoration:none;">Elite Circle Terms</a>
       <span style="color:#1e2d42;">|</span>
       <a href="privacy.php" style="color:#5b6475; text-decoration:none;">Privacy Policy</a>
       <span style="color:#1e2d42;">|</span>
@@ -724,6 +751,45 @@ $elitePlans = $membership->getElitesPlans();
 
     // Initialize Countdown Engine
     initEliteCountdown(expiryTs, isPermanent);
+
+    // Compliance Check: verify if active Elite member has accepted Terms v1.0
+    try {
+      const checkResp = await fetch('api/elite-enrollment.php?action=check', {
+        headers: { 'Authorization': 'Bearer ' + (session ? session.access_token : '') }
+      });
+      if (checkResp.ok) {
+        const checkData = await checkResp.json();
+        const complianceBox = document.getElementById('eliteComplianceNoticeBox');
+        const waBtn = document.getElementById('eliteVipWaBtn');
+
+        if (checkData.ok && checkData.requires_consent) {
+          // Member needs to review and accept Terms v1.0
+          if (complianceBox) complianceBox.style.display = 'block';
+          if (waBtn) {
+            waBtn.href = 'elite_enrollment.php?mode=compliance';
+            waBtn.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Unlock WhatsApp Group (Accept Terms)
+            `;
+            waBtn.style.background = 'rgba(240, 180, 41, 0.15)';
+            waBtn.style.borderColor = 'rgba(240, 180, 41, 0.4)';
+            waBtn.style.color = '#F0B429';
+          }
+        } else if (checkData.ok && checkData.accepted) {
+          // Member has valid acceptance on record — configure secure, pre-filled VIP WhatsApp verification link
+          if (complianceBox) complianceBox.style.display = 'none';
+          if (waBtn) {
+            const memberName = (checkData.enrollment && checkData.enrollment.member_name) || userDisplayName;
+            const memberEmail = (checkData.enrollment && checkData.enrollment.email) || user.email;
+            const enrollmentId = (checkData.enrollment && checkData.enrollment.id) || 'VERIFIED';
+            const waMsg = `Hi BM Forex Hub, I am an active BM Elite Member. Please verify my access to the VIP WhatsApp Group.\n\nFull Name: ${memberName}\nEmail: ${memberEmail}\nMember ID: ${user.id}\nTerms Version: 1.0 (Accepted)\nAcceptance Record: ${enrollmentId}`;
+            waBtn.href = `https://wa.me/254700000000?text=${encodeURIComponent(waMsg)}`;
+          }
+        }
+      }
+    } catch(e) {
+      console.warn('Elite compliance check notice:', e);
+    }
 
   } else if (hasElitePlan && isExpired) {
     // Expired subscriber view

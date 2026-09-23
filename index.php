@@ -355,6 +355,25 @@
 <div id="view-dashboard" class="bm-view bm-view--active">
   <div class="dash-overview dash-workspace-shell">
 
+    <!-- ===== In-App Compliance Notice Banner for Active Elite Members ===== -->
+    <div id="dashEliteComplianceBanner" style="display:none; background: linear-gradient(135deg, rgba(240, 180, 41, 0.12) 0%, rgba(22, 119, 255, 0.12) 100%); border: 1px solid rgba(240, 180, 41, 0.4); border-radius: 14px; padding: 18px 22px; margin-bottom: 24px; position: relative;">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 280px;">
+          <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(240, 180, 41, 0.2); color: #F0B429; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">&#9888;</div>
+          <div>
+            <strong style="color: #F0B429; font-size: 0.95rem; display: block; margin-bottom: 2px;">Action Required: BM Elite Terms Acceptance (v1.0)</strong>
+            <span style="color: #8fa3b8; font-size: 0.82rem; line-height: 1.45;">As an active BM Elite member, please review and accept the official updated Terms &amp; Conditions to maintain your VIP privileges and WhatsApp mentorship access.</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <a href="terms-elite.php" style="color: #8fa3b8; font-size: 0.8rem; text-decoration: none; padding: 8px 14px; border: 1px solid #283548; border-radius: 8px; transition: color .15s;">View Terms</a>
+          <a href="elite_enrollment.php?mode=compliance" class="btn-upgrade-elites" style="background: #F0B429; color: #0B0F14; font-weight: 700; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-size: 0.83rem; display: inline-flex; align-items: center; gap: 6px;">
+            Accept Terms &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== SECTION 1: Welcome Banner ===== -->
     <div class="dash-welcome">
       <div class="dash-welcome__left">
@@ -2802,6 +2821,20 @@ function closeSubscriptionQuickModal() {
       if (modalStatusEl) modalStatusEl.textContent = 'Active Premium';
       if (modalPlanEl) modalPlanEl.textContent = activePlanName || 'BM Elites Trading Circle';
       if (modalExpiryEl) modalExpiryEl.textContent = authData.subscription_expiry ? new Date(authData.subscription_expiry).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : 'Lifetime VIP';
+
+      // Check if active Elite member requires compliance terms acceptance
+      try {
+        const checkResp = await fetch('api/elite-enrollment.php?action=check', {
+          headers: { 'Authorization': 'Bearer ' + (session ? session.access_token : '') }
+        });
+        if (checkResp.ok) {
+          const checkData = await checkResp.json();
+          const complianceBanner = document.getElementById('dashEliteComplianceBanner');
+          if (complianceBanner && checkData.ok && checkData.requires_consent) {
+            complianceBanner.style.display = 'block';
+          }
+        }
+      } catch(e) {}
 
     } else if (hasTrial) {
       if (badgeTextEl) badgeTextEl.textContent = '⏱️ Free Trial Active (' + (window._trialDaysLeft || 0) + ' Days Left)';

@@ -9,6 +9,7 @@ require_once __DIR__ . '/engine_config.php';
             <a href="about.php" style="color:#fff; margin:0 10px; text-decoration:none;">About</a>
             <a href="privacy.php" style="color:#fff; margin:0 10px; text-decoration:none;">Privacy</a>
             <a href="terms.php" style="color:#fff; margin:0 10px; text-decoration:none;">Terms</a>
+            <a href="terms-elite.php" style="color:#F0B429; margin:0 10px; text-decoration:none;">Elite Terms</a>
             <a href="contact.php" style="color:#fff; margin:0 10px; text-decoration:none;">Contact</a>
         </nav>
     </div>

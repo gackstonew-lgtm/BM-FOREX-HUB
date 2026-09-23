@@ -596,8 +596,10 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
 <!-- Footer -->
 <footer style="margin-top:40px;padding:20px 24px;border-top:1px solid #1e2d42;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:0.77rem;color:#5b6475;">
   <div>&copy; <?= date('Y') ?> BM Forex Hub. Operating Entity: Varban Company Limited.</div>
-  <div style="display:flex;gap:16px;">
+  <div style="display:flex;gap:16px;flex-wrap:wrap;">
     <a href="terms.php" style="color:#5b6475;text-decoration:none;">Terms of Use</a>
+    <span style="color:#1e2d42;">|</span>
+    <a href="terms-elite.php" style="color:#F0B429;text-decoration:none;">Elite Circle Terms</a>
     <span style="color:#1e2d42;">|</span>
     <a href="privacy.php" style="color:#5b6475;text-decoration:none;">Privacy Policy</a>
     <span style="color:#1e2d42;">|</span>
@@ -729,6 +731,12 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
 
   acceptCheck.addEventListener('change', validateFormState);
 
+  // URL and mode state
+  const urlParams       = new URLSearchParams(window.location.search);
+  let isComplianceMode  = urlParams.get('mode') === 'compliance';
+  let isExistingMember  = isComplianceMode;
+  let existingSubRef    = '';
+
   // Initialize Auth & Data Population
   try {
     const { user, session } = await BMAuth.getSession();
@@ -747,43 +755,107 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
     if (checkResp.ok) {
       const checkData = await checkResp.json();
       if (checkData.ok && checkData.accepted) {
-        // User already has valid acceptance on record — proceed to subscription page directly
-        const target = 'subscribe.php' + (selectedPlanKey ? '?plan=' + encodeURIComponent(selectedPlanKey) : '?service=elite');
-        window.location.replace(target);
+        // User already has valid acceptance on record
+        if (checkData.is_elite || isComplianceMode) {
+          window.location.replace('bm_elites.php?compliance_success=1');
+        } else {
+          const target = 'subscribe.php' + (selectedPlanKey ? '?plan=' + encodeURIComponent(selectedPlanKey) : '?service=elite');
+          window.location.replace(target);
+        }
         return;
+      }
+      if (checkData.is_elite) {
+        isExistingMember = true;
       }
     }
 
-    // Prefill profile data from server
+    // Prefill profile and subscription data from server
     const prefillResp = await fetch('api/elite-enrollment.php?action=prefill', {
       headers: { 'Authorization': 'Bearer ' + currentAuthToken }
     });
 
     if (prefillResp.ok) {
       const prefillData = await prefillResp.json();
-      if (prefillData.ok && prefillData.profile) {
-        const p = prefillData.profile;
-        if (p.full_name && !nameInput.value) nameInput.value = p.full_name;
-        if (p.email) emailInput.value = p.email;
-        if (p.phone && !phoneInput.value) phoneInput.value = p.phone;
-        if (p.country && !countryInput.value) countryInput.value = p.country;
+      if (prefillData.ok) {
+        if (prefillData.is_elite) {
+          isExistingMember = true;
+        }
+
+        if (prefillData.profile) {
+          const p = prefillData.profile;
+          if (p.full_name && !nameInput.value) nameInput.value = p.full_name;
+          if (p.email) emailInput.value = p.email;
+          if (p.phone && !phoneInput.value) phoneInput.value = p.phone;
+          if (p.country && !countryInput.value) countryInput.value = p.country;
+        }
+
+        // Prefill existing active subscription if present
+        if (prefillData.existing_subscription) {
+          const sub = prefillData.existing_subscription;
+          existingSubRef = sub.id || '';
+          if (sub.amount_usd && parseFloat(sub.amount_usd) > 0) {
+            amountInput.value = sub.amount_usd;
+          }
+          if (sub.starts_at) {
+            const cleanDate = sub.starts_at.substring(0, 10);
+            if (cleanDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+              startDateInput.value = cleanDate;
+              recalculateCycleCompletion(cleanDate);
+            }
+          }
+          if (sub.plan_key || sub.plan) {
+            selectedPlanKey = sub.plan_key || sub.plan;
+          }
+        }
       }
     }
 
-    // Preselect plan from URL if present
-    if (selectedPlanKey && planAmountMap[selectedPlanKey]) {
-      const presetAmt = planAmountMap[selectedPlanKey];
-      amountInput.value = presetAmt;
-      if (tierPills) {
-        const pill = tierPills.querySelector(`[data-amt="${presetAmt}"]`);
-        if (pill) pill.classList.add('active');
+    // Update UI elements if in existing member compliance mode
+    if (isExistingMember || isComplianceMode) {
+      const heroBadge = document.querySelector('.enroll-badge');
+      if (heroBadge) heroBadge.textContent = '👑 EXISTING BM ELITE MEMBER COMPLIANCE';
+
+      const heroTitle = document.querySelector('.enroll-title');
+      if (heroTitle) heroTitle.textContent = 'Elite Circle Terms & Conditions Acceptance (v1.0)';
+
+      const heroSubtitle = document.querySelector('.enroll-subtitle');
+      if (heroSubtitle) {
+        heroSubtitle.textContent = 'As an active BM Elite member, reviewing and accepting the updated Terms & Conditions (Effective 05 January 2026) verifies your compliance and unlocks your active VIP countdown and WhatsApp mentorship group.';
       }
-    } else if (!amountInput.value) {
-      amountInput.value = 1000;
-      if (tierPills) {
-        const pill = tierPills.querySelector('[data-amt="1000"]');
-        if (pill) pill.classList.add('active');
+
+      const stepIndicator = document.querySelector('.enroll-steps');
+      if (stepIndicator) {
+        stepIndicator.innerHTML = `
+          <div class="enroll-step active">
+            <div class="enroll-step__num">✓</div>
+            <span>Elite Compliance Verification &amp; Terms Acceptance</span>
+          </div>
+        `;
       }
+
+      submitBtn.innerHTML = '<span>Verify Compliance &amp; Accept Terms &rarr;</span>';
+      if (continueBtn) continueBtn.textContent = 'Enter BM Elites Trading Circle \u2192';
+    }
+
+    // Preselect plan from URL if present and not already set
+    if (!amountInput.value) {
+      if (selectedPlanKey && planAmountMap[selectedPlanKey]) {
+        const presetAmt = planAmountMap[selectedPlanKey];
+        amountInput.value = presetAmt;
+        if (tierPills) {
+          const pill = tierPills.querySelector(`[data-amt="${presetAmt}"]`);
+          if (pill) pill.classList.add('active');
+        }
+      } else {
+        amountInput.value = 1000;
+        if (tierPills) {
+          const pill = tierPills.querySelector('[data-amt="1000"]');
+          if (pill) pill.classList.add('active');
+        }
+      }
+    } else if (tierPills) {
+      const pill = tierPills.querySelector(`[data-amt="${amountInput.value}"]`);
+      if (pill) pill.classList.add('active');
     }
 
     validateFormState();
@@ -811,6 +883,9 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
       investment_amount: parseFloat(amountInput.value) || 0,
       currency: currencyInput.value,
       investment_start_date: startDateInput.value,
+      payment_reference: existingSubRef || '',
+      is_existing_member: isExistingMember,
+      mode: isComplianceMode ? 'compliance' : 'standard',
       accepted: true,
       plan: selectedPlanKey || planTierMap[amountInput.value] || ''
     };
@@ -837,7 +912,9 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
 
       if (!resp.ok || !data.ok) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Submit Electronic Enrollment &amp; Proceed</span>';
+        submitBtn.innerHTML = isExistingMember 
+          ? '<span>Verify Compliance &amp; Accept Terms &rarr;</span>' 
+          : '<span>Submit Electronic Enrollment &amp; Proceed</span>';
         showError((data && data.error) || 'Submission failed. Please check your network and try again.');
         return;
       }
@@ -851,6 +928,8 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
 
       if (data.redirect_url) {
         redirectTargetUrl = data.redirect_url;
+      } else if (isExistingMember) {
+        redirectTargetUrl = 'bm_elites.php?compliance_success=1';
       }
 
       modalOverlay.classList.add('show');
@@ -862,7 +941,9 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
 
     } catch(err) {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span>Submit Electronic Enrollment &amp; Proceed</span>';
+      submitBtn.innerHTML = isExistingMember 
+        ? '<span>Verify Compliance &amp; Accept Terms &rarr;</span>' 
+        : '<span>Submit Electronic Enrollment &amp; Proceed</span>';
       showError('Could not connect to the server. Please check your internet connection.');
     }
   });

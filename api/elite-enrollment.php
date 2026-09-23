@@ -160,6 +160,61 @@ function get_client_ip() {
     return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : '127.0.0.1';
 }
 
+// Find user's active BM Elite subscription if one exists
+function get_active_elite_subscription($userId, $userEmail = '') {
+    $pdo = getMarketPDO();
+    $nowIso = date('c');
+
+    try {
+        // 1. Check subscriptions table
+        $stmt = $pdo->prepare("
+            SELECT id, user_id, username, plan, plan_key, plan_name, amount_usd, starts_at, expires_at, created_at, status
+            FROM subscriptions 
+            WHERE (user_id = ? OR username = ? OR id = ?)
+              AND (plan LIKE 'elite_%' OR plan_key LIKE 'elite_%' OR plan = 'all' OR plan_name LIKE '%Elite%')
+              AND (status = 'active' OR status IS NULL OR status = '')
+              AND (expires_at IS NULL OR expires_at = '' OR expires_at > ?)
+            ORDER BY created_at DESC 
+            LIMIT 1
+        ");
+        $stmt->execute([$userId, $userEmail, $userId, $nowIso]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) return $row;
+
+        // 2. Check user_subscriptions table
+        $stmt2 = $pdo->prepare("
+            SELECT id, user_id, username, plan, plan_name, amount_usd, starts_at, expires_at, created_at, status
+            FROM user_subscriptions 
+            WHERE (user_id = ? OR username = ?)
+              AND (plan LIKE 'elite_%' OR plan = 'all' OR plan_name LIKE '%Elite%')
+              AND (status = 'active' OR status IS NULL OR status = '')
+              AND (expires_at IS NULL OR expires_at = '' OR expires_at > ?)
+            ORDER BY created_at DESC 
+            LIMIT 1
+        ");
+        $stmt2->execute([$userId, $userEmail, $nowIso]);
+        $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+        if ($row2) return $row2;
+
+    } catch (\Throwable $e) {}
+
+    return null;
+}
+
+// Determine if user is an active BM Elite Member
+function isActiveBMEliteMember($userId, $userEmail = '') {
+    $sub = get_active_elite_subscription($userId, $userEmail);
+    if ($sub) return true;
+
+    // Permanent admin accounts / VIP pass
+    $adminEmails = ['admin@bmforexhub.exchange', 'info@admin.bmforexhub.exchange', 'gackstonebaraka@gmail.com'];
+    if (in_array(strtolower($userEmail), $adminEmails)) {
+        return true;
+    }
+
+    return false;
+}
+
 // ── Routing ─────────────────────────────────────────────────────────
 
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
@@ -194,28 +249,28 @@ if ($action === 'check') {
         SELECT id, user_id, member_name, investment_amount, currency, investment_start_date, 
                expected_cycle_completion_date, terms_version, terms_effective_date, accepted, accepted_at, email_status
         FROM elite_circle_enrollments 
-        WHERE user_id = ? AND terms_version = ? AND accepted = 1 
+        WHERE (user_id = ? OR email = ?) AND terms_version = ? AND accepted = 1 
         ORDER BY created_at DESC 
         LIMIT 1
     ");
-    $stmt->execute([$userId, ELITE_TERMS_VERSION]);
+    $stmt->execute([$userId, $userEmail, ELITE_TERMS_VERSION]);
     $enrollment = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($enrollment) {
-        send_response([
-            'ok'            => true,
-            'accepted'      => true,
-            'terms_version' => ELITE_TERMS_VERSION,
-            'enrollment'    => $enrollment
-        ]);
-    } else {
-        send_response([
-            'ok'            => true,
-            'accepted'      => false,
-            'terms_version' => ELITE_TERMS_VERSION,
-            'enrollment'    => null
-        ]);
-    }
+    $isElite = isActiveBMEliteMember($userId, $userEmail);
+    $activeSub = get_active_elite_subscription($userId, $userEmail);
+    $termsAccepted = !empty($enrollment);
+    $requiresConsent = $isElite && !$termsAccepted;
+
+    send_response([
+        'ok'                    => true,
+        'accepted'              => $termsAccepted,
+        'is_elite'              => $isElite,
+        'requires_consent'      => $requiresConsent,
+        'terms_version'         => ELITE_TERMS_VERSION,
+        'terms_effective_date'  => ELITE_TERMS_EFFECTIVE_DATE,
+        'enrollment'            => $enrollment ?: null,
+        'existing_subscription' => $activeSub ?: null
+    ]);
 }
 
 // ── ACTION: Prefill Authenticated Member Data ─────────────────────────
@@ -235,10 +290,29 @@ if ($action === 'prefill') {
         $profile['country'] = $meta['country_code'] ?? ($meta['country'] ?? '');
     }
 
+    $isElite = isActiveBMEliteMember($userId, $userEmail);
+    $activeSub = get_active_elite_subscription($userId, $userEmail);
+    $stmt = $pdo = getMarketPDO();
+    $checkStmt = $pdo->prepare("
+        SELECT id, terms_version, accepted, accepted_at 
+        FROM elite_circle_enrollments 
+        WHERE (user_id = ? OR email = ?) AND terms_version = ? AND accepted = 1 
+        LIMIT 1
+    ");
+    $checkStmt->execute([$userId, $userEmail, ELITE_TERMS_VERSION]);
+    $existingEnrollment = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+    $termsAccepted = !empty($existingEnrollment);
+    $requiresConsent = $isElite && !$termsAccepted;
+
     send_response([
-        'ok'      => true,
-        'user_id' => $userId,
-        'profile' => $profile
+        'ok'                    => true,
+        'user_id'               => $userId,
+        'profile'               => $profile,
+        'is_elite'              => $isElite,
+        'requires_consent'      => $requiresConsent,
+        'existing_subscription' => $activeSub ?: null,
+        'enrollment'            => $existingEnrollment ?: null
     ]);
 }
 
@@ -302,12 +376,20 @@ if ($action === 'submit' && $method === 'POST') {
     // 4. Idempotency & Duplicate Protection
     $checkStmt = $pdo->prepare("
         SELECT id, created_at FROM elite_circle_enrollments 
-        WHERE user_id = ? AND terms_version = ? AND accepted = 1 
+        WHERE (user_id = ? OR email = ?) AND terms_version = ? AND accepted = 1 
         ORDER BY created_at DESC 
         LIMIT 1
     ");
-    $checkStmt->execute([$userId, ELITE_TERMS_VERSION]);
+    $checkStmt->execute([$userId, $userEmail, ELITE_TERMS_VERSION]);
     $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+    $isExistingMember = !empty($postData['is_existing_member']) 
+        || (isset($postData['mode']) && $postData['mode'] === 'compliance') 
+        || isActiveBMEliteMember($userId, $userEmail);
+
+    $defaultRedirectUrl = $isExistingMember 
+        ? 'bm_elites.php?compliance_success=1' 
+        : ('subscribe.php' . ($planParam ? '?plan=' . urlencode($planParam) : '?service=elite'));
 
     $enrollmentId = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
         mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff),
@@ -329,12 +411,16 @@ if ($action === 'submit' && $method === 'POST') {
                 'accepted_at'           => $existing['created_at'],
                 'accepted_date'         => date('d F Y', strtotime($existing['created_at'])),
                 'accepted_time'         => date('H:i:s T', strtotime($existing['created_at'])),
-                'redirect_url'          => 'subscribe.php' . ($planParam ? '?plan=' . urlencode($planParam) : '?service=elite')
+                'redirect_url'          => $defaultRedirectUrl
             ]);
         }
     }
 
     // 5. Persist Enrollment Record to Database
+    $enrollmentNote = $isExistingMember 
+        ? 'Existing active BM Elite member terms acceptance' 
+        : 'Electronic acceptance via web portal';
+
     $insertSql = "
         INSERT INTO elite_circle_enrollments (
             id, user_id, member_name, id_passport_number, phone, email, country,
@@ -371,7 +457,7 @@ if ($action === 'submit' && $method === 'POST') {
         $serverNow,
         $acceptedIp,
         $userAgent,
-        'Electronic acceptance via web portal',
+        $enrollmentNote,
         $serverNow,
         $serverNow
     ]);
@@ -398,6 +484,7 @@ if ($action === 'submit' && $method === 'POST') {
                 'accepted'                      => 1,
                 'accepted_at'                   => $serverNow,
                 'accepted_ip_address'           => $acceptedIp,
+                'notes'                         => $enrollmentNote,
                 'created_at'                    => $serverNow,
                 'updated_at'                    => $serverNow
             ]);
@@ -406,9 +493,14 @@ if ($action === 'submit' && $method === 'POST') {
 
     // 6. Send Administrative Notification Email to configured administrator recipient
     $adminEmail = getenv('ADMIN_EMAIL') ?: ($_SERVER['ADMIN_EMAIL'] ?? 'info@admin.bmforexhub.exchange');
-    $emailSubject = "BM FOREX HUB — BM Elite Compliance & Terms Acceptance";
+    $emailSubject = $isExistingMember 
+        ? "BM FOREX HUB — Existing BM Elite Member Terms Acceptance" 
+        : "BM FOREX HUB — BM Elite Compliance & Terms Acceptance";
     $formattedAcceptDate = date('d F Y', strtotime($serverNow));
     $formattedAcceptTime = date('H:i:s T', strtotime($serverNow));
+    $memberStatusLabel = $isExistingMember 
+        ? "Existing Active BM Elite Member (Terms v1.0 Compliance)" 
+        : "New Prospective BM Elite Member";
 
     $adminEmailHtml = "
     <div style='font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; background: #0B0F14; color: #FFFFFF; border: 1px solid #283548; border-radius: 12px; overflow: hidden;'>
@@ -423,7 +515,8 @@ if ($action === 'submit' && $method === 'POST') {
             <div style='background: #101722; border: 1px solid #1E2D42; border-radius: 8px; padding: 18px; margin-bottom: 18px;'>
                 <h4 style='color: #F0B429; margin: 0 0 12px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em;'>MEMBER DETAILS</h4>
                 <table style='width: 100%; border-collapse: collapse; font-size: 13px; color: #FFFFFF;'>
-                    <tr><td style='padding: 6px 0; color: #8FA3B8; width: 38%;'>Full Name:</td><td style='padding: 6px 0; font-weight: 600;'>" . htmlspecialchars($memberName) . "</td></tr>
+                    <tr><td style='padding: 6px 0; color: #8FA3B8; width: 38%;'>Member Status:</td><td style='padding: 6px 0; font-weight: 700; color: " . ($isExistingMember ? "#F0B429" : "#16C784") . ";'>" . htmlspecialchars($memberStatusLabel) . "</td></tr>
+                    <tr><td style='padding: 6px 0; color: #8FA3B8;'>Full Name:</td><td style='padding: 6px 0; font-weight: 600;'>" . htmlspecialchars($memberName) . "</td></tr>
                     <tr><td style='padding: 6px 0; color: #8FA3B8;'>ID / Passport Number:</td><td style='padding: 6px 0; font-weight: 600; color: #F0B429; font-family: monospace;'>" . htmlspecialchars($idPassportNumber) . "</td></tr>
                     <tr><td style='padding: 6px 0; color: #8FA3B8;'>Phone Number:</td><td style='padding: 6px 0;'>" . htmlspecialchars($phone) . "</td></tr>
                     <tr><td style='padding: 6px 0; color: #8FA3B8;'>Email Address:</td><td style='padding: 6px 0;'>" . htmlspecialchars($email) . "</td></tr>
@@ -436,7 +529,7 @@ if ($action === 'submit' && $method === 'POST') {
                 <table style='width: 100%; border-collapse: collapse; font-size: 13px; color: #FFFFFF;'>
                     <tr><td style='padding: 6px 0; color: #8FA3B8; width: 38%;'>Investment Amount:</td><td style='padding: 6px 0; font-weight: 700; color: #16C784; font-size: 15px;'>" . htmlspecialchars($currency) . " " . number_format($investmentAmount, 2) . "</td></tr>
                     <tr><td style='padding: 6px 0; color: #8FA3B8;'>Currency:</td><td style='padding: 6px 0;'>" . htmlspecialchars($currency) . "</td></tr>
-                    <tr><td style='padding: 6px 0; color: #8FA3B8;'>Payment Reference:</td><td style='padding: 6px 0;'>" . htmlspecialchars($paymentReference ?: 'Pending Payment Stage') . "</td></tr>
+                    <tr><td style='padding: 6px 0; color: #8FA3B8;'>Payment / Subscription Ref:</td><td style='padding: 6px 0;'>" . htmlspecialchars($paymentReference ?: ($isExistingMember ? 'Existing Active Subscription' : 'Pending Payment Stage')) . "</td></tr>
                     <tr><td style='padding: 6px 0; color: #8FA3B8;'>Investment Start Date:</td><td style='padding: 6px 0;'>" . htmlspecialchars($startDate) . "</td></tr>
                     <tr><td style='padding: 6px 0; color: #8FA3B8;'>Expected Cycle Completion:</td><td style='padding: 6px 0; font-weight: 600;'>" . htmlspecialchars($completionDate) . " (4-Month Cycle)</td></tr>
                 </table>
@@ -499,18 +592,21 @@ if ($action === 'submit' && $method === 'POST') {
         ]);
     } catch (\Throwable $e) {}
 
-    // 7. Success Response with redirect instructions to existing subscription flow
+    // 7. Success Response with redirect instructions
     send_response([
         'ok'                    => true,
-        'message'               => 'Elite Circle enrollment completed. Your Terms & Conditions acceptance has been recorded.',
+        'message'               => $isExistingMember 
+            ? 'Terms & Conditions acceptance verified. Your Elite VIP status and mentorship access have been confirmed.'
+            : 'Elite Circle enrollment completed. Your Terms & Conditions acceptance has been recorded.',
         'enrollment_id'         => $enrollmentId,
+        'is_existing_member'    => $isExistingMember,
         'terms_version'         => ELITE_TERMS_VERSION,
         'terms_effective_date'  => '05 January 2026',
         'accepted_at'           => $serverNow,
         'accepted_date'         => $formattedAcceptDate,
         'accepted_time'         => $formattedAcceptTime,
         'email_status'          => $emailStatus,
-        'redirect_url'          => 'subscribe.php' . ($planParam ? '?plan=' . urlencode($planParam) : '?service=elite')
+        'redirect_url'          => $defaultRedirectUrl
     ]);
 }
 
