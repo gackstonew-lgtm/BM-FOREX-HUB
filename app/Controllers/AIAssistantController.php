@@ -71,7 +71,7 @@ class AIAssistantController {
                 'success'      => true,
                 'reply'        => $response['reply'],
                 'escalate'     => $response['escalate'] ?? false,
-                'whatsapp_url' => $response['whatsapp_url'] ?? $settings['whatsapp_url'] ?? 'https://wa.me/254780618608',
+                'whatsapp_url' => $response['whatsapp_url'] ?? $settings['whatsapp_url'] ?? 'https://wa.me/254785618608',
                 'action_route' => $response['action_route'] ?? null,
                 'off_topic'    => $response['off_topic'] ?? false
             ]);

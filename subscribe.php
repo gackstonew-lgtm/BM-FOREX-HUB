@@ -472,7 +472,7 @@ foreach ($KORA_PLANS_USD as $k => $p) {
 <script>
 var API_BASE = typeof API_BASE !== 'undefined' ? API_BASE : '';
 (function(){
-  var WHATSAPP_NUMBER = '254780618608'; // ← official WhatsApp number
+  var WHATSAPP_NUMBER = '254785618608'; // ← official WhatsApp number
   var PLANS = <?php echo json_encode($plansDynamic); ?>;
   var SUB_META={
     grid_monthly:{amt:'25',per:'per month',cta:'Subscribe Monthly'},

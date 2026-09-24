@@ -211,7 +211,7 @@ function send_indicator_email(array $payment, string $type, string $detail, arra
   </div>
   <div style='text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #283548'>
     <p style='color:#7F8B99;font-size:12px;margin:0'>BM FOREX HUB LTD | Nakuru, Kenya</p>
-    <p style='color:#7F8B99;font-size:12px;margin:4px 0 0'>support@bmforexhub.exchange | +254 780 618 608</p>
+    <p style='color:#7F8B99;font-size:12px;margin:4px 0 0'>support@bmforexhub.exchange | +254 785 618608</p>
   </div>
 </div>";
     } else {
@@ -229,7 +229,7 @@ function send_indicator_email(array $payment, string $type, string $detail, arra
   </div>
   <div style='text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #283548'>
     <p style='color:#7F8B99;font-size:12px;margin:0'>BM FOREX HUB LTD | Nakuru, Kenya</p>
-    <p style='color:#7F8B99;font-size:12px;margin:4px 0 0'>support@bmforexhub.exchange | +254 780 618 608</p>
+    <p style='color:#7F8B99;font-size:12px;margin:4px 0 0'>support@bmforexhub.exchange | +254 785 618608</p>
   </div>
 </div>";
     }

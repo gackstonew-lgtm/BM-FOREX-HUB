@@ -188,7 +188,7 @@ footer a{color:var(--gold)}
 <p><strong>BM FOREX HUB LTD</strong></p>
 <p><strong>Website:</strong> <a href="https://bmforexhub.exchange">https://bmforexhub.exchange</a><br>
 <strong>Email:</strong> <a href="mailto:info@admin.bmforexhub.exchange">info@admin.bmforexhub.exchange</a><br>
-<strong>Phone:</strong> +254 780 618 608</p>
+<strong>Phone:</strong> +254 785 618608</p>
 <p><strong>Business Address:</strong><br>Shoppers Paradise Building, 4th Floor<br>Kenyatta Avenue<br>Nakuru, Kenya</p>
 
 </div></main>

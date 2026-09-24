@@ -241,7 +241,7 @@ function send_payment_email($payment, $type, $detail) {
             <p style='color:#B8C3D1;font-size:13px;line-height:1.7'>$access_line If you have any questions, reply to this email or contact us on WhatsApp.</p>
             <div style='text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #283548'>
                 <p style='color:#7F8B99;font-size:12px;margin:0'>BM FOREX HUB LTD | Nakuru, Kenya</p>
-                <p style='color:#7F8B99;font-size:12px;margin:4px 0 0'>support@bmforexhub.exchange | +254 780 618 608</p>
+                <p style='color:#7F8B99;font-size:12px;margin:4px 0 0'>support@bmforexhub.exchange | +254 785 618608</p>
             </div>
         </div>";
     } else {
@@ -261,7 +261,7 @@ function send_payment_email($payment, $type, $detail) {
             <p style='color:#B8C3D1;font-size:14px;line-height:1.7'>Please try again from your dashboard. If the issue persists, contact us on WhatsApp.</p>
             <div style='text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #283548'>
                 <p style='color:#7F8B99;font-size:12px;margin:0'>BM FOREX HUB LTD | Nakuru, Kenya</p>
-                <p style='color:#7F8B99;font-size:12px;margin:4px 0 0'>support@bmforexhub.exchange | +254 780 618 608</p>
+                <p style='color:#7F8B99;font-size:12px;margin:4px 0 0'>support@bmforexhub.exchange | +254 785 618608</p>
             </div>
         </div>";
     }

@@ -26,7 +26,7 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
       <span>Copy Trading</span>
     </a>
-    <a href="https://wa.me/254780618608" target="_blank" rel="noopener noreferrer" class="dash-premium-action">
+    <a href="https://wa.me/254785618608" target="_blank" rel="noopener noreferrer" class="dash-premium-action">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       <span>Events</span>
     </a>

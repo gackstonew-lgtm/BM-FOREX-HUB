@@ -522,7 +522,7 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
           <p><strong>Trading/Business Brand:</strong> BM FOREX HUB<br>
           <strong>Operating Entity:</strong> Varban Company Limited<br>
           <strong>Parent / Associated Company:</strong> Stillrock Ventures<br>
-          <strong>Official Support Contact:</strong> +254 780 618 608<br>
+          <strong>Official Support Contact:</strong> +254 785 618608<br>
           <strong>Official Website:</strong> bmforexhub.exchange<br>
           <strong>Registered Office:</strong> Nairobi, Kenya<br>
           <strong>Effective Date:</strong> 05 January 2026 | <strong>Version:</strong> 1.0</p>

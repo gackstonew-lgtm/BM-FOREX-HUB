@@ -593,7 +593,7 @@ $elitePlans = $membership->getElitesPlans();
         </div>
 
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
-          <a href="https://wa.me/254780618608?text=Hi%20BM%20Forex%20Hub,%20I%20have%20successfully%20subscribed%20to%20BM%20Elites.%20Please%20add%20me%20to%20the%20VIP%20WhatsApp%20group." target="_blank" rel="noopener noreferrer" class="btn-vip-whatsapp" style="padding:14px 28px;">
+          <a href="https://wa.me/254785618608?text=Hi%20BM%20Forex%20Hub,%20I%20have%20successfully%20subscribed%20to%20BM%20Elites.%20Please%20add%20me%20to%20the%20VIP%20WhatsApp%20group." target="_blank" rel="noopener noreferrer" class="btn-vip-whatsapp" style="padding:14px 28px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             Join VIP WhatsApp Group
           </a>
@@ -711,7 +711,7 @@ $elitePlans = $membership->getElitesPlans();
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
             <span id="eliteUpgradeBtnText">Upgrade Elites</span>
           </a>
-          <a href="https://wa.me/254780618608?text=Hi%20BM%20Forex%20Hub,%20I%20am%20an%20active%20BM%20Elites%20member." target="_blank" rel="noopener noreferrer" class="btn-vip-whatsapp" id="eliteVipWaBtn">
+          <a href="https://wa.me/254785618608?text=Hi%20BM%20Forex%20Hub,%20I%20am%20an%20active%20BM%20Elites%20member." target="_blank" rel="noopener noreferrer" class="btn-vip-whatsapp" id="eliteVipWaBtn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             Join VIP WhatsApp Group
           </a>
@@ -952,7 +952,7 @@ $elitePlans = $membership->getElitesPlans();
                 const memberEmail = (checkData.enrollment && checkData.enrollment.email) || user.email;
                 const enrollmentId = (checkData.enrollment && checkData.enrollment.id) || 'VERIFIED';
                 const waMsg = `Hi BM Forex Hub, I am an active BM Elite Member. Please verify my access to the VIP WhatsApp Group.\n\nFull Name: ${memberName}\nEmail: ${memberEmail}\nMember ID: ${user.id}\nTerms Version: 1.0 (Accepted)\nAcceptance Record: ${enrollmentId}`;
-                waBtn.href = `https://wa.me/254780618608?text=${encodeURIComponent(waMsg)}`;
+                waBtn.href = `https://wa.me/254785618608?text=${encodeURIComponent(waMsg)}`;
               }
             }
           }

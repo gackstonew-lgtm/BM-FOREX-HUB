@@ -12,7 +12,7 @@
     isMinimized: false,
     welcomeMessage: '',
     suggestedQuestions: [],
-    whatsappUrl: 'https://wa.me/254780618608',
+    whatsappUrl: 'https://wa.me/254785618608',
     hasInteracted: false
   };
 

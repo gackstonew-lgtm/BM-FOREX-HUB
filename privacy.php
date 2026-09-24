@@ -198,7 +198,7 @@ footer a{color:var(--gold)}
 <p>If you have any questions regarding this Privacy Policy or wish to exercise your privacy rights, please contact us.</p>
 <p><strong>BM FOREX HUB LTD</strong></p>
 <p><strong>Email:</strong> <a href="mailto:info@admin.bmforexhub.exchange">info@admin.bmforexhub.exchange</a><br>
-<strong>Phone:</strong> +254 780 618 608<br>
+<strong>Phone:</strong> +254 785 618608<br>
 <strong>Website:</strong> <a href="https://bmforexhub.exchange">https://bmforexhub.exchange</a></p>
 <p><strong>Business Address:</strong><br>Shoppers Paradise Building, 4th Floor<br>Kenyatta Avenue<br>Nakuru, Kenya</p>
 
