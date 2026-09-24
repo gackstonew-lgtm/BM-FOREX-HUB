@@ -85,8 +85,9 @@ if ($sampleSub) {
 // -------------------------------------------------------------
 echo PHP_EOL . "3. Testing terms-elite.php Legal Page..." . PHP_EOL;
 $termsEliteFile = __DIR__ . '/../terms-elite.php';
+$termsCompFile = __DIR__ . '/../components/elite_terms_content.php';
 assertTest("terms-elite.php file exists", file_exists($termsEliteFile));
-$termsContent = file_get_contents($termsEliteFile);
+$termsContent = file_get_contents($termsEliteFile) . (file_exists($termsCompFile) ? file_get_contents($termsCompFile) : '');
 assertTest("Contains 39 sections", strpos($termsContent, '39. COMPANY DETAILS') !== false);
 assertTest("Contains Effective Date 05 January 2026", strpos($termsContent, '05 January 2026') !== false);
 assertTest("Contains Operating Entity Varban Company Limited", strpos($termsContent, 'Varban Company Limited') !== false);

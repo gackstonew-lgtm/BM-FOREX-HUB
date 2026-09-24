@@ -15,7 +15,7 @@ $elitePlans = $membership->getElitesPlans();
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php require_once __DIR__ . '/components/pwa_meta.php'; ?>
 <title>BM FOREX HUB | BM Elites Trading Circle</title>
-<meta name="description" content="BM Elites Trading Circle is a premium managed investment model.">
+<meta name="description" content="BM Elites Trading Circle is an exclusive managed investment model. Review the official Elite Circle Terms and proceed with electronic enrollment.">
 <link rel="icon" type="image/png" href="BM-ForexHub-Logo-Circle.png">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,9 +44,8 @@ $elitePlans = $membership->getElitesPlans();
     margin-left: 0;
   }
 }
-}
 
-/* ===== NEW TOPBAR STYLE OVERRIDES ===== */
+/* ===== TOPBAR STYLE OVERRIDES ===== */
 .topbar { background: #101722; border-bottom: 1px solid #1e2d42; }
 .topbar .logo--text span { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; color: #fff; }
 .topbar__user-info {
@@ -62,46 +61,283 @@ $elitePlans = $membership->getElitesPlans();
 .topbar__user-greeting small { display: block; color: #8fa3b8; font-size: 0.7rem; }
 .topbar__user-greeting strong { font-weight: 600; }
 
-.topbar__nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin: 0 auto;
-}
-.topbar__nav-link {
-  color: #8fa3b8;
-  text-decoration: none;
-  font-size: 0.88rem;
-  font-weight: 500;
-  padding: 18px 0;
-  border-bottom: 2px solid transparent;
-  transition: color 0.15s, border-color 0.15s;
-}
-.topbar__nav-link:hover {
-  color: #fff;
-}
-.topbar__nav-link.active {
-  color: #fff;
-  border-bottom-color: #1677FF;
-}
-
-@media (max-width: 768px) {
-  .topbar__nav {
-    display: none;
-  }
-}
-
 /* ===== DASHBOARD OVERVIEW ===== */
 .dash-overview {
   padding: 28px 30px 20px;
+  max-width: 1140px;
+  margin: 0 auto;
 }
 .dash-overview__title {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.65rem; font-weight: 700; color: #fff; margin: 0 0 5px;
 }
-.dash-overview__subtitle { color: #8fa3b8; font-size: 0.88rem; margin: 0; }
+.dash-overview__subtitle { color: #8fa3b8; font-size: 0.88rem; margin: 0; line-height: 1.55; }
 
-/* ===== BM ELITES COUNTDOWN EXPERIENCE ===== */
+/* ===== ELITE CIRCLE TERMS GATE & CONTAINER ===== */
+.elite-terms-gate {
+  max-width: 920px;
+  margin: 0 auto;
+}
+.elite-terms-container {
+  background: #101722;
+  border: 1px solid #1E2D42;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+.elite-terms-sections-wrap {
+  padding: 24px 28px 12px;
+  max-height: 540px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #283548 #0B0F14;
+}
+.elite-terms-sections-wrap::-webkit-scrollbar { width: 8px; }
+.elite-terms-sections-wrap::-webkit-scrollbar-track { background: #0B0F14; }
+.elite-terms-sections-wrap::-webkit-scrollbar-thumb { background: #283548; border-radius: 4px; }
+.elite-terms-sections-wrap::-webkit-scrollbar-thumb:hover { background: #1677FF; }
+
+/* Legal Header Box */
+.legal-header-box {
+  background: linear-gradient(180deg, #151D29 0%, #101722 100%);
+  border: 1px solid #283548;
+  border-radius: 14px;
+  padding: 26px 24px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.legal-header-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%; height: 2px;
+  background: linear-gradient(90deg, transparent, #1677FF, #F0B429, #1677FF, transparent);
+}
+.legal-header-box h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 8px 0 6px;
+}
+.legal-header-desc {
+  color: #B8C3D1;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(240, 180, 41, 0.12);
+  border: 1px solid rgba(240, 180, 41, 0.3);
+  color: #F0B429;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px 16px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+  color: #7F8B99;
+}
+.meta-item strong { color: #fff; font-family: 'IBM Plex Mono', monospace; }
+
+/* Callout Box */
+.callout-box {
+  background: rgba(246, 70, 93, 0.08);
+  border: 1px solid rgba(246, 70, 93, 0.3);
+  border-left: 4px solid #F6465D;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 0.84rem;
+  color: #D8E2ED;
+  line-height: 1.6;
+}
+.callout-box strong { color: #F6465D; }
+
+/* Table of Contents */
+.toc-card {
+  background: #0E141E;
+  border: 1px solid #283548;
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+}
+.toc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px 12px;
+  font-size: 0.78rem;
+}
+.toc-grid a {
+  color: #B8C3D1;
+  text-decoration: none;
+  padding: 2px 0;
+  transition: color 0.15s;
+}
+.toc-grid a:hover { color: #1677FF; }
+
+/* Legal Sections */
+.legal-section {
+  background: #151D29;
+  border: 1px solid #283548;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.legal-section h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #F0B429;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.legal-section p {
+  color: #B8C3D1;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+.legal-section p:last-child { margin-bottom: 0; }
+.legal-section strong { color: #fff; }
+.legal-section ul {
+  color: #B8C3D1;
+  margin: 0 0 10px 20px;
+  font-size: 0.86rem;
+}
+.legal-section li { margin-bottom: 4px; }
+
+/* Terms Acceptance Card */
+.terms-acceptance-card {
+  background: linear-gradient(180deg, #151D29 0%, #101722 100%);
+  border: 1px solid rgba(22, 119, 255, 0.35);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.elite-terms-accept-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  color: #FFFFFF;
+  line-height: 1.55;
+  font-weight: 600;
+  user-select: none;
+}
+.elite-terms-accept-label input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #1677FF;
+  border-radius: 4px;
+}
+
+/* Validation message */
+.elite-terms-validation-msg {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: rgba(246, 70, 93, 0.1);
+  border: 1px solid rgba(246, 70, 93, 0.3);
+  color: #F6465D;
+  font-size: 0.84rem;
+  margin-bottom: 16px;
+}
+.elite-terms-validation-msg.show {
+  display: flex;
+}
+
+/* CTA Row & Button */
+.terms-cta-row {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.btn-enroll-proceed {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 36px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1677FF 0%, #0D47A1 100%);
+  color: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  box-shadow: 0 8px 24px rgba(22, 119, 255, 0.35);
+  max-width: 100%;
+}
+.btn-enroll-proceed:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(22, 119, 255, 0.5);
+  color: #ffffff;
+}
+.btn-enroll-proceed:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+.terms-step-hint {
+  font-size: 0.78rem;
+  color: #7F8B99;
+  text-align: center;
+}
+
+/* Key Highlights Feature Cards */
+.live-class-card {
+  background: #151d2a;
+  border: 1px solid #1e2d42;
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.live-class-card:hover {
+  border-color: rgba(22, 119, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ===== BM ELITES ACTIVE SUBSCRIBER COUNTDOWN EXPERIENCE ===== */
 .elite-hero-card {
   background: radial-gradient(120% 120% at 50% 0%, rgba(22, 119, 255, 0.16) 0%, #101722 75%), #101722;
   border: 1px solid rgba(22, 119, 255, 0.35);
@@ -116,10 +352,7 @@ $elitePlans = $membership->getElitesPlans();
 .elite-hero-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 15%;
-  right: 15%;
-  height: 2px;
+  top: 0; left: 15%; right: 15%; height: 2px;
   background: linear-gradient(90deg, transparent, #1677FF, #16C784, #1677FF, transparent);
 }
 .elite-badge-pill {
@@ -157,8 +390,6 @@ $elitePlans = $membership->getElitesPlans();
   margin: 0 auto 28px;
   line-height: 1.55;
 }
-
-/* ── 4-Block Countdown Grid ── */
 .elite-countdown-grid {
   display: flex;
   align-items: center;
@@ -204,8 +435,6 @@ $elitePlans = $membership->getElitesPlans();
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-
-/* ── Meta Info Bar ── */
 .elite-meta-box {
   background: rgba(16, 23, 34, 0.85);
   border: 1px solid #1E2D42;
@@ -220,16 +449,8 @@ $elitePlans = $membership->getElitesPlans();
   color: #B8C3D1;
   flex-wrap: wrap;
 }
-.elite-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.elite-meta-item strong {
-  color: #FFFFFF;
-}
-
-/* ── Action Buttons ── */
+.elite-meta-item { display: flex; align-items: center; gap: 6px; }
+.elite-meta-item strong { color: #FFFFFF; }
 .elite-cta-group {
   display: flex;
   align-items: center;
@@ -281,72 +502,60 @@ $elitePlans = $membership->getElitesPlans();
   transform: translateY(-2px);
 }
 
-@media (max-width: 600px) {
-  .elite-countdown-grid {
-    gap: 8px;
-  }
-  .elite-countdown-block {
-    min-width: 68px;
-    padding: 14px 6px 10px;
-    border-radius: 10px;
-  }
-  .elite-countdown-num {
-    font-size: 1.65rem;
-  }
-  .elite-countdown-label {
-    font-size: 0.58rem;
-    letter-spacing: 0.06em;
-  }
-  .elite-hero-card {
-    padding: 30px 16px 24px;
-  }
-  .elite-meta-box {
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px 14px;
-  }
-  .elite-cta-group {
-    flex-direction: column;
-    width: 100%;
-  }
-  .btn-upgrade-elites, .btn-vip-whatsapp {
-    width: 100%;
-  }
+/* Light theme overrides */
+:root[data-theme="light"] .elite-terms-container {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
+:root[data-theme="light"] .legal-header-box {
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+}
+:root[data-theme="light"] .legal-header-box h1 { color: #0F172A; }
+:root[data-theme="light"] .legal-header-desc { color: #475569; }
+:root[data-theme="light"] .meta-grid { border-top-color: #E2E8F0; color: #64748B; }
+:root[data-theme="light"] .meta-item strong { color: #0F172A; }
+:root[data-theme="light"] .toc-card { background: #F8FAFC; border-color: #E2E8F0; }
+:root[data-theme="light"] .toc-title { color: #0F172A; }
+:root[data-theme="light"] .toc-grid a { color: #475569; }
+:root[data-theme="light"] .toc-grid a:hover { color: #1677FF; }
+:root[data-theme="light"] .legal-section { background: #F8FAFC; border-color: #E2E8F0; }
+:root[data-theme="light"] .legal-section h2 { color: #B45309; }
+:root[data-theme="light"] .legal-section p { color: #334155; }
+:root[data-theme="light"] .legal-section strong { color: #0F172A; }
+:root[data-theme="light"] .terms-acceptance-card {
+  background: #F8FAFC;
+  border-color: rgba(22, 119, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+:root[data-theme="light"] .elite-terms-accept-label { color: #0F172A; }
+:root[data-theme="light"] .elite-terms-sections-wrap {
+  scrollbar-color: #CBD5E1 #F1F5F9;
+}
+:root[data-theme="light"] .elite-terms-sections-wrap::-webkit-scrollbar-track { background: #F1F5F9; }
+:root[data-theme="light"] .elite-terms-sections-wrap::-webkit-scrollbar-thumb { background: #CBD5E1; }
+:root[data-theme="light"] .live-class-card { background: #FFFFFF; border-color: #E2E8F0; }
+:root[data-theme="light"] .dash-overview__title { color: #0F172A; }
+:root[data-theme="light"] .dash-overview__subtitle { color: #64748B; }
 
-/* Feature cards */
-.live-class-card {
-  background: #151d2a;
-  border: 1px solid #1e2d42;
-  border-radius: 14px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: transform 0.2s, border-color 0.2s;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dash-overview { padding: 20px 16px; }
+  .elite-terms-sections-wrap { padding: 18px 16px 8px; max-height: 420px; }
+  .legal-header-box { padding: 20px 16px; }
+  .legal-section { padding: 16px; }
+  .terms-acceptance-card { padding: 18px 16px; }
+  .btn-enroll-proceed { width: 100%; font-size: 0.95rem; padding: 14px 20px; }
+  .elite-countdown-grid { gap: 8px; }
+  .elite-countdown-block { min-width: 68px; padding: 14px 6px 10px; border-radius: 10px; }
+  .elite-countdown-num { font-size: 1.65rem; }
+  .elite-countdown-label { font-size: 0.58rem; letter-spacing: 0.06em; }
+  .elite-hero-card { padding: 30px 16px 24px; }
+  .elite-meta-box { flex-direction: column; gap: 8px; padding: 12px 14px; }
+  .elite-cta-group { flex-direction: column; width: 100%; }
+  .btn-upgrade-elites, .btn-vip-whatsapp { width: 100%; }
 }
-.live-class-card:hover {
-  border-color: rgba(22, 119, 255, 0.4);
-  transform: translateY(-2px);
-}
-
-/* Pricing Card Styles */
-.sp-card{background:linear-gradient(180deg,#151D29 0%,#101722 100%);border:1px solid #283548;border-radius:16px;padding:32px 24px 28px;text-align:center;position:relative;transition:all .25s ease;cursor:pointer;display:flex;flex-direction:column;max-width:440px;margin:0 auto}
-.sp-card:hover{border-color:#1677FF;transform:translateY(-3px);box-shadow:0 12px 40px rgba(22,119,255,0.18)}
-.sp-card__badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1677FF,#0D47A1);color:#FFFFFF;font-size:0.6rem;font-weight:700;padding:4px 16px;border-radius:20px;text-transform:uppercase;letter-spacing:0.8px;white-space:nowrap}
-.sp-card__icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.3rem;background:rgba(22,119,255,0.12)}
-.sp-card h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:600;color:#fff;margin-bottom:4px}
-.sp-card__desc{font-size:0.82rem;color:#B8C3D1;margin-bottom:20px;line-height:1.4}
-.sp-elite-tiers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.sp-elite-tier{background:#202B3A;border:1px solid #283548;border-radius:10px;padding:12px 10px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;text-align:center;display:block;text-decoration:none}
-.sp-elite-tier:hover{border-color:#1677FF;background:rgba(22,119,255,0.12);transform:translateY(-1px)}
-.sp-elite-tier:active{transform:translateY(0)}
-.sp-elite-tier--full{grid-column:1/-1}
-.sp-elite-tier__amount{display:block;font-size:1.05rem;font-weight:700;color:#FFFFFF;line-height:1.2}
-.sp-elite-tier__usd{display:block;font-size:0.7rem;color:#7F8B99;margin-top:3px}
-.sp-card__feat{list-style:none;text-align:left;margin:0 0 24px;flex:1;padding:0}
-.sp-card__feat li{font-size:0.82rem;color:#B8C3D1;padding:6px 0;display:flex;align-items:flex-start;gap:10px;line-height:1.4}
-.sp-card__feat li::before{content:'';width:16px;height:16px;border-radius:50%;background:rgba(22,199,132,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6.5 11.5L3.5 8.5l1-1 2 2 5-5 1 1z' fill='%2316C784'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:12px}
 </style>
 <script>var API_BASE = '<?php echo rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); ?>';</script>
 </head>
@@ -356,13 +565,14 @@ $elitePlans = $membership->getElitesPlans();
 <?php $activeNav = 'elites'; include __DIR__ . '/components/global_sidebar.php'; ?>
 
 <div class="dash-main-wrap">
-<!-- Unified Global Header -->
-<?php include __DIR__ . '/components/global_header.php'; ?>
+  <!-- Unified Global Header -->
+  <?php include __DIR__ . '/components/global_header.php'; ?>
 
   <!-- Main BM Elites View -->
   <div class="dash-overview">
+    
     <?php if (isset($_GET['payment_success']) && $_GET['payment_success'] == 1): ?>
-      <div class="card-inner-box" style="text-align: center; max-width: 650px; margin: 40px auto; padding: 40px; background:#151D2A; border:1px solid #1E2D42; border-radius:16px;">
+      <div class="card-inner-box" style="text-align: center; max-width: 650px; margin: 20px auto 36px; padding: 40px; background:#151D2A; border:1px solid #1E2D42; border-radius:16px;">
         <div style="width: 64px; height: 64px; background: rgba(22, 199, 132, 0.15); color: #16C784; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 24px;">
           &check;
         </div>
@@ -392,6 +602,8 @@ $elitePlans = $membership->getElitesPlans();
           </a>
         </div>
       </div>
+    <?php endif; ?>
+
     <?php if (isset($_GET['compliance_success']) && $_GET['compliance_success'] == 1): ?>
       <div style="background: rgba(22, 199, 132, 0.12); border: 1px solid rgba(22, 199, 132, 0.35); border-radius: 12px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -405,10 +617,11 @@ $elitePlans = $membership->getElitesPlans();
       </div>
     <?php endif; ?>
 
-    <!-- Title block -->
-    <div class="dash-overview__header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom: 24px;">
+    <!-- Title and Introduction Block -->
+    <div class="dash-overview__header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom: 28px;">
       <div>
-        <h1 class="dash-overview__title">BM Elites Trading Circle</h1>
+        <h1 class="dash-overview__title">BM Elites</h1>
+        <p style="color:#1677FF; font-family:'Space Grotesk',sans-serif; font-size:0.95rem; font-weight:600; margin:2px 0 6px;">Elite Circle Membership</p>
         <p class="dash-overview__subtitle">BM Elites Trading Circle is an elite managed investment model where capital contributed by participants is pooled together and traded in the foreign exchange market by senior quantitative analysts.</p>
       </div>
       <div class="breadcrumbs" style="color:#8fa3b8; font-size:0.83rem;">
@@ -418,6 +631,7 @@ $elitePlans = $membership->getElitesPlans();
 
     <!-- ======================================================== -->
     <!-- 1. ACTIVE BM ELITES SUBSCRIBER EXPERIENCE (COUNTDOWN)   -->
+    <!-- (Shown dynamically via JS if active elite member is logged in) -->
     <!-- ======================================================== -->
     <div id="eliteActiveSubscriberHero" style="display:none;">
       
@@ -435,7 +649,7 @@ $elitePlans = $membership->getElitesPlans();
         </div>
       </div>
 
-      <!-- Primary Live Countdown Card (Inspired by reference aesthetic) -->
+      <!-- Primary Live Countdown Card -->
       <div class="elite-hero-card">
         <div class="elite-badge-pill" id="eliteHeroBadge">
           <span style="font-size:0.9rem;">👑</span>
@@ -514,14 +728,14 @@ $elitePlans = $membership->getElitesPlans();
             <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(22, 119, 255, 0.15); color: #1677FF; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">&#9889;</div>
             <div>
               <h4 style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px;">High-Conviction Signals</h4>
-              <p style="color: #8fa3b8; font-size: 0.82rem; margin: 0; line-height: 1.45;">Real-time trade entries, Take-Profit & Stop-Loss targets for Forex, Gold (XAUUSD) & Crypto.</p>
+              <p style="color: #8fa3b8; font-size: 0.82rem; margin: 0; line-height: 1.45;">Real-time trade entries, Take-Profit &amp; Stop-Loss targets for Forex, Gold (XAUUSD) &amp; Crypto.</p>
             </div>
           </div>
           <div style="background: #101722; border: 1px solid #1e2d42; border-radius: 12px; padding: 18px; display: flex; gap: 14px; align-items: flex-start; text-align: left;">
             <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(34, 197, 94, 0.15); color: #22C55E; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">&#128172;</div>
             <div>
               <h4 style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px;">VIP Mentorship Group</h4>
-              <p style="color: #8fa3b8; font-size: 0.82rem; margin: 0; line-height: 1.45;">Direct access to senior traders, daily market breakdowns & consultation on WhatsApp.</p>
+              <p style="color: #8fa3b8; font-size: 0.82rem; margin: 0; line-height: 1.45;">Direct access to senior traders, daily market breakdowns &amp; consultation on WhatsApp.</p>
             </div>
           </div>
           <div style="background: #101722; border: 1px solid #1e2d42; border-radius: 12px; padding: 18px; display: flex; gap: 14px; align-items: flex-start; text-align: left;">
@@ -535,7 +749,7 @@ $elitePlans = $membership->getElitesPlans();
             <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(167, 139, 250, 0.15); color: #a78bfa; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">&#127891;</div>
             <div>
               <h4 style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px;">Exclusive Live Classes</h4>
-              <p style="color: #8fa3b8; font-size: 0.82rem; margin: 0; line-height: 1.45;">Live Google Meet sessions, Smart Money Concepts (SMC) & ICT trading strategy archives.</p>
+              <p style="color: #8fa3b8; font-size: 0.82rem; margin: 0; line-height: 1.45;">Live Google Meet sessions, Smart Money Concepts (SMC) &amp; ICT trading strategy archives.</p>
             </div>
           </div>
         </div>
@@ -544,85 +758,75 @@ $elitePlans = $membership->getElitesPlans();
     </div>
 
     <!-- ======================================================== -->
-    <!-- 2. NON-SUBSCRIBER OVERVIEW & TIER SELECTION              -->
+    <!-- 2. TERMS-FIRST MEMBERSHIP ENTRY POINT                    -->
+    <!-- (Always fully rendered server-side by default)           -->
     <!-- ======================================================== -->
-    <div id="eliteNonSubscriberHero" style="display:none;">
-      <!-- Key Highlights Grid -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 36px;">
-        <div class="live-class-card">
-          <h3 style="color: #F0B429; margin-bottom: 8px; font-size: 1.05rem; font-family:'Space Grotesk',sans-serif;">Expert Trading Management</h3>
-          <p style="color: #8fa3b8; font-size: 0.9rem; line-height: 1.5; margin:0;">Experienced forex analysts execute trades on behalf of the pool to optimize risk-managed returns.</p>
-        </div>
-        <div class="live-class-card">
-          <h3 style="color: #F0B429; margin-bottom: 8px; font-size: 1.05rem; font-family:'Space Grotesk',sans-serif;">5% Weekly Target Returns</h3>
-          <p style="color: #8fa3b8; font-size: 0.9rem; line-height: 1.5; margin:0;">Investors earn a target profit of <strong>5% weekly</strong> on their allocated capital.</p>
-        </div>
-        <div class="live-class-card">
-          <h3 style="color: #F0B429; margin-bottom: 8px; font-size: 1.05rem; font-family:'Space Grotesk',sans-serif;">Weekly Income Payout</h3>
-          <p style="color: #8fa3b8; font-size: 0.9rem; line-height: 1.5; margin:0;">Earnings are processed and paid out weekly directly to verified investor accounts.</p>
-        </div>
-        <div class="live-class-card">
-          <h3 style="color: #F0B429; margin-bottom: 8px; font-size: 1.05rem; font-family:'Space Grotesk',sans-serif;">Slot-Based Allocation</h3>
-          <p style="color: #8fa3b8; font-size: 0.9rem; line-height: 1.5; margin:0;">Profit distribution is proportional based strictly on the number of capital shares held.</p>
-        </div>
-      </div>
-      
-      <!-- Primary CTA Banner -->
-      <div style="text-align: center; margin-bottom: 40px;">
-        <a href="elite_enrollment.php" class="btn-upgrade-elites" style="padding:16px 36px; font-size:1.05rem;">
-          Upgrade to BM Elites
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </div>
+    <div id="eliteNonSubscriberHero">
 
-      <!-- Tier Selection Card -->
-      <div style="display: flex; justify-content: center; margin-bottom: 40px;">
-        <div class="sp-card">
-          <span class="sp-card__badge">Exclusive Circle</span>
-          <div class="sp-card__icon">&#128081;</div>
-          <h3>Select Investment Tier</h3>
-          <div class="sp-card__desc">Choose your capital allocation tier to join the managed circle</div>
-          <div class="sp-elite-tiers">
-            <a href="elite_enrollment.php?plan=elite_starter" class="sp-elite-tier">
-              <span class="sp-elite-tier__amount">$1,000</span>
-              <span class="sp-elite-tier__usd">Starter Tier</span>
-            </a>
-            <a href="elite_enrollment.php?plan=elite_intermediate" class="sp-elite-tier">
-              <span class="sp-elite-tier__amount">$2,000</span>
-              <span class="sp-elite-tier__usd">Intermediate Tier</span>
-            </a>
-            <a href="elite_enrollment.php?plan=elite_advanced" class="sp-elite-tier">
-              <span class="sp-elite-tier__amount">$3,000</span>
-              <span class="sp-elite-tier__usd">Advanced Tier</span>
-            </a>
-            <a href="elite_enrollment.php?plan=elite_professional" class="sp-elite-tier">
-              <span class="sp-elite-tier__amount">$5,000</span>
-              <span class="sp-elite-tier__usd">Professional Tier</span>
-            </a>
-            <a href="elite_enrollment.php?plan=elite_premium" class="sp-elite-tier">
-              <span class="sp-elite-tier__amount">$6,000</span>
-              <span class="sp-elite-tier__usd">Premium Tier</span>
-            </a>
-            <a href="elite_enrollment.php?plan=elite_elite" class="sp-elite-tier">
-              <span class="sp-elite-tier__amount">$10,000</span>
-              <span class="sp-elite-tier__usd">Ultimate VIP Elite Tier</span>
+      <div class="elite-terms-gate" id="eliteTermsGate">
+
+        <!-- Authoritative Elite Circle Terms Container -->
+        <div class="elite-terms-container" id="eliteTermsContainer" aria-label="Elite Circle Terms and Conditions">
+          <div class="elite-terms-sections-wrap">
+            <?php include __DIR__ . '/components/elite_terms_content.php'; ?>
+          </div>
+          
+          <div style="padding:14px 24px; border-top:1px solid #1E2D42; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#0E141E;">
+            <span style="font-size:0.78rem; color:#7F8B99;">Elite Circle Terms Version 1.0 (Republic of Kenya)</span>
+            <a href="terms-elite.php" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem; color:#1677FF; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Open Full Document in New Tab
             </a>
           </div>
-          <ul class="sp-card__feat">
-            <li>Exclusive WhatsApp mentorship group</li>
-            <li>Weekly managed profit distribution</li>
-            <li>High-conviction institutional signals</li>
-            <li>Priority consultation & senior trader access</li>
-          </ul>
-          <a href="elite_enrollment.php" class="btn-upgrade-elites" style="width:100%;">
-            Subscribe to BM Elites
-          </a>
         </div>
-      </div>
+
+        <!-- Validation Message -->
+        <div class="elite-terms-validation-msg" id="eliteTermsValidationMsg" role="alert" aria-live="polite">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Please read and accept the Elite Circle Terms and Conditions before proceeding.</span>
+        </div>
+
+        <!-- Acceptance Section & CTA Card -->
+        <div class="terms-acceptance-card">
+          <label class="elite-terms-accept-label" for="eliteTermsAcceptCheck">
+            <input type="checkbox" id="eliteTermsAcceptCheck" name="elite_terms_accepted" aria-describedby="eliteTermsValidationMsg">
+            <span>I have read and agree to the <a href="terms-elite.php" target="_blank" rel="noopener noreferrer" style="color:#1677FF; text-decoration:underline;">Elite Circle Terms and Conditions</a>.</span>
+          </label>
+
+          <div class="terms-cta-row">
+            <button type="button" class="btn-enroll-proceed" id="eliteEnrollCTABtn" disabled aria-disabled="true">
+              Proceed to Electronic Enrollment &amp; Acceptance &rarr;
+            </button>
+            <span class="terms-step-hint">Stage 1 of 4: Review Terms &rarr; Electronic Enrollment &rarr; Tier Selection &rarr; Payment</span>
+          </div>
+        </div>
+
+        <!-- Program Highlights Grid -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin-bottom:36px;">
+          <div class="live-class-card">
+            <h3 style="color:#F0B429; margin-bottom:8px; font-size:1.05rem; font-family:'Space Grotesk',sans-serif;">Expert Trading Management</h3>
+            <p style="color:#8fa3b8; font-size:0.88rem; line-height:1.55; margin:0;">Experienced forex analysts execute institutional strategies on behalf of the pool to optimize risk-managed returns.</p>
+          </div>
+          <div class="live-class-card">
+            <h3 style="color:#F0B429; margin-bottom:8px; font-size:1.05rem; font-family:'Space Grotesk',sans-serif;">5% Weekly Target Returns</h3>
+            <p style="color:#8fa3b8; font-size:0.88rem; line-height:1.55; margin:0;">Target performance objective of <strong>5% weekly</strong> on allocated capital throughout the active cycle.</p>
+          </div>
+          <div class="live-class-card">
+            <h3 style="color:#F0B429; margin-bottom:8px; font-size:1.05rem; font-family:'Space Grotesk',sans-serif;">Weekly Income Payout</h3>
+            <p style="color:#8fa3b8; font-size:0.88rem; line-height:1.55; margin:0;">Earnings distributions are processed and paid out weekly directly to verified investor accounts.</p>
+          </div>
+          <div class="live-class-card">
+            <h3 style="color:#F0B429; margin-bottom:8px; font-size:1.05rem; font-family:'Space Grotesk',sans-serif;">4-Month Managed Cycle</h3>
+            <p style="color:#8fa3b8; font-size:0.88rem; line-height:1.55; margin:0;">Structured four-month trading cycle with proportional profit distributions based on capital share.</p>
+          </div>
+        </div>
+
+      </div><!-- /.elite-terms-gate -->
+
     </div>
 
-    <!-- Risk Disclaimer (Preserved) -->
-    <div style="margin-bottom: 40px; padding: 18px 22px; background: #151d2a; border: 1px solid rgba(220, 53, 69, 0.25); border-radius: 12px; display: flex; align-items: flex-start; gap: 14px; max-width: 860px; margin-left: auto; margin-right: auto;">
+    <!-- Risk Disclaimer -->
+    <div style="margin-bottom: 40px; padding: 18px 22px; background: #151d2a; border: 1px solid rgba(220, 53, 69, 0.25); border-radius: 12px; display: flex; align-items: flex-start; gap: 14px; max-width: 920px; margin-left: auto; margin-right: auto;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f6465d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top: 2px; opacity: 0.85;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       <div>
         <strong style="color: #f6465d; display: block; margin-bottom: 6px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Risk Disclaimer</strong>
@@ -630,241 +834,164 @@ $elitePlans = $membership->getElitesPlans();
       </div>
     </div>
     
-    <?php endif; ?>
-  </div>
-  
-  <!-- Footer -->
-  <footer style="margin-top: 40px; padding: 20px 24px; border-top: 1px solid #1e2d42; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.77rem; color: #5b6475;">
-    <div>&copy; <?= date('Y') ?> BM Forex Hub. All Rights Reserved.</div>
-    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-      <a href="terms.php" style="color:#5b6475; text-decoration:none;">Terms of Use</a>
-      <span style="color:#1e2d42;">|</span>
-      <a href="terms-elite.php" style="color:#F0B429; text-decoration:none;">Elite Circle Terms</a>
-      <span style="color:#1e2d42;">|</span>
-      <a href="privacy.php" style="color:#5b6475; text-decoration:none;">Privacy Policy</a>
-      <span style="color:#1e2d42;">|</span>
-      <a href="risk-disclosure.php" style="color:#5b6475; text-decoration:none;">Risk Disclaimer</a>
-      <span style="color:#1e2d42;">|</span>
-      <a href="contact.php" style="color:#5b6475; text-decoration:none;">Support</a>
-    </div>
-  </footer>
-</div>
+  </div><!-- /.dash-overview -->
+</div><!-- /.dash-main-wrap -->
+
+<!-- Global Site Footer -->
+<?php include __DIR__ . '/footer.php'; ?>
 
 <!-- Scripts for Supabase, Auth and Dynamic UI functionality -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/auth.js?v=<?= filemtime('js/auth.js') ?>"></script>
 <script>
 (async function() {
-  /* ---------- Auth Guard ---------- */
-  const { user, session } = await BMAuth.getSession();
-  if (!user) { window.location.href = 'login.php'; return; }
+  /* ---------- Auth Check & Active Subscription Gate ---------- */
+  try {
+    const { user, session } = await BMAuth.getSession();
+    
+    if (user) {
+      const authData = await BMAuth.getMembershipStatus(user, session);
+      const userDisplayName = BMAuth.displayName(user);
+      const displayUserEl = document.getElementById('displayUsername');
+      if (displayUserEl) displayUserEl.textContent = userDisplayName;
 
-  const authData = await BMAuth.getMembershipStatus(user, session);
-  const userDisplayName = BMAuth.displayName(user);
-  const displayUserEl = document.getElementById('displayUsername');
-  if (displayUserEl) displayUserEl.textContent = userDisplayName;
+      // Evaluate whether user has active BM Elites subscription
+      const plans = authData.plans || [];
+      const isPermanent = authData.permanent_access || plans.includes('all');
+      const hasElitePlan = isPermanent || plans.some(p => p.startsWith('elite_'));
 
-  // Evaluate whether user has BM Elites subscription
-  const plans = authData.plans || [];
-  const isPermanent = authData.permanent_access || plans.includes('all');
-  const hasElitePlan = isPermanent || plans.some(p => p.startsWith('elite_'));
-
-  // Find exact active elite subscription record
-  let eliteSub = null;
-  if (Array.isArray(authData.subscriptions)) {
-    eliteSub = authData.subscriptions.find(s => s.plan === 'all' || (s.plan_key && s.plan_key.startsWith('elite_')) || (s.plan && s.plan.startsWith('elite_')));
-    if (!eliteSub && hasElitePlan && authData.subscriptions.length > 0) {
-      eliteSub = authData.subscriptions[0];
-    }
-  }
-
-  // Active status check
-  const nowTs = Date.now();
-  let expiryTs = 0;
-  let isExpired = false;
-
-  if (eliteSub && eliteSub.expires_at) {
-    expiryTs = new Date(eliteSub.expires_at).getTime();
-    isExpired = expiryTs <= nowTs;
-  } else if (authData.subscription_expiry) {
-    expiryTs = new Date(authData.subscription_expiry).getTime();
-    isExpired = expiryTs <= nowTs;
-  } else if (isPermanent) {
-    expiryTs = new Date('2036-12-31T23:59:59Z').getTime();
-    isExpired = false;
-  }
-
-  const isEliteActive = hasElitePlan && !isExpired;
-
-  // Plan name dictionary
-  const planNameMap = {
-    'elite_starter': 'BM Elites — $1,000 USD Starter Tier',
-    'elite_intermediate': 'BM Elites — $2,000 USD Intermediate Tier',
-    'elite_advanced': 'BM Elites — $3,000 USD Advanced Tier',
-    'elite_professional': 'BM Elites — $5,000 USD Professional Tier',
-    'elite_premium': 'BM Elites — $6,000 USD Premium Tier',
-    'elite_elite': 'BM Elites — $10,000 USD VIP Elite Tier',
-    'all': 'BM Elites — Permanent Admin / VIP Access'
-  };
-
-  const activePlanKey = (eliteSub && eliteSub.plan) || (plans.find(p => p.startsWith('elite_'))) || (isPermanent ? 'all' : '');
-  const activePlanTitle = planNameMap[activePlanKey] || (eliteSub && eliteSub.plan_name) || 'BM Elites Trading Circle';
-
-  // Section DOM elements
-  const subscriberHero = document.getElementById('eliteActiveSubscriberHero');
-  const nonSubscriberHero = document.getElementById('eliteNonSubscriberHero');
-  const badgeTextEl = document.getElementById('eliteMembershipBadgeText');
-  const badgeContainerEl = document.getElementById('eliteMembershipBadge');
-
-  if (isEliteActive) {
-    // Show active subscriber view
-    if (subscriberHero) subscriberHero.style.display = 'block';
-    if (nonSubscriberHero) nonSubscriberHero.style.display = 'none';
-
-    // Topbar badge
-    if (badgeTextEl) badgeTextEl.textContent = '👑 Elite Member Active';
-    if (badgeContainerEl) {
-      badgeContainerEl.style.background = 'linear-gradient(135deg, rgba(240, 180, 41, 0.15) 0%, rgba(22, 119, 255, 0.15) 100%)';
-      badgeContainerEl.style.borderColor = 'rgba(240, 180, 41, 0.4)';
-      badgeContainerEl.style.color = '#F0B429';
-    }
-
-    // Populate metadata details
-    const tierLabel = document.getElementById('eliteActiveTierLabel');
-    if (tierLabel) tierLabel.textContent = activePlanTitle;
-
-    const statusLabel = document.getElementById('eliteActiveStatusLabel');
-    if (statusLabel) {
-      statusLabel.textContent = isPermanent ? '● Permanent VIP Access' : '● Active Member';
-      statusLabel.style.color = '#16C784';
-    }
-
-    const expiryLabel = document.getElementById('eliteActiveExpiryLabel');
-    if (expiryLabel) {
-      if (isPermanent) {
-        expiryLabel.textContent = 'Permanent (Perpetual)';
-      } else if (expiryTs > 0) {
-        const d = new Date(expiryTs);
-        expiryLabel.textContent = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-      }
-    }
-
-    // Initialize Countdown Engine
-    initEliteCountdown(expiryTs, isPermanent);
-
-    // Compliance Check: verify if active Elite member has accepted Terms v1.0
-    try {
-      const checkResp = await fetch('api/elite-enrollment.php?action=check', {
-        headers: { 'Authorization': 'Bearer ' + (session ? session.access_token : '') }
-      });
-      if (checkResp.ok) {
-        const checkData = await checkResp.json();
-        const complianceBox = document.getElementById('eliteComplianceNoticeBox');
-        const waBtn = document.getElementById('eliteVipWaBtn');
-
-        if (checkData.ok && checkData.requires_consent) {
-          // Member needs to review and accept Terms v1.0
-          if (complianceBox) complianceBox.style.display = 'block';
-          if (waBtn) {
-            waBtn.href = 'elite_enrollment.php?mode=compliance';
-            waBtn.innerHTML = `
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Unlock WhatsApp Group (Accept Terms)
-            `;
-            waBtn.style.background = 'rgba(240, 180, 41, 0.15)';
-            waBtn.style.borderColor = 'rgba(240, 180, 41, 0.4)';
-            waBtn.style.color = '#F0B429';
-          }
-        } else if (checkData.ok && checkData.accepted) {
-          // Member has valid acceptance on record — configure secure, pre-filled VIP WhatsApp verification link
-          if (complianceBox) complianceBox.style.display = 'none';
-          if (waBtn) {
-            const memberName = (checkData.enrollment && checkData.enrollment.member_name) || userDisplayName;
-            const memberEmail = (checkData.enrollment && checkData.enrollment.email) || user.email;
-            const enrollmentId = (checkData.enrollment && checkData.enrollment.id) || 'VERIFIED';
-            const waMsg = `Hi BM Forex Hub, I am an active BM Elite Member. Please verify my access to the VIP WhatsApp Group.\n\nFull Name: ${memberName}\nEmail: ${memberEmail}\nMember ID: ${user.id}\nTerms Version: 1.0 (Accepted)\nAcceptance Record: ${enrollmentId}`;
-            waBtn.href = `https://wa.me/254700000000?text=${encodeURIComponent(waMsg)}`;
-          }
+      let eliteSub = null;
+      if (Array.isArray(authData.subscriptions)) {
+        eliteSub = authData.subscriptions.find(s => s.plan === 'all' || (s.plan_key && s.plan_key.startsWith('elite_')) || (s.plan && s.plan.startsWith('elite_')));
+        if (!eliteSub && hasElitePlan && authData.subscriptions.length > 0) {
+          eliteSub = authData.subscriptions[0];
         }
       }
-    } catch(e) {
-      console.warn('Elite compliance check notice:', e);
-    }
 
-  } else if (hasElitePlan && isExpired) {
-    // Expired subscriber view
-    if (subscriberHero) subscriberHero.style.display = 'block';
-    if (nonSubscriberHero) nonSubscriberHero.style.display = 'none';
+      const nowTs = Date.now();
+      let expiryTs = 0;
+      let isExpired = false;
 
-    // Show expired state in countdown hero
-    const expiredNotice = document.getElementById('eliteExpiredNotice');
-    if (expiredNotice) expiredNotice.style.display = 'block';
-    const countdownGrid = document.getElementById('eliteCountdownGrid');
-    if (countdownGrid) countdownGrid.style.display = 'none';
+      if (eliteSub && eliteSub.expires_at) {
+        expiryTs = new Date(eliteSub.expires_at).getTime();
+        isExpired = expiryTs <= nowTs;
+      } else if (authData.subscription_expiry) {
+        expiryTs = new Date(authData.subscription_expiry).getTime();
+        isExpired = expiryTs <= nowTs;
+      } else if (isPermanent) {
+        expiryTs = new Date('2036-12-31T23:59:59Z').getTime();
+        isExpired = false;
+      }
 
-    const heading = document.getElementById('eliteCountdownHeading');
-    if (heading) heading.textContent = 'Your BM Elites Access Has Ended';
+      const isEliteActive = hasElitePlan && !isExpired;
 
-    const subheading = document.getElementById('eliteCountdownSubheading');
-    if (subheading) subheading.textContent = 'Renew or upgrade your capital allocation to participate in the upcoming live trading session.';
+      const planNameMap = {
+        'elite_starter': 'BM Elites — $1,000 USD Starter Tier',
+        'elite_intermediate': 'BM Elites — $2,000 USD Intermediate Tier',
+        'elite_advanced': 'BM Elites — $3,000 USD Advanced Tier',
+        'elite_professional': 'BM Elites — $5,000 USD Professional Tier',
+        'elite_premium': 'BM Elites — $6,000 USD Premium Tier',
+        'elite_elite': 'BM Elites — $10,000 USD VIP Elite Tier',
+        'all': 'BM Elites — Permanent Admin / VIP Access'
+      };
 
-    const heroBadge = document.getElementById('eliteHeroBadge');
-    if (heroBadge) {
-      heroBadge.className = 'elite-badge-pill expired';
-      heroBadge.innerHTML = '<span>⚠️</span> <span>SUBSCRIPTION EXPIRED</span>';
-    }
+      const activePlanKey = (eliteSub && eliteSub.plan) || (plans.find(p => p.startsWith('elite_'))) || (isPermanent ? 'all' : '');
+      const activePlanTitle = planNameMap[activePlanKey] || (eliteSub && eliteSub.plan_name) || 'BM Elites Trading Circle';
 
-    const upgradeBtnText = document.getElementById('eliteUpgradeBtnText');
-    if (upgradeBtnText) upgradeBtnText.textContent = 'Renew / Upgrade Elites';
+      const subscriberHero = document.getElementById('eliteActiveSubscriberHero');
+      const nonSubscriberHero = document.getElementById('eliteNonSubscriberHero');
 
-    const statusLabel = document.getElementById('eliteActiveStatusLabel');
-    if (statusLabel) {
-      statusLabel.textContent = '● Subscription Expired';
-      statusLabel.style.color = '#F6465D';
-    }
+      if (isEliteActive) {
+        if (subscriberHero) subscriberHero.style.display = 'block';
+        if (nonSubscriberHero) nonSubscriberHero.style.display = 'none';
 
-    const tierLabel = document.getElementById('eliteActiveTierLabel');
-    if (tierLabel) tierLabel.textContent = activePlanTitle + ' (Expired)';
+        const tierLabel = document.getElementById('eliteActiveTierLabel');
+        if (tierLabel) tierLabel.textContent = activePlanTitle;
 
-    const expiryLabel = document.getElementById('eliteActiveExpiryLabel');
-    if (expiryLabel && expiryTs > 0) {
-      const d = new Date(expiryTs);
-      expiryLabel.textContent = 'Expired on ' + d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-    }
+        const statusLabel = document.getElementById('eliteActiveStatusLabel');
+        if (statusLabel) {
+          statusLabel.textContent = isPermanent ? '● Permanent VIP Access' : '● Active Member';
+          statusLabel.style.color = '#16C784';
+        }
 
-    if (badgeTextEl) badgeTextEl.textContent = '⚠️ Subscription Expired';
-    if (badgeContainerEl) {
-      badgeContainerEl.style.background = 'rgba(246, 70, 93, 0.1)';
-      badgeContainerEl.style.borderColor = 'rgba(246, 70, 93, 0.3)';
-      badgeContainerEl.style.color = '#f6465d';
-    }
+        const expiryLabel = document.getElementById('eliteActiveExpiryLabel');
+        if (expiryLabel) {
+          if (isPermanent) {
+            expiryLabel.textContent = 'Permanent (Perpetual)';
+          } else if (expiryTs > 0) {
+            const d = new Date(expiryTs);
+            expiryLabel.textContent = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+          }
+        }
 
-  } else {
-    // Non-subscriber view
-    if (subscriberHero) subscriberHero.style.display = 'none';
-    if (nonSubscriberHero) nonSubscriberHero.style.display = 'block';
+        initEliteCountdown(expiryTs, isPermanent);
 
-    if (badgeTextEl) badgeTextEl.textContent = '⚠️ Subscription Required';
-    if (badgeContainerEl) {
-      badgeContainerEl.style.background = 'rgba(246, 70, 93, 0.1)';
-      badgeContainerEl.style.borderColor = 'rgba(246, 70, 93, 0.3)';
-      badgeContainerEl.style.color = '#f6465d';
-    }
-
-    try {
-      const checkResp = await fetch('api/elite-enrollment.php?action=check', {
-        headers: { 'Authorization': 'Bearer ' + (session ? session.access_token : '') }
-      });
-      if (checkResp.ok) {
-        const checkData = await checkResp.json();
-        if (checkData.ok && checkData.accepted) {
-          // User already completed terms enrollment — update CTA links to direct subscription
-          document.querySelectorAll('a[href^="elite_enrollment.php"]').forEach(a => {
-            a.href = a.href.replace('elite_enrollment.php', 'subscribe.php');
+        // Compliance check for active members
+        try {
+          const checkResp = await fetch('api/elite-enrollment.php?action=check', {
+            headers: { 'Authorization': 'Bearer ' + (session ? session.access_token : '') }
           });
-        }
+          if (checkResp.ok) {
+            const checkData = await checkResp.json();
+            const complianceBox = document.getElementById('eliteComplianceNoticeBox');
+            const waBtn = document.getElementById('eliteVipWaBtn');
+
+            if (checkData.ok && checkData.requires_consent) {
+              if (complianceBox) complianceBox.style.display = 'block';
+              if (waBtn) {
+                waBtn.href = 'elite_enrollment.php?mode=compliance';
+                waBtn.innerHTML = `
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Unlock WhatsApp Group (Accept Terms)
+                `;
+              }
+            } else if (checkData.ok && checkData.accepted) {
+              if (complianceBox) complianceBox.style.display = 'none';
+              if (waBtn) {
+                const memberName = (checkData.enrollment && checkData.enrollment.member_name) || userDisplayName;
+                const memberEmail = (checkData.enrollment && checkData.enrollment.email) || user.email;
+                const enrollmentId = (checkData.enrollment && checkData.enrollment.id) || 'VERIFIED';
+                const waMsg = `Hi BM Forex Hub, I am an active BM Elite Member. Please verify my access to the VIP WhatsApp Group.\n\nFull Name: ${memberName}\nEmail: ${memberEmail}\nMember ID: ${user.id}\nTerms Version: 1.0 (Accepted)\nAcceptance Record: ${enrollmentId}`;
+                waBtn.href = `https://wa.me/254700000000?text=${encodeURIComponent(waMsg)}`;
+              }
+            }
+          }
+        } catch(e) {}
       }
-    } catch(e) {}
+    }
+  } catch(err) {
+    console.warn('Auth evaluation notice:', err);
+  }
+
+  // Elite Terms Gate Checkbox & CTA Handling
+  const termsCheck = document.getElementById('eliteTermsAcceptCheck');
+  const termsCtaBtn = document.getElementById('eliteEnrollCTABtn');
+  const termsValMsg = document.getElementById('eliteTermsValidationMsg');
+
+  if (termsCheck && termsCtaBtn) {
+    termsCheck.addEventListener('change', function() {
+      if (this.checked) {
+        termsCtaBtn.disabled = false;
+        termsCtaBtn.setAttribute('aria-disabled', 'false');
+        if (termsValMsg) termsValMsg.classList.remove('show');
+      } else {
+        termsCtaBtn.disabled = true;
+        termsCtaBtn.setAttribute('aria-disabled', 'true');
+      }
+    });
+
+    termsCtaBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (!termsCheck.checked) {
+        if (termsValMsg) {
+          termsValMsg.classList.add('show');
+          termsValMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        return false;
+      }
+      
+      window.location.href = 'elite_enrollment.php';
+    });
   }
 
   // Countdown function
@@ -876,7 +1003,6 @@ $elitePlans = $membership->getElitesPlans();
 
     if (!elDays || !elHours || !elMinutes || !elSeconds) return;
 
-    // For permanent admin accounts, calculate recurring weekly session cycle (e.g. next Sunday 18:00 UTC)
     let dynamicTargetTs = targetTs;
     if (isPerm) {
       const now = new Date();
@@ -940,13 +1066,15 @@ $elitePlans = $membership->getElitesPlans();
     };
     hamburgerBtn.addEventListener('click', openMenu);
     if (mobileNavClose) mobileNavClose.addEventListener('click', closeMenu);
-    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-    mobileNav.addEventListener('click', e => { if (e.target === mobileNav) closeMenu(); });
+    if (mobileNav) {
+      mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      mobileNav.addEventListener('click', e => { if (e.target === mobileNav) closeMenu(); });
+    }
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && mobileNav.classList.contains('open')) closeMenu(); });
   }
 })();
 </script>
-<script src="js/motion.js" defer></script>
 <?php $activeTab = 'more'; include __DIR__ . '/components/mobile-tabbar.php'; ?>
+
 </body>
 </html>

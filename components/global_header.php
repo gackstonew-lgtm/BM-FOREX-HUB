@@ -50,18 +50,4 @@ $activeNav = $activeNav ?? 'dashboard';
     </div>
   </div>
 
-  <!-- Row 2: Primary Horizontal Platform Navigation Bar -->
-  <div class="topbar__nav-row">
-    <nav class="topbar__nav" aria-label="Primary Platform Navigation">
-      <a href="index.php?section=dashboard" class="topbar__nav-link <?= $activeNav === 'dashboard' ? 'active' : '' ?>">Dashboard</a>
-      <a href="overview.php" class="topbar__nav-link <?= $activeNav === 'market' ? 'active' : '' ?>">Market Overview</a>
-      <a href="index.php?section=signals" class="topbar__nav-link <?= $activeNav === 'signals' ? 'active' : '' ?>">Trading Signals</a>
-      <a href="index.php?section=strength" class="topbar__nav-link <?= $activeNav === 'strength' ? 'active' : '' ?>">Currency Strength</a>
-      <a href="index.php?section=news" class="topbar__nav-link <?= $activeNav === 'news' ? 'active' : '' ?>">Economic Calendar</a>
-      <a href="trading.php" class="topbar__nav-link <?= $activeNav === 'tools' ? 'active' : '' ?>">Quantum Edge</a>
-      <a href="classes.php" class="topbar__nav-link <?= $activeNav === 'classes' ? 'active' : '' ?>">Classes</a>
-      <a href="index.php?section=methodology" class="topbar__nav-link <?= $activeNav === 'methodology' ? 'active' : '' ?>">Methodology</a>
-      <a href="bm_elites.php" class="topbar__nav-link topbar__nav-link--accent <?= $activeNav === 'elites' ? 'active' : '' ?>">BM Elites</a>
-    </nav>
-  </div>
 </header>

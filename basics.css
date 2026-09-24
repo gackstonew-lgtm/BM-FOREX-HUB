@@ -2195,3 +2195,17 @@ footer { border-top: 1px solid var(--hairline); padding: 36px 32px 60px; max-wid
 .upgrade-cta__title{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;margin:0 0 12px;color:var(--ink)}
 .upgrade-cta__text{color:var(--ink-muted);font-size:.95rem;line-height:1.7;margin:0 0 24px}
 .upgrade-cta__btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;font-size:.95rem}
+
+/* ===== Global Site Footer Sidebar Offset ===== */
+/* On pages with the sidebar, the footer sits outside dash-main-wrap and must
+   mirror the same left offset so it spans only the content area on desktop. */
+@media (min-width: 900px) {
+  body.has-sidebar .bm-site-footer {
+    margin-left: var(--sidebar-w, 260px);
+    transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  body.has-sidebar.sidebar-collapsed .bm-site-footer {
+    margin-left: var(--sidebar-collapsed-w, 64px);
+  }
+}
+

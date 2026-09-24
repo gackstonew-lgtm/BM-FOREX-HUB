@@ -599,7 +599,7 @@ body{background:#0B0F14;color:#FFFFFF;font-family:'Inter',system-ui,sans-serif;m
   <div style="display:flex;gap:16px;flex-wrap:wrap;">
     <a href="terms.php" style="color:#5b6475;text-decoration:none;">Terms of Use</a>
     <span style="color:#1e2d42;">|</span>
-    <a href="terms-elite.php" style="color:#F0B429;text-decoration:none;">Elite Circle Terms</a>
+    <a href="terms-elite.php" style="color:#5b6475;text-decoration:none;">Elite Circle Terms</a>
     <span style="color:#1e2d42;">|</span>
     <a href="privacy.php" style="color:#5b6475;text-decoration:none;">Privacy Policy</a>
     <span style="color:#1e2d42;">|</span>
