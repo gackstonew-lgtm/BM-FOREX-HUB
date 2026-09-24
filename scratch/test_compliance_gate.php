@@ -127,9 +127,9 @@ $testEnrollmentId = "ENR-2026-TEST-001";
 $testIdPassport = "ID-99887766"; // Sensitive
 
 $waMsg = "Hi BM Forex Hub, I am an active BM Elite Member. Please verify my access to the VIP WhatsApp Group.\n\nFull Name: {$testName}\nEmail: {$testEmail}\nMember ID: {$testUserId}\nTerms Version: 1.0 (Accepted)\nAcceptance Record: {$testEnrollmentId}";
-$waUrl = "https://wa.me/254700000000?text=" . urlencode($waMsg);
+$waUrl = "https://wa.me/254780618608?text=" . urlencode($waMsg);
 
-assertTest("WhatsApp link target is https://wa.me/254700000000", strpos($waUrl, 'https://wa.me/254700000000?text=') === 0);
+assertTest("WhatsApp link target is https://wa.me/254780618608", strpos($waUrl, 'https://wa.me/254780618608?text=') === 0);
 assertTest("WhatsApp message contains Member Name", strpos($waMsg, $testName) !== false);
 assertTest("WhatsApp message contains Member Email", strpos($waMsg, $testEmail) !== false);
 assertTest("WhatsApp message contains Member ID", strpos($waMsg, $testUserId) !== false);

@@ -21,7 +21,7 @@ return [
     ],
     'fallback_message' => "I'm the BM Forex Hub AI Assistant. I specialize in BM Forex Hub services, Forex trading, and trading education. For questions outside these topics, please use a general AI assistant.",
     'escalation_message' => "It looks like this requires assistance from our support team.",
-    'whatsapp_url' => "https://wa.me/message/K5RM7MSWXBNPC1",
+    'whatsapp_url' => "https://wa.me/254780618608",
     'max_history_length' => 20,
     'rate_limit_per_minute' => 30,
 ];

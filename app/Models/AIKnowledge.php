@@ -117,7 +117,7 @@ class AIKnowledge {
             [
                 'category' => 'contact',
                 'question' => 'How can I contact BM Forex Hub support?',
-                'answer' => "You can reach our official team via WhatsApp Chat at https://wa.me/message/K5RM7MSWXBNPC1, visit our Telegram Channel at https://t.me/bmforexhubafrica, or send an inquiry from our Contact Us page (contact.php).",
+                'answer' => "You can reach our official team via WhatsApp Chat at https://wa.me/254780618608, visit our Telegram Channel at https://t.me/bmforexhubafrica, or send an inquiry from our Contact Us page (contact.php).",
                 'keywords' => 'contact, support, help, whatsapp, telegram, phone, email'
             ]
         ];

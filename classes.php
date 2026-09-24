@@ -514,7 +514,7 @@
         <div class="bottom-card-content">
           <h4>Need Help?</h4>
           <p>If you face any issues joining the class, contact our support team.</p>
-          <a href="https://wa.me/message/K5RM7MSWXBNPC1" target="_blank" rel="noopener noreferrer">Contact Support &rarr;</a>
+          <a href="https://wa.me/254780618608" target="_blank" rel="noopener noreferrer">Contact Support &rarr;</a>
         </div>
       </div>
     </div>

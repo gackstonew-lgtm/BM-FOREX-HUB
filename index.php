@@ -430,11 +430,11 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         <span>Signal Grid</span>
       </a>
-      <a href="https://wa.me/message/K5RM7MSWXBNPC1" target="_blank" rel="noopener noreferrer" class="dash-qa-card">
+      <a href="https://wa.me/254780618608" target="_blank" rel="noopener noreferrer" class="dash-qa-card">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
         <span>Classes</span>
       </a>
-      <a href="https://wa.me/message/K5RM7MSWXBNPC1" target="_blank" rel="noopener noreferrer" class="dash-qa-card">
+      <a href="https://wa.me/254780618608" target="_blank" rel="noopener noreferrer" class="dash-qa-card">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span>Events</span>
       </a>
@@ -467,7 +467,7 @@
     <div class="dash-classes-section">
       <div class="dash-section-header">
         <h2>Live Classes</h2>
-        <a href="https://wa.me/message/K5RM7MSWXBNPC1" target="_blank" rel="noopener noreferrer" class="dash-view-all">View All &rarr;</a>
+        <a href="https://wa.me/254780618608" target="_blank" rel="noopener noreferrer" class="dash-view-all">View All &rarr;</a>
       </div>
       <div class="dash-classes-grid">
         <div class="dash-class-card dash-class-card--main">
@@ -505,14 +505,14 @@
               <small>Wednesday &middot; 8:00 PM (EAT)</small>
             </span>
           </a>
-          <a href="https://wa.me/message/K5RM7MSWXBNPC1" target="_blank" rel="noopener noreferrer" class="dash-upcoming-item">
+          <a href="https://wa.me/254780618608" target="_blank" rel="noopener noreferrer" class="dash-upcoming-item">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
             <span>
               <strong>Liquidity &amp; Smart Money Concepts</strong>
               <small>Friday &middot; 8:00 PM (EAT)</small>
             </span>
           </a>
-          <a href="https://wa.me/message/K5RM7MSWXBNPC1" target="_blank" rel="noopener noreferrer" class="dash-upcoming-item">
+          <a href="https://wa.me/254780618608" target="_blank" rel="noopener noreferrer" class="dash-upcoming-item">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
             <span>
               <strong>Risk Management Essentials</strong>
@@ -590,8 +590,8 @@
       <a href="https://www.tiktok.com/@bm_forex?_r=1&amp;_t=ZS-97waauJBTBS" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">Live Trading</a>
       <button class="btn btn-ghost" id="aboutBtn" type="button" aria-haspopup="dialog">About</button>
       <a href="subscribe.php?service=copy_trading" class="btn btn-ghost">Copy Trading</a>
-      <a href="https://wa.me/message/K5RM7MSWXBNPC1" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">Events</a>
-      <a href="https://wa.me/message/K5RM7MSWXBNPC1" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">Classes</a>
+      <a href="https://wa.me/254780618608" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">Events</a>
+      <a href="https://wa.me/254780618608" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">Classes</a>
       <a href="subscribe.php" class="btn btn-ghost" style="color:var(--gold);border-color:rgba(22,119,255,0.45)">Subscribe</a>
     </div>
   </div>
@@ -1300,7 +1300,7 @@ if (file_exists($sqliteFile)) {
 </div>
 
 <!-- Floating WhatsApp button -->
-<a class="whatsapp-float" href="https://wa.me/message/K5RM7MSWXBNPC1"
+<a class="whatsapp-float" href="https://wa.me/254780618608"
    target="_blank" rel="noopener noreferrer"
    aria-label="Chat with BM Forex Hub on WhatsApp">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
